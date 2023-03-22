@@ -1,31 +1,38 @@
 const axios = require("axios");
+const User = require("../models/user");
 const {
   GOOGLEREDIRECTURL,
   GOOGLECLIENTSECRET,
   GOOGLECLIENTID,
+  PRODUCTION,
 } = require("../config");
-const User = require("../models/user");
 
-exports.googleRedirect = async (req, res) => {
+exports.googleAuth = async (req, res) => {
   const { code } = req.query;
 
   const accessToken = await getAccessTokenFromGoogle(code);
   const userData = await getUserDataFromAccessToken(accessToken);
 
-  console.log(userData);
-  // const registeredUser = await User.find({ email: userData.email });
+  let user = await User.findOne({ Email: userData.email });
 
-  // if (registeredUser) {
-  // } else {
-  // }
+  if (!user) {
+    user = await User.create({
+      Name: userData.name,
+      Email: userData.email.toLowerCase(),
+      ProfilePic: userData.picture,
+    });
+  }
 
-  // Add jwt cookies
+  req.session.userId = user._id;
 
-  // Redirects to the client side
-  //   return res.redirect("/");
+  // changes on production
+  if (PRODUCTION !== "production") {
+    return res.redirect("http://localhost:3000");
+  }
+  return res.redirect("/");
 };
 
-const getAccessTokenFromGoogle = async (codeFromGoogle) => {
+async function getAccessTokenFromGoogle(codeFromGoogle) {
   const { data } = await axios({
     url: `https://oauth2.googleapis.com/token`,
     method: "post",
@@ -39,9 +46,9 @@ const getAccessTokenFromGoogle = async (codeFromGoogle) => {
   });
 
   return data.access_token;
-};
+}
 
-const getUserDataFromAccessToken = async (accessToken) => {
+async function getUserDataFromAccessToken(accessToken) {
   const { data } = await axios({
     url: "https://www.googleapis.com/oauth2/v2/userinfo",
     method: "get",
@@ -50,16 +57,4 @@ const getUserDataFromAccessToken = async (accessToken) => {
     },
   });
   return data;
-};
-
-// function loginUser() {
-//   // Add cookies
-// }
-
-// async function registeredUser() {
-//   const user = await User.create({
-//     Email: userData.email,
-//     Name: userData.name,
-//     ProfilePic: userData.picture,
-//   });
-// }
+}
