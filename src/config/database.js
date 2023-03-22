@@ -1,11 +1,9 @@
 const mongoose = require("mongoose");
-const { DBPASS, DBUSER, DBNAME, DBCLUSTER } = require("./index");
+const { DBURL } = require("./index");
 
 const connect = async () => {
   try {
-    await mongoose.connect(
-      `mongodb+srv://${DBUSER}:${DBPASS}@${DBCLUSTER}.mongodb.net/${DBNAME}?retryWrites=true&w=majority`
-    );
+    await mongoose.connect(DBURL);
   } catch (err) {
     console.log(`Error in connecting the database ${err}`);
   }

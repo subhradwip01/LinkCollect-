@@ -1,11 +1,11 @@
 const express = require("express");
-const { googleRedirect } = require("../../controllers/auth");
+const { googleAuth } = require("../../controllers/googleAuth");
 const { userLogout, getCurrentUser } = require("../../controllers/user");
 const catchAsync = require("../../utils/catchAsync");
 
 const router = express.Router();
 
-router.get("/google-auth", catchAsync(googleRedirect));
+router.get("/google-auth", catchAsync(googleAuth));
 
 router.get("/current-user", getCurrentUser);
 
