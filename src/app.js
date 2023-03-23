@@ -2,15 +2,15 @@ const bodyParser = require("body-parser");
 const express = require("express");
 const app = express();
 const Collection = require('./repository/collectionRepo');
+const Timeline = require('./repository/timelineRepo');
+const timelineRepo = new Timeline();
 const collectionRepo = new Collection();
-const session = require("express-session");
+
 const connect = require("./config/database");
 const { PORT } = require("./config/index");
-const { sessionConfig } = require("./config/sessionConfig");
 const ApiRoutes = require("./routes/index");
 
 const setUpAndStartServer = async () => {
-  app.use(session(sessionConfig));
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -20,7 +20,21 @@ const setUpAndStartServer = async () => {
 
     app.listen(PORT, async() => {
         console.log(`Server Started at ${PORT}`);
-      
+      //   const collection = await collectionRepo.create({
+      //       title:""
+      //   });
+      //   console.log(collection);
+      //   const timeline = await timelineRepo.create({
+      //       Collection : collection.id,
+      //       link :"www.ds.com",
+      //       note:"hellopsdfsd",
+      //       time:Date.now()
+      //   })
+      //   console.log(timeline);
+      //  collection.timeline.push(timeline);
+      //  await collection.save();
+      //  console.log(collection);
+
     })
 };
 

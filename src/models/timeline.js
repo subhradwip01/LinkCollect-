@@ -1,9 +1,13 @@
 const mongoose = require('mongoose');
 
 const TimelineSchema = new mongoose.Schema({
-     Collection : {
+     collectionId : {
         type : mongoose.Schema.Types.ObjectId,
-        ref : "Collection"
+        ref : "Collection"  
+     },
+     userId : {
+      type : mongoose.Schema.Types.ObjectId,
+      ref:'User',
      },
      link :{
         type : String,

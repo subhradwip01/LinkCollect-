@@ -1,13 +1,16 @@
 const { Timeline , Collection } = require('../models/index');
 
 class TimelineRepo {
-   create = async (data) => {
+   createtimeline = async (data) => {
       try {
+        // console.log("repositroy");
          const timeline = await Timeline.create(data);
          //push into the corresponding collection
-         const collection = await Collection.findOne(data.id);
+         const collection = await Collection.findById(data.collectionId);
+       //  console.log(collection);
          collection.timeline.push(timeline);
-         await Collection.save();
+         //console.log(collection);
+         await collection.save();
          //saved
          return timeline;
       } catch (error) {
@@ -32,7 +35,7 @@ class TimelineRepo {
    }
    getAll = async(id) => { //collection id
       try {
-         const timeline =await Timeline.findById(id);
+         const timeline =await Timeline.find({collectionId:id});
          return timeline;
      } catch (error) {
         throw error;
