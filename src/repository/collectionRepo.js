@@ -1,10 +1,13 @@
-const { Collection } = require('../models/index');
+const { Collection,User } = require('../models/index');
 
 class CollectionRepo {
     
     create = async (data) => {
         try {
             const collection = await Collection.create(data);
+            const user = await User.findById(data.userId);
+            user.Collections.push(collection);
+            await user.save();
             return collection;
         } catch (error) {
             throw error;

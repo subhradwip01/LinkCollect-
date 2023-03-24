@@ -1,7 +1,9 @@
 const express = require("express");
 const router = express.Router();
+const {validateUserAuthforSignIn,validateUserAuthforSignUp} = require('../../middlewares/authValidate');
 const collectionController = require('../../controllers/collectionController');
 const timelineController = require('../../controllers/timelineController');
+const UserControllers = require('../../controllers/userController');
 
 
 const userRoutes = require("./user");
@@ -22,6 +24,17 @@ router.get('/getTimeline/:id',timelineController.getTimeline);
 router.get('/getWholeTimeline/:id',timelineController.getThatTimeline);
 router.delete('/deleteTimeline/:id',timelineController.deleteTimeline);
 router.patch('/updateTimeline/:id',timelineController.updateTimeline);
+
+//User
+router.post('/signUp',validateUserAuthforSignUp,UserControllers.create); 
+router.get('/isauthenticated',UserControllers.isAuthenticated);
+router.get('/verify-email',UserControllers.verifyEmailtoken); 
+router.get('/getById/:id',UserControllers.getByUserId) 
+router.post('/signin',validateUserAuthforSignIn,UserControllers.signIn);
+router.delete('/delete/:id',UserControllers.destroy); 
+router.get('/getCollections/:id',UserControllers.getWithCollection);
+
+
 
 
 module.exports = router;

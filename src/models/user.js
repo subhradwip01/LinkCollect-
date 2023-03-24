@@ -1,17 +1,24 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
+const {SALT} = require('../config/serverConfig');
+const bcrypt = require('bcrypt');
+
 
 const userSchema = new Schema({
-  Email: {
-    type: String,
-    required: true
-  },
   Name: {
     type: String,
     required: true,
   },
+  email: {
+    type: String,
+    unique : true,
+    required: true
+  },
   ProfilePic: {
     type: String,
+  },
+  password: {
+    type: String
   },
   Collections: [
     {
@@ -24,9 +31,15 @@ const userSchema = new Schema({
     reruired: true
   }, verified: {
     type: Number,
-    Default: 0,
   }
 }, { timestamps: true });
+
+ userSchema.pre('save',function(next){
+    //console.log("in hook",SALT);
+    const encryptedPassword = bcrypt.hashSync(this.password,Number(SALT)); 
+    this.password = encryptedPassword;
+    next();
+ })
 
 
 const User = mongoose.model("User", userSchema);

@@ -6,19 +6,21 @@ class UserRepository {
 
     async create(data) {
         try {
-            console.log(data);
+            console.log("repo",data);
             const user = await User.create(data);
-            verifyEmail(user.Name, user.email, user.emailtoken);
+            console.log(user);
+            verifyEmail(user.Name, user.email, user.emailToken);
             return user;
         } catch (error) {
-            console.log("Something went wrong at repository layer");
+            console.log("Something went wrong at repository layer",error);
             throw (error);
         }
     }
     async verifyEmailtoken(token) {
         try {
 
-            const user = await User.findOne({ emailtoken: token });
+            const user = await User.find({ emailToken: token });
+            console.log("verifying user");
             if (!user) {
                 console.log('User dosent exist');
                 throw error;
@@ -41,15 +43,20 @@ class UserRepository {
     }
     async destroy(userId) {
         try {
-            await User.destroy({
-                where: {
-                    id: userId
-                }
-            });
+            await User.findByIdAndRemove(userId);
             return true;
         } catch (error) {
             console.log("Something went wrong at repository layer");
             throw (error);
+        }
+    }
+    async getwithCollection(userId){
+        try {
+
+            const user = await User.findById(userId).populate({path:"Collections"}).lean();
+            return user;
+        } catch (error) {
+            throw error;
         }
     }
     async getByUserId(userId) {

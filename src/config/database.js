@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { DBPASS ,DBUSER, DBNAME } = require('./index');
+const { DBPASS ,DBUSER, DBNAME } = require('./serverConfig');
 
 
 const connect = async () => {

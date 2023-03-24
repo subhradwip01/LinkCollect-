@@ -5,7 +5,7 @@ const {
   GOOGLECLIENTSECRET,
   GOOGLECLIENTID,
   PRODUCTION,
-} = require("../config");
+} = require("../config/serverConfig");
 
 exports.googleAuth = async (req, res) => {
   const { code } = req.query;

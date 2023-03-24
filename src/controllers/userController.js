@@ -1,11 +1,11 @@
-const UserService = require("../services/User-service");
+const UserService = require("../services/Userservice");
 
 const userService = new UserService();
 
 const create = async (req, res) => {
     try {
         const response = await userService.create({
-            Name:req.body.name,
+            Name:req.body.Name,
             email: req.body.email,
             password: req.body.password
         });
@@ -69,6 +69,25 @@ const signIn = async(req,res) => {
 const getByUserId = async (req,res) => {
     try {
         const response = await userService.getUserById(req.params.id);
+        return res.status(201).json({
+            message : "Successfully fetched the user",
+            data : response,
+            err : {},
+            success:true
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message : "Not able to fetch",
+            err:error,
+            success:false,
+            data:{}
+        });
+    }
+}
+const getWithCollection= async (req,res) => {
+    try {
+        const response = await userService.getWithCollection(req.params.id);
         return res.status(201).json({
             message : "Successfully fetched the user",
             data : response,
@@ -154,12 +173,11 @@ const destroy = async(req,res) => {
 
 module.exports = {
     destroy,
+    getWithCollection,
     create,
     getUser,
     signIn,
     isAuthenticated,
-    isAdmin,
-    grantRole,
     verifyEmailtoken,
     getByUserId
 }

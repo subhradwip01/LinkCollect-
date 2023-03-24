@@ -1,7 +1,8 @@
-const UserRepository = require("../repository/user-repository");
+const UserRepository = require("../repository/userRepo");
 const { JWT_KEY } = require('../config/serverConfig');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+var randomBytes = require('randombytes');
 
 
 class UserService {
@@ -10,6 +11,8 @@ class UserService {
     }
     async create(data) {
         try {
+            data.emailToken = randomBytes(32).toString('hex');
+            data.verified = 0;
             const user = await this.userRepository.create(data);
             return user;
         } catch (error) {
@@ -45,8 +48,18 @@ class UserService {
             throw (error);
         }
     }
+    async getWithCollection(userId){
+        try {
+            const user = await this.userRepository.getwithCollection(userId);
+            return user;
+        } catch (error) {
+            console.log("Something went wrong Service layer.");
+            throw (error);
+        }
+    }
     createToken(user) {
         try {
+            console.log('in user',user);
             const result = jwt.sign(user, JWT_KEY, { expiresIn: '1h' });
             return result;
         } catch (error) {
@@ -78,8 +91,8 @@ class UserService {
                 console.log("Password dosen't match");
                 throw { error: "Incorrect password" };
             }
-            const newJWTtoken = this.createToken({ email: user.email, id: user.id });
-            return newJWTtoken
+            const newJWTtoken = this.createToken({ email: user.email, id: user._id });
+            return {userId:user._id,token:newJWTtoken}
 
         } catch (error) {
             console.log("Something went wrong in signIn process");

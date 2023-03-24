@@ -7,7 +7,7 @@ const timelineRepo = new Timeline();
 const collectionRepo = new Collection();
 
 const connect = require("./config/database");
-const { PORT } = require("./config/index");
+const { PORT } = require("./config/serverConfig");
 const ApiRoutes = require("./routes/index");
 
 const setUpAndStartServer = async () => {
