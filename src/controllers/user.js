@@ -13,6 +13,5 @@ exports.getCurrentUser = async (req, res) => {
 
 exports.userLogout = async (req, res) => {
   req.session.userId = null;
-
   return res.sendStatus(200);
 };
