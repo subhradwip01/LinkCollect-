@@ -1,11 +1,14 @@
 const express = require("express");
-const router = express.Router();
 const timelineController = require("../../controllers/timelineController");
+const router = express.Router({ mergeParams: true }); // merge params will make the prefix param available from the index.js folder;
+// To get collection id in our case
 
-router.post("/createTimeline", timelineController.create);
-router.get("/getTimeline/:id", timelineController.getTimeline);
-router.get("/getWholeTimeline/:id", timelineController.getThatTimeline);
-router.delete("/deleteTimeline/:id", timelineController.deleteTimeline);
-router.patch("/updateTimeline/:id", timelineController.updateTimeline);
+// Postioning of routes matter, let the specific routes come before general routes
+
+router.get("/:timelineId", timelineController.getTimeline);
+router.get("/", timelineController.getThatTimeline); // For all timelines
+router.post("/", timelineController.create);
+router.delete("/:timelineId", timelineController.deleteTimeline);
+router.patch("/:timelineId", timelineController.updateTimeline);
 
 module.exports = router;

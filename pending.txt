@@ -1,0 +1,4 @@
+// Error handling is not perfect
+// server-side schema validation using joi
+// cloudinary image upload middleware
+// When we ref something and it get deleted, then clean up code should be also there
