@@ -5,7 +5,7 @@ const {
   GOOGLECLIENTSECRET,
   GOOGLECLIENTID,
   PRODUCTION,
-} = require("../config/serverConfig");
+} = require("../config");
 
 exports.googleAuth = async (req, res) => {
   const { code } = req.query;
@@ -16,15 +16,12 @@ exports.googleAuth = async (req, res) => {
   let user = await User.findOne({ email: userData.email });
 
   if (!user) {
-    user = await User.create({
-      name: userData.name,
-      email: userData.email.toLowerCase(),
-      ProfilePic: userData.picture,
-    });
+    // create a user
   }
 
-  req.session.userId = user._id;
+  // const token = Create a token
 
+  // Here I will send the user token as query to the client
   // changes on production
   if (PRODUCTION !== "production") {
     return res.redirect("http://localhost:3000");
