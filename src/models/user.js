@@ -1,17 +1,26 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-const userSchema = new Schema({
-  Email: {
-    type: String,
+const userSchema = new Schema(
+  {
+    email: {
+      type: String,
+    },
+    name: {
+      type: String,
+    },
+    profilePic: {
+      type: String,
+    },
+    collections: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Collection",
+      },
+    ],
   },
-  Name: {
-    type: String,
-  },
-  ProfilePic: {
-    type: String,
-  },
-});
+  { timestamps: true }
+);
 
 const User = mongoose.model("User", userSchema);
 

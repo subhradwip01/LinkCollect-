@@ -13,12 +13,12 @@ exports.googleAuth = async (req, res) => {
   const accessToken = await getAccessTokenFromGoogle(code);
   const userData = await getUserDataFromAccessToken(accessToken);
 
-  let user = await User.findOne({ Email: userData.email });
+  let user = await User.findOne({ email: userData.email });
 
   if (!user) {
     user = await User.create({
-      Name: userData.name,
-      Email: userData.email.toLowerCase(),
+      name: userData.name,
+      email: userData.email.toLowerCase(),
       ProfilePic: userData.picture,
     });
   }

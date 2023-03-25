@@ -8,7 +8,7 @@ exports.getCurrentUser = async (req, res) => {
     return res.send(user);
   }
 
-  return res.sendStatus(200);
+  return res.sendStatus(200).send("Not Logged In");
 };
 
 exports.userLogout = async (req, res) => {

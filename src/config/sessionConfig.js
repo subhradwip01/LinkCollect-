@@ -1,5 +1,5 @@
 const MongoStore = require("connect-mongo");
-const { SESSIONSECRET, DBURL } = require(".");
+const { SESSIONSECRET, DBURL } = require("./index");
 
 // Initializing mongo store to save session data
 const store = new MongoStore({
