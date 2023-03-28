@@ -4,17 +4,19 @@ import { deleteCollection, getAllCollectionsWithoutTimelines} from '../api-servi
 import CreateCollection from './CreateCollection';
 import { createCollection } from '../api-services/collectionService';
 
-function Home() {
+function Home({}) {
   const [collections, setCollections] = useState([]);
   const navigate = useNavigate()
 
-  useEffect(()=>{
-    const gettingCollections = async()=>{
-      const {data} = await getAllCollectionsWithoutTimelines();
-      setCollections([...data.data])
-    }
-    gettingCollections()
-  }, [])
+  const getCollections = async (userId) => {
+    const { data } = await getAllCollectionsWithoutTimelines(userId);
+    console.log(data);
+    setCollections(data.data);
+  };
+
+  useEffect(() => {
+    getCollections()
+  }, []);
 
   const handleLogout = ()=>{
     localStorage.clear();
@@ -26,13 +28,11 @@ function Home() {
     const {title} = e.target;
     const collection = {title: title.value}
 
-    // For instant ui change
+    const {data} = await createCollection(collection);
+    console.log(data);
     const tempCollections = [...collections];
-    tempCollections.push(collection);
+    tempCollections.push(data.data);
     setCollections(tempCollections);
-
-    // Making changes to db
-    await createCollection(collection);
     return navigate("/")
   }
 

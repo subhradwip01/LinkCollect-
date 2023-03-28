@@ -3,18 +3,22 @@ import GoogleAuth from '../components/GoogleAuthBtn'
 import config from "../config.json"
 import axios from 'axios';
 import { login } from '../api-services/authService';
-import {Link} from "react-router-dom"
+import {Link, useNavigate} from "react-router-dom"
 
 const api = config.api;
 
 function Login() {  
 
+  const navigate = useNavigate()
+
   const handleLogin = async(e)=>{
     e.preventDefault()
     const {email, password} = e.target;
 
-    const {data} = await login(email.value, password.value);
-    console.log(data);
+    const {data} = await login(email.value, password.value.trim());
+    localStorage.setItem("token", data.data.token);
+
+    return navigate("/");
   }
 
   return (

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { getCollection } from '../api-services/collectionService';
 import CreateTimeline from './CreateTimeline';
 import Timeline from './Timeline';
@@ -23,13 +23,16 @@ function Collection() {
         const {link, note} = e.target;
         const time = new Date('14 Jun 2017 00:00:00 PDT').toUTCString();
         const timeline = {link: link.value, note: note.value, time }
-        //For instant ui change
-        const tempCollection = {...collection};
-        tempCollection.timelines.push(timeline);
-        setCollection(tempCollection)
+        // For instant ui change
+        // const tempCollection = {...collection};
+        // tempCollection.timelines.push(timeline);
+        // setCollection(tempCollection)
 
         // To make changes in DB
-        return await createTimeline(collectionId, timeline);
+        const {data} = await createTimeline(collectionId, timeline);
+        const tempCollection = {...collection};
+        tempCollection.timelines.push(data.data);
+        setCollection(tempCollection)
       }
 
     const handleTimelineDelete = async(timelineId)=>{
@@ -65,7 +68,7 @@ function Collection() {
         ))}
         <h2>Add more timelines</h2>
         <CreateTimeline handleCreateTimeline={handleCreateTimeline} collectionId={collectionId} />
-        <button style={{"marginTop": "10px"}}><a href="/">Back to all collections</a></button>
+        <button style={{"marginTop": "10px"}}><Link to="/">Back to all collections</Link></button>
     </div>
   )
 }

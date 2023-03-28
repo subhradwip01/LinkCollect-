@@ -1,16 +1,24 @@
 const mongoose = require("mongoose");
-const { Schema } = mongoose;
 
-const TimelineSchema = new Schema(
+const TimelineSchema = new mongoose.Schema(
   {
+    collectionId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Collection",
+    },
+    title: {
+      type: String,
+    },
     link: {
       type: String,
+      required: true,
     },
     note: {
       type: String,
     },
     time: {
       type: Date,
+      required: true,
     },
   },
   { timestamps: true }

@@ -4,9 +4,13 @@ const CollectionSchema = new mongoose.Schema(
   {
     title: {
       type: String,
+      required: true,
     },
-
-    timeline: [
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Users",
+    },
+    timelines: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Timeline",

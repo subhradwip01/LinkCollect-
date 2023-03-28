@@ -3,7 +3,7 @@ const collectionService = new CollectionService();
 
 const create = async (req, res) => {
   try {
-    const collection = await collectionService.create(req.body);
+    const collection = await collectionService.create(req.body, req.user);
     return res.status(201).json({
       data: collection,
       success: true,
@@ -74,11 +74,9 @@ const get = async (req, res) => {
     });
   }
 };
-
-// ASK QUESTION - why do we have an id param for get all
 const getAll = async (req, res) => {
   try {
-    const collection = await collectionService.getAll(req.params.id);
+    const collection = await collectionService.getAll(req.user);
     return res.status(201).json({
       data: collection,
       success: true,
@@ -96,9 +94,7 @@ const getAll = async (req, res) => {
 };
 const getAllWithTimeline = async (req, res) => {
   try {
-    const collection = await collectionService.getAllWithTimeline(
-      req.params.id
-    );
+    const collection = await collectionService.getAllWithTimeline(req.user);
     return res.status(201).json({
       data: collection,
       success: true,

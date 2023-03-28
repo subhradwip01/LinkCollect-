@@ -4,20 +4,27 @@ import api from "./apiConfig.json";
 
 const apiEndpoint = api.baseUrl + "/user";
 
-export function login(email, password) {
-  return http.post(`${apiEndpoint}/signin`, {
-    email,
-    password,
-  });
-}
+let signUp;
+let signIn;
 
 export function register(name, email, password) {
+  signUp = password;
   return http.post(`${apiEndpoint}/signup`, {
     name,
     email,
     password,
   });
 }
+
+export function login(email, password) {
+  signIn = password;
+  return http.post(`${apiEndpoint}/signin`, {
+    email,
+    password,
+  });
+}
+
+console.log(signUp === signIn);
 
 export function getUserById(userId) {
   return http.get(`${apiEndpoint}/get-user/${userId}`);

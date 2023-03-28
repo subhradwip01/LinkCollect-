@@ -5,10 +5,12 @@ const router = express.Router({ mergeParams: true }); // merge params will make 
 
 // Postioning of routes matter, let the specific routes come before general routes
 
-router.get("/:timelineId", timelineController.getTimeline);
-router.get("/", timelineController.getThatTimeline); // For all timelines
 router.post("/", timelineController.create);
-router.delete("/:timelineId", timelineController.deleteTimeline);
 router.patch("/:timelineId", timelineController.updateTimeline);
+router.delete("/:timelineId", timelineController.deleteTimeline);
 
 module.exports = router;
+
+// Not Using
+// router.get("/:timelineId", timelineController.getTimeline);
+// router.get("/", timelineController.getThatTimeline); // For all timelines

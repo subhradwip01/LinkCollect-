@@ -6,7 +6,6 @@ class UserRepository {
     try {
       console.log("repo", data);
       const user = await User.create(data);
-      console.log(user);
       verifyEmail(user.name, user.email, user.emailToken);
       return user;
     } catch (error) {
@@ -16,7 +15,7 @@ class UserRepository {
   }
   async verifyEmailtoken(token) {
     try {
-      const user = await User.find({ emailToken: token });
+      const user = await User.findOne({ emailToken: token });
       console.log("verifying user");
       if (!user) {
         console.log("User dosent exist");
@@ -32,7 +31,7 @@ class UserRepository {
       //     }
       //   });
       await User.findOneAndUpdate({ emailtoken: token }, data);
-      return "Verification Successfull!";
+      return user;
     } catch (error) {
       console.log("Something went wrong in the verification of mail");
       throw error;
@@ -50,7 +49,7 @@ class UserRepository {
   async getwithCollection(userId) {
     try {
       const user = await User.findById(userId)
-        .populate({ path: "Collections" })
+        .populate({ path: "collections" })
         .lean();
       return user;
     } catch (error) {
@@ -59,6 +58,7 @@ class UserRepository {
   }
   async getByUserId(userId) {
     try {
+      console.log("Here", userId);
       const user = await User.findById(userId);
       return user;
     } catch (e) {

@@ -29,7 +29,10 @@ const getUser = async (req, res) => {
   try {
     // console.log(req.body);
     // console.log(req.query);
-    const response = await userService.getUser(req.query.id);
+
+    console.log("hey");
+
+    const response = await userService.getUser(req.user);
     return res.status(201).json({
       message: "Successfully fetched the User!",
       data: response,
@@ -90,7 +93,7 @@ const getByUserId = async (req, res) => {
 };
 const getWithCollection = async (req, res) => {
   try {
-    const response = await userService.getWithCollection(req.params.id);
+    const response = await userService.getWithCollection(req.user);
     return res.status(201).json({
       message: "Successfully fetched the user",
       data: response,
@@ -131,12 +134,16 @@ const isAuthenticated = async (req, res) => {
 const verifyEmailtoken = async (req, res) => {
   try {
     const response = await userService.verifyEmailtoken(req.query.token);
-    return res.status(201).json({
-      success: true,
-      message: "email verified",
-      data: response,
-      err: {},
-    });
+    // Changes on production
+    const token = userService.createToken({ user: response._id });
+
+    res.redirect(`http://localhost:3000?token=${token}`);
+    // return res.status(201).json({
+    //   success: true,
+    //   message: "email verified",
+    //   data: response,
+    //   err: {},
+    // });
   } catch (error) {
     console.log(error);
     return res.status(500).json({
