@@ -8,4 +8,5 @@ exports.isLoggedIn = (req, res, next) => {
       data: {},
     });
   }
+  next();
 };

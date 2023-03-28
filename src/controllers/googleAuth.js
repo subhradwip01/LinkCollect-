@@ -22,12 +22,11 @@ exports.googleAuth = async (req, res) => {
     user = await User.create({
       name: userData.name,
       email: userData.email,
-      password: userData.password,
     });
   }
 
   // const token = Create a token
-  const token = userService.createToken({ email: user.email });
+  const token = userService.createToken({ user: user._id });
 
   // Sending user Token as query to the client
   // changes on production

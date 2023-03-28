@@ -4,9 +4,9 @@ class CollectionService {
   constructor() {
     this.collectionRepo = new CollectionRepo();
   }
-  create = async (data) => {
+  create = async (data, userId) => {
     try {
-      const collection = await this.collectionRepo.create(data);
+      const collection = await this.collectionRepo.create(data, userId);
       return collection;
     } catch (error) {
       throw error;
@@ -36,18 +36,18 @@ class CollectionService {
       throw error;
     }
   };
-  getAllWithTimeline = async (id) => {
+  getAllWithTimeline = async (userId) => {
     try {
       const collection =
-        await this.collectionRepo.getAllCollectionsWithTimeline(id);
+        await this.collectionRepo.getAllCollectionsWithTimeline(userId);
       return collection;
     } catch (error) {
       throw error;
     }
   };
-  getAll = async (id) => {
+  getAll = async (userId) => {
     try {
-      const collection = await this.collectionRepo.getAll(id);
+      const collection = await this.collectionRepo.getAll(userId);
       return collection;
     } catch (error) {
       throw error;

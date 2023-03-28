@@ -11,4 +11,6 @@ module.exports = {
   DBURL: process.env.DBURL,
   SALT: process.env.ROUNDS,
   JWT_KEY: process.env.JWT_KEY,
+  USER: process.env.USER,
+  PASS: process.env.PASS,
 };

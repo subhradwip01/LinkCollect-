@@ -1,5 +1,5 @@
 const UserRepository = require("../repository/userRepo");
-const { JWT_KEY } = require("../config");
+const { JWT_KEY, SALT } = require("../config");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 var randomBytes = require("randombytes");
@@ -82,6 +82,10 @@ class UserService {
       const user = await this.userRepository.getByEmail(userEmail);
       // step 2 -> compare the user
       const encryptedPassword = user.password;
+
+      const newP = bcrypt.hashSync(plainPassword, 12);
+      console.log("inwoooooososos", newP);
+
       const passwordMatch = this.checkPassword(
         plainPassword,
         encryptedPassword
@@ -91,7 +95,8 @@ class UserService {
         console.log("Password dosen't match");
         throw { error: "Incorrect password" };
       }
-      const newJWTtoken = this.createToken({ email: user.email, id: user._id });
+      const newJWTtoken = this.createToken({ user: user._id });
+
       return { userId: user._id, token: newJWTtoken };
     } catch (error) {
       console.log("Something went wrong in signIn process");

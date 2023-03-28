@@ -6,9 +6,8 @@ exports.decryptUser = (req, res, next) => {
   if (!token) return next(); // req.user will stay undefined
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded;
-    console.log(user);
+    const decoded = jwt.decode(token.split(" ")[1], process.env.JWT_SECRET);
+    req.user = decoded.user;
     next();
   } catch (ex) {
     res.status(400).send("Invalid token.");

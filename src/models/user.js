@@ -28,7 +28,6 @@ const userSchema = new Schema(
     ],
     emailToken: {
       type: String,
-      reruired: true,
     },
     verified: {
       type: Number,
@@ -38,7 +37,8 @@ const userSchema = new Schema(
 );
 
 userSchema.pre("save", function (next) {
-  if (!this.password || !this.isModified("password")) return next();
+  if (!this.password) return next(); // Added for google auth
+  if (!this.isModified("password")) return next();
   const encryptedPassword = bcrypt.hashSync(this.password, Number(SALT));
   this.password = encryptedPassword;
   next();

@@ -1,20 +1,24 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const CollectionSchema = new mongoose.Schema({
+const CollectionSchema = new mongoose.Schema(
+  {
     title: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     userId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Users",
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Users",
     },
-
-    timeline: [{
+    timelines: [
+      {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Timeline"
-    }]
-}, { timestamps: true });
+        ref: "Timeline",
+      },
+    ],
+  },
+  { timestamps: true }
+);
 
-const Collection = mongoose.model('Collection', CollectionSchema);
-module.exports = Collection; 
+const Collection = mongoose.model("Collection", CollectionSchema);
+module.exports = Collection;

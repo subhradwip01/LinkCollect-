@@ -1,10 +1,10 @@
 const { Collection, User } = require("../models/index");
 
 class CollectionRepo {
-  create = async (data) => {
+  create = async (data, userId) => {
     try {
-      const collection = await Collection.create(data);
-      const user = await User.findById(data.userId);
+      const collection = await Collection.create({ ...data, userId });
+      const user = await User.findById(userId);
       user.collections.push(collection);
       await user.save();
       return collection;
@@ -22,25 +22,27 @@ class CollectionRepo {
   };
   get = async (id) => {
     try {
-      const collection = await Collection.findById(id);
+      const collection = await Collection.findById(id).populate({
+        path: "timelines",
+      });
+      console.log(`THE COLLECTION IS ${collection}`);
       return collection;
     } catch (error) {
       throw error;
     }
   };
-  getAll = async (id) => {
+  getAll = async (userId) => {
     try {
-      const collection = await Collection.findById(id);
+      const collection = await Collection.find({ userId });
       return collection;
     } catch (error) {
       throw error;
     }
   };
-  getAllCollectionsWithTimeline = async (id) => {
-    //userid
+  getAllCollectionsWithTimeline = async (userId) => {
     try {
-      const collection = await Collection.findById(id)
-        .populate({ path: "timeline" })
+      const collection = await Collection.find({ userId })
+        .populate({ path: "timelines" })
         .lean();
       return collection;
     } catch (error) {

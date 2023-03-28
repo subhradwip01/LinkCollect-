@@ -1,0 +1,60 @@
+*,*::before, *::after{
+  box-sizing: border-box;
+}
+
+body{
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.app{
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  width: 350px;
+  height: 500px;
+  overflow: scroll;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.auth{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.auth input{
+  display: block;
+}
+
+.auth form{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.collection{
+  margin-top: 250px;
+  padding: 20px 10px;
+  display: flex;
+  align-items: space-between;
+  flex-direction: column;
+}
+
+.timeline{
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  padding: 10px;
+  display: flex;
+  align-items: space-between;
+  flex-direction: column;
+}
+
+.hidden{
+  display: none;
+}

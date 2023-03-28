@@ -1,7 +1,7 @@
-const Collection = require('./collectionRepo');
-const Timeline = require('./timelineRepo');
+const Collection = require("./collectionRepo");
+const Timeline = require("./timelineRepo");
 
 module.export = {
-    CollectionRepo : Collection,
-    TimelineRepo : Timeline
-}
+  CollectionRepo: Collection,
+  TimelineRepo: Timeline,
+};
