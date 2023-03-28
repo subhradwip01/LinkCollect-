@@ -50,7 +50,7 @@ class UserRepository {
   async getwithCollection(userId) {
     try {
       const user = await User.findById(userId)
-        .populate({ path: "Collections" })
+        .populate({ path: "collections" })
         .lean();
       return user;
     } catch (error) {
