@@ -29,7 +29,8 @@ const userSchema = new Schema({
   emailToken: {
     type: String,
     reruired: true
-  }, verified: {
+  },
+   verified: {
     type: Number,
   }
 }, { timestamps: true });

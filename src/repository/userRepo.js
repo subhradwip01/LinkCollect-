@@ -26,15 +26,12 @@ class UserRepository {
                 throw error;
             }
             var data = {
-                emailtoken: null,
+                emailToken: "null",
                 verified: 1
             }
-            //   await User.update(data, {
-            //     where: {
-            //       emailtoken: token
-            //     }
-            //   });
-            await User.findOneAndUpdate({ emailtoken: token }, data);
+            const userUpdated = await User.findOneAndUpdate({ emailToken: token }, data);
+            console.log(userUpdated);
+
             return 'Verification Successfull!';
         } catch (error) {
             console.log("Something went wrong in the verification of mail");

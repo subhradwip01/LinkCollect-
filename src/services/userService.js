@@ -59,7 +59,7 @@ class UserService {
     }
     createToken(user) {
         try {
-            console.log('in user',user);
+            //console.log('in user',user);
             const result = jwt.sign(user, JWT_KEY, { expiresIn: '1h' });
             return result;
         } catch (error) {
