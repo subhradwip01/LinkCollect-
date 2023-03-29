@@ -37,8 +37,7 @@ const userSchema = new Schema(
 );
 
 userSchema.pre("save", function (next) {
-  if (!this.password) return next(); // Added for google auth
-  if (!this.isModified("password")) return next();
+  if (!this.password || !this.isModified("password")) return next(); // Added for google auth and unnecessary hash changes whenever user.save is called (could have created bugs)
   const encryptedPassword = bcrypt.hashSync(this.password, Number(SALT));
   this.password = encryptedPassword;
   next();

@@ -137,7 +137,7 @@ const verifyEmailtoken = async (req, res) => {
     // Changes on production
     const token = userService.createToken({ user: response._id });
 
-    res.redirect(`http://localhost:3000?token=${token}`);
+    res.redirect(`http://localhost:3000/login?token=${token}`);
     // return res.status(201).json({
     //   success: true,
     //   message: "email verified",

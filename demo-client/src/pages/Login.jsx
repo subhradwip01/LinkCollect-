@@ -1,23 +1,37 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import GoogleAuth from '../components/GoogleAuthBtn'
 import config from "../config.json"
-import axios from 'axios';
-import { login } from '../api-services/authService';
-import {Link, useNavigate} from "react-router-dom"
+import { getUserById, login } from '../api-services/authService';
+import {Link, useLocation, useNavigate} from "react-router-dom"
+import jwt from "jsonwebtoken";
 
 const api = config.api;
 
-function Login() {  
-
+function Login({handleSetUser}) {  
+  const location = useLocation();
   const navigate = useNavigate()
 
+  // For google auth redirect and email verification redirect from server with token in query
+  useEffect(() => {
+      const token = new URLSearchParams(location.search).get("token");
+      setUserAndRedirect(token)
+  }, [])
+
+  // To handle login
   const handleLogin = async(e)=>{
     e.preventDefault()
     const {email, password} = e.target;
-
     const {data} = await login(email.value, password.value.trim());
-    localStorage.setItem("token", data.data.token);
+    const token = data.data.token;
+    setUserAndRedirect(token)
+  }
 
+  const setUserAndRedirect = async (token)=>{
+    if(!token) return;
+    const { user: userId } = jwt.decode(token);
+    const response = await getUserById(userId);
+    handleSetUser(response.data.data);
+    localStorage.setItem("token", token);
     return navigate("/");
   }
 

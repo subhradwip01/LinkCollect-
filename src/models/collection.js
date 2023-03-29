@@ -6,6 +6,9 @@ const CollectionSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    description: {
+      type: String,
+    },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Users",
@@ -19,6 +22,9 @@ const CollectionSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+// Collection Image
+// Upvote
 
 const Collection = mongoose.model("Collection", CollectionSchema);
 module.exports = Collection;

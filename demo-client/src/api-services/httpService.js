@@ -15,18 +15,9 @@ axios.interceptors.response.use(null, (error) => {
 });
 
 // ----------- Setting JWT token on every request ------------ //
-function setJwt(jwt) {
+export function setJwtInRequestHeader(jwt) {
   axios.defaults.headers.common["Authorization"] = `Bearer ${jwt}`;
 }
-
-function init() {
-  const token = localStorage.getItem("token");
-  if (token) {
-    setJwt(token);
-  }
-}
-
-init();
 
 // Please use http.get,post....instead of using axios everywhere
 export default {

@@ -7,39 +7,48 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import jwt from "jsonwebtoken";
+import { setJwtInRequestHeader } from "./api-services/httpService";
 
 function App() {
-  const location = useLocation();
   const [user, setUser] = useState();
-  const navigate = useNavigate();
 
-  // For googleauth redirect
+  // To check for token as the app opens and set the user
   useEffect(() => {
-    async function getUserNow() {
+    async function checkForToken() {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const { user: userId } = jwt.decode(token);
+      const { data } = await getUserById(userId);
+      return setUser(data.data);
+    }
+  }, []);
+
+  // To set JWT token in request header for authorization on each API call
+  useEffect(() => {
+    function init() {
       const token = localStorage.getItem("token");
       if (token) {
-        const something = jwt.decode(token);
-        console.log(something);
-        // const { data } = await getUserById(userId);
-
-        // setUser(data.data);
-      } else navigate("/login");
+        setJwtInRequestHeader(token);
+      }
     }
 
-    const JWT_token = new URLSearchParams(location.search).get("token");
-    if (JWT_token) {
-      localStorage.setItem("token", JWT_token);
-    }
+    init();
+  }, [user]);
 
-    getUserNow();
-  }, []);
+  // This function is passed as props to diff compoenents to set the user
+  const handleSetUser = (user) => {
+    setUser(user);
+  };
 
   return (
     <div className="app">
       <Routes>
         <Route path="/" element={<Home user={user} />} />
         <Route path="/collections/:id" element={<Collection />} />
-        <Route path="/login" element={<Login />} />
+        <Route
+          path="/login"
+          element={<Login handleSetUser={handleSetUser} />}
+        />
         <Route path="/register" element={<Register />} />
       </Routes>
     </div>
