@@ -1,8 +1,0 @@
-// Error handling is not perfect
-// server-side schema validation using joi
-// cloudinary image upload middleware
-// When we ref something and it get deleted, then clean up code should be also there
-// Pending collection Update
-// Normal login check
-// Authorization on timeline and collection routes by middleware
-// For instant ui change on react we will have to get the document id on client side rather than mongodb making one for us
