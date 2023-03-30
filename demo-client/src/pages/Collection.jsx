@@ -63,6 +63,7 @@ function Collection() {
   return (
     <div className='collection'>
         <h1>{collection.title}Collection</h1>
+        <img className="collection__image" src={collection.image && collection.image.replace("/upload", "/upload/w_500")} />  
         {collection.timelines && collection.timelines.map((t,index)=>(
             <Timeline key={index} timelineId={t._id} handleTimelineUpdate={handleTimelineUpdate} handleTimelineDelete={handleTimelineDelete} link={t.link} note={t.note} />
         ))}

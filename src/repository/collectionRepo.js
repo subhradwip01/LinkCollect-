@@ -9,6 +9,7 @@ class CollectionRepo {
       await user.save();
       return collection;
     } catch (error) {
+      console.log(error);
       throw error;
     }
   };

@@ -3,6 +3,8 @@ import api from "./apiConfig.json";
 
 const apiEndpoint = api.baseUrl + "/collections";
 
+const boundary = "---------------------------" + Date.now().toString(16);
+
 // With Timelines
 export function getAllCollections() {
   return http.get(`${apiEndpoint}/`);

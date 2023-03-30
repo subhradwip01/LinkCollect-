@@ -3,6 +3,10 @@ const collectionService = new CollectionService();
 
 const create = async (req, res) => {
   try {
+    // Adding image url we got from cloudinary to req.body
+    if (req.file) {
+      req.body.image = req.file.path;
+    }
     const collection = await collectionService.create(req.body, req.user);
     return res.status(201).json({
       data: collection,
@@ -39,6 +43,10 @@ const deleteCollection = async (req, res) => {
 };
 const update = async (req, res) => {
   try {
+    // Adding image url we got from cloudinary to req.body
+    if (req.file) {
+      req.body.image = req.file.path;
+    }
     const collection = await collectionService.update(req.params.id, req.body);
     return res.status(201).json({
       data: collection,

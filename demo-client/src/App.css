@@ -58,3 +58,7 @@ body{
 .hidden{
   display: none;
 }
+
+.collection__image{
+  width: 200px;
+}

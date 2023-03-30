@@ -8,6 +8,10 @@ function Home({}) {
   const [collections, setCollections] = useState([]);
   const navigate = useNavigate()
 
+  useEffect(()=>{
+    if(!localStorage.getItem("token")) return navigate("/login")
+  })
+
   const getCollections = async (userId) => {
     const { data } = await getAllCollectionsWithoutTimelines(userId);
     console.log(data);
@@ -25,11 +29,17 @@ function Home({}) {
 
   const handleCreateCollection = async(e)=>{
     e.preventDefault();
-    const {title} = e.target;
-    const collection = {title: title.value}
+    const {title, description, image} = e.target;
+    
+    // When sending an encoded image we need to send it as multipart formData
+    const formData = new FormData();
 
-    const {data} = await createCollection(collection);
-    console.log(data);
+    // Appending the data
+    formData.append("image", image.files[0])
+    formData.append("description", description.value);
+    formData.append("title", title.value);
+
+    const {data} = await createCollection(formData);
     const tempCollections = [...collections];
     tempCollections.push(data.data);
     setCollections(tempCollections);
