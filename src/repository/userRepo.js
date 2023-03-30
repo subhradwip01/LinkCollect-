@@ -13,6 +13,7 @@ class UserRepository {
       throw error;
     }
   }
+  
   async verifyEmailtoken(token) {
     try {
       const user = await User.findOne({ emailToken: token });

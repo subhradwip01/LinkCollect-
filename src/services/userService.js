@@ -55,6 +55,7 @@ class UserService {
       throw error;
     }
   }
+  
   createToken(user) {
     try {
       console.log("in user", user);
@@ -63,6 +64,7 @@ class UserService {
     } catch (error) {
       console.log("Something went wrong in token creation.");
       throw error;
+
     }
   }
 
