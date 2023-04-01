@@ -5,7 +5,10 @@ const {
   GOOGLECLIENTSECRET,
   GOOGLECLIENTID,
   PRODUCTION,
-} = require("../config/serverConfig");
+} = require("../config");
+const UserService = require("../services/Userservice");
+
+const userService = new UserService();
 
 exports.googleAuth = async (req, res) => {
   const { code } = req.query;
@@ -13,23 +16,24 @@ exports.googleAuth = async (req, res) => {
   const accessToken = await getAccessTokenFromGoogle(code);
   const userData = await getUserDataFromAccessToken(accessToken);
 
-  let user = await User.findOne({ Email: userData.email });
+  let user = await User.findOne({ email: userData.email });
 
   if (!user) {
     user = await User.create({
-      Name: userData.name,
-      Email: userData.email.toLowerCase(),
-      ProfilePic: userData.picture,
+      name: userData.name,
+      email: userData.email,
     });
   }
 
-  req.session.userId = user._id;
+  // const token = Create a token
+  const token = userService.createToken({ user: user._id });
 
+  // Sending user Token as query to the client
   // changes on production
   if (PRODUCTION !== "production") {
-    return res.redirect("http://localhost:3000");
+    return res.redirect(`http://localhost:3000/login?token=${token}`);
   }
-  return res.redirect("/");
+  return res.redirect(`/?token=${token}`);
 };
 
 async function getAccessTokenFromGoogle(codeFromGoogle) {
