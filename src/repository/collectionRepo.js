@@ -5,11 +5,13 @@ class CollectionRepo {
     create = async (data) => {
         try {
             const collection = await Collection.create(data);
-            const user = await User.findById(data.userId);
+            const user = await User.findById(collection.userId);
+            console.log("in repo",user);
             user.Collections.push(collection);
             await user.save();
             return collection;
         } catch (error) {
+            console.log(error);
             throw error;
         }
     }

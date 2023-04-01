@@ -50,6 +50,7 @@ const getUser = async (req, res) => {
 const signIn = async(req,res) => {
     try {
         const response = await userService.signIn(req.body.email, req.body.password);
+        console.log(req.body);
         return res.status(201).json({
             message : "Successfully Signed In",
             data : response,

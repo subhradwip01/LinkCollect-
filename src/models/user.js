@@ -37,8 +37,7 @@ const userSchema = new Schema({
 
  userSchema.pre('save',function(next){
     //console.log("in hook",SALT);
-    const encryptedPassword = bcrypt.hashSync(this.password,Number(SALT)); 
-    this.password = encryptedPassword;
+    console.log(this);
     next();
  })
 
