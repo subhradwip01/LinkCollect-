@@ -30,7 +30,7 @@ export function googleAuth() {
   const query = queryString.stringify({
     client_id:
       "842762588000-kh4ksf014o6upmdklc1tukus5d4gi5ch.apps.googleusercontent.com",
-    redirect_uri: "http://localhost:5000/api/v1/user/google-auth",
+    redirect_uri: "https://linkcollect.io/api/v1/user/google-auth", // Changes on production
     scope: [
       "https://www.googleapis.com/auth/userinfo.email",
       "https://www.googleapis.com/auth/userinfo.profile",
