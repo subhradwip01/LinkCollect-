@@ -55,16 +55,15 @@ class UserService {
       throw error;
     }
   }
-  
+
   createToken(user) {
     try {
-      console.log("in user", user);
+      // console.log("in user", user);
       const result = jwt.sign(user, JWT_KEY, { expiresIn: "1h" });
       return result;
     } catch (error) {
       console.log("Something went wrong in token creation.");
       throw error;
-
     }
   }
 
@@ -86,7 +85,6 @@ class UserService {
       const encryptedPassword = user.password;
 
       const newP = bcrypt.hashSync(plainPassword, 12);
-      console.log("inwoooooososos", newP);
 
       const passwordMatch = this.checkPassword(
         plainPassword,

@@ -1,11 +1,8 @@
 import React, { useEffect } from 'react'
 import GoogleAuth from '../components/GoogleAuthBtn'
-import config from "../config.json"
 import { getUserById, login } from '../api-services/authService';
 import {Link, useLocation, useNavigate} from "react-router-dom"
 import jwt from "jsonwebtoken";
-
-const api = config.api;
 
 function Login({handleSetUser}) {  
   const location = useLocation();

@@ -6,7 +6,7 @@ const {
   GOOGLECLIENTID,
   PRODUCTION,
 } = require("../config");
-const UserService = require("../services/Userservice");
+const UserService = require("../services/userService");
 
 const userService = new UserService();
 
@@ -43,7 +43,7 @@ async function getAccessTokenFromGoogle(codeFromGoogle) {
     data: {
       client_id: GOOGLECLIENTID,
       client_secret: GOOGLECLIENTSECRET,
-      redirect_uri: GOOGLEREDIRECTURL, // changes on production
+      redirect_uri: GOOGLEREDIRECTURL,
       grant_type: "authorization_code",
       code: codeFromGoogle,
     },

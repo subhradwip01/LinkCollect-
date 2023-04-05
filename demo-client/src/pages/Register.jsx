@@ -2,9 +2,6 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
 import { register } from '../api-services/authService';
 import GoogleAuth from '../components/GoogleAuthBtn';
-import config from "../config.json"
-
-const api = config.api;
 
 function Register() {
   const [verifying, setVerifying] = useState(false)

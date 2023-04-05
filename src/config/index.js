@@ -5,7 +5,7 @@ dotenv.config();
 module.exports = {
   PRODUCTION: process.env.PRODUCTION,
   GOOGLECLIENTID: process.env.GOOGLE_CLIENT_ID,
-  GOOGLECLIENTSECRET: process.env.GOOGLE_SECRET_CLOUDINARY_KEY,
+  GOOGLECLIENTSECRET: process.env.GOOGLE_SECRET_API_KEY,
   GOOGLEREDIRECTURL: process.env.GOOGLE_REDIRECT_URI,
   DBURL: process.env.DBURL,
   SALT: process.env.ROUNDS,
@@ -15,5 +15,6 @@ module.exports = {
   CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME,
   CLOUDINARY_KEY: process.env.CLOUDINARY_KEY,
   CLOUDINARY_SECRET: process.env.CLOUDINARY_SECRET,
-  PORT:process.env.PORT
+  PORT: process.env.PORT,
+  BACKEND_URL: process.env.BACKEND_URL,
 };

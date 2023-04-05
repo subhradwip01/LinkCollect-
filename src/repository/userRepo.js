@@ -13,7 +13,7 @@ class UserRepository {
       throw error;
     }
   }
-  
+
   async verifyEmailtoken(token) {
     try {
       const user = await User.findOne({ emailToken: token });
@@ -59,7 +59,6 @@ class UserRepository {
   }
   async getByUserId(userId) {
     try {
-      console.log("Here", userId);
       const user = await User.findById(userId);
       return user;
     } catch (e) {
@@ -80,7 +79,6 @@ class UserRepository {
   }
 
   async getById(userId) {
-    console.log("here", userId);
     try {
       const user = await User.findAll({ id: userId });
       // delete user.password;

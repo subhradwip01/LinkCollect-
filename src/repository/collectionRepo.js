@@ -26,7 +26,6 @@ class CollectionRepo {
       const collection = await Collection.findById(id).populate({
         path: "timelines",
       });
-      console.log(`THE COLLECTION IS ${collection}`);
       return collection;
     } catch (error) {
       throw error;

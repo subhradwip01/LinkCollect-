@@ -50,7 +50,6 @@ function Home({}) {
   const handleCollectionDelete = async(collectionId)=>{
     // For instant ui change
     const tempCollections = collections.filter(c=>c._id!==collectionId);
-    console.log(tempCollections)
     setCollections(tempCollections);
 
     // Changing in the db

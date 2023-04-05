@@ -1,4 +1,5 @@
-const UserService = require("../services/Userservice");
+const { PRODUCTION } = require("../config");
+const UserService = require("../services/userService");
 
 const userService = new UserService();
 
