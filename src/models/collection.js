@@ -12,6 +12,10 @@ const CollectionSchema = new mongoose.Schema(
     description: {
       type: String,
     },
+    upvotes : [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Users",
+    }],
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Users",
