@@ -1,3 +1,4 @@
+const { collection } = require("../models/collection");
 const { Collection, User } = require("../models/index");
 
 class CollectionRepo {
@@ -60,5 +61,33 @@ class CollectionRepo {
       throw error;
     }
   };
+  upvote = async(collectionId,userId)=>{
+    try {
+      const collection = await Collection.findById(collectionId);
+      if(!collection){
+          throw new Error("Collection not found");
+      }
+      collection.upvotes.addToSet(userId);
+      await collection.save();
+      return collection;
+
+    } catch (error) {
+      throw error;
+    }
+  }
+  downvote = async(collectionId,userId)=>{
+     try {
+        const collection = await Collection.findById(collectionId);
+        console.log(collection);
+        if(!collection){
+          throw new Error("Collection not found");
+      }
+      collection.upvotes.pull(userId);
+      await collection.save();
+      return collection;
+     } catch (error) {
+      throw error;
+     }
+  }
 }
 module.exports = CollectionRepo;
