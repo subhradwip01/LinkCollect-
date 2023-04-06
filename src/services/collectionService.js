@@ -1,11 +1,13 @@
 const CollectionRepo = require("../repository/collectionRepo");
 
+
 class CollectionService {
   constructor() {
     this.collectionRepo = new CollectionRepo();
   }
     create = async (data, userId) => {
       try {
+      
       const collection = await this.collectionRepo.create(data, userId);
       return collection;
     } catch (error) {
