@@ -17,13 +17,13 @@ class UserRepository {
   async verifyEmailtoken(token) {
     try {
       const user = await User.findOne({ emailToken: token });
-      console.log("verifying user");
+      console.log("verifying user",token);
       if (!user) {
         console.log("User dosent exist");
         throw error;
       }
       var data = {
-        emailtoken: null,
+        emailToken: null,
         verified: 1,
       };
       //   await User.update(data, {
@@ -31,7 +31,7 @@ class UserRepository {
       //       emailtoken: token
       //     }
       //   });
-      await User.findOneAndUpdate({ emailtoken: token }, data);
+      await User.findOneAndUpdate({ emailToken: token }, data);
       return user;
     } catch (error) {
       console.log("Something went wrong in the verification of mail");

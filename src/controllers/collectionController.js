@@ -22,10 +22,12 @@ const collectionService = new CollectionService();
 const create = async (req, res) => {
   try {
     // Adding image url we got from cloudinary to req.body
+    //console.log(req.body,req.user);
     if (req.file) {
       req.body.image = req.file.path;
     }
-    const collection = await collectionService.create(req.body, req.user);
+    //here i'm making a change
+    const collection = await collectionService.create(req.body, req.body.userId);
     return res.status(201).json({
       data: collection,
       success: true,

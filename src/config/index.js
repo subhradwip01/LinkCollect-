@@ -16,5 +16,5 @@ module.exports = {
   CLOUDINARY_KEY: process.env.CLOUDINARY_KEY,
   CLOUDINARY_SECRET: process.env.CLOUDINARY_SECRET,
   PORT: process.env.PORT,
-  BACKEND_URL: process.env.BACKEND_URL,
+  BACKEND_URL: process.env.BASE_URL,
 };
