@@ -17,5 +17,7 @@ router.get("/", collectionController.getAllWithTimeline);
 router.post("/", upload.single("image"), collectionController.create);
 router.patch("/:id", upload.single("image"), collectionController.update);
 router.delete("/:id", collectionController.deleteCollection);
+router.post("/:id/upvote",collectionController.upvote);
+router.post('/:id/downvote',collectionController.downvote);
 
 module.exports = router;

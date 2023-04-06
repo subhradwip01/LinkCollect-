@@ -53,6 +53,22 @@ class CollectionService {
       throw error;
     }
   };
+  upvote = async(collectionId,userId) => {
+    try {
+      const collection = await this.collectionRepo.upvote(collectionId,userId);
+      return collection;
+    } catch (error) {
+      throw error;
+    }
+  };
+  downvote = async(collectionId,userId) => {
+    try {
+      const collection = await this.collectionRepo.downvote(collectionId,userId);
+      return collection;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 module.exports = CollectionService;

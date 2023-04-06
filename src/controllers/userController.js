@@ -192,18 +192,18 @@ const verifyEmailtoken = async (req, res) => {
   try {
     const response = await userService.verifyEmailtoken(req.query.token);
     // Changes on production
-   /* const token = userService.createToken({ user: response._id });
+    const token = userService.createToken({ user: response._id });
 
     if (PRODUCTION !== "production") {
       return res.redirect(`http://localhost:3000/login?token=${token}`);
      } 
-    return res.redirect(`/?token=${token}`); */
-    return res.status(201).json({
-      success: true,
-      message: "email verified",
-      data: response,
-      err: {},
-    });
+    return res.redirect(`/?token=${token}`); 
+    // return res.status(201).json({
+    //   success: true,
+    //   message: "email verified",
+    //   data: response,
+    //   err: {},
+    // });
   } catch (error) {
     console.log(error);
     return res.status(500).json({

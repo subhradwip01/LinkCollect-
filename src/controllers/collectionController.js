@@ -1,24 +1,6 @@
 const CollectionService = require("../services/collectionService");
 const collectionService = new CollectionService();
 
-// const create = async (req,res) =>{
-//     try {
-       
-//         const collection = await collectionService.create(req.body);
-//         return res.status(201).json({
-//             data : collection,
-//             success : true,
-//             message : 'Successfully created a Collection',
-//             err : {},
-//         })
-//     } catch (error) {
-//         return res.status(500).json({
-//             data : {},
-//             success : false,
-//             message : 'Not able to create Collections',
-//             err : error
-//         })
-//       }};
 const create = async (req, res) => {
   try {
     // Adding image url we got from cloudinary to req.body
@@ -139,6 +121,46 @@ const getAllWithTimeline = async (req, res) => {
   }
 };
 
+//here instead of req.body , you can also use req.user.id in production
+const upvote = async(req,res)=>{
+  try {
+    const collection = await collectionService.upvote(req.params.id,req.body.userId);
+    return res.status(201).json({
+      data: collection,
+      success: true,
+      message: "Successfully upvoted a Collection",
+      err: {},
+    });
+  } catch (error) {
+    return res.status(500).json({
+      data: {},
+      success: false,
+      message: "Not able to upvote the Collection",
+      err: error,
+    });
+  }
+}
+//here instead of req.body , you can also use req.user.id in production
+const downvote = async(req,res)=>{
+  try {
+    console.log(req.body.userId);
+    const collection = await collectionService.downvote(req.params.id,req.body.userId);
+    return res.status(201).json({
+      data: collection,
+      success: true,
+      message: "Successfully downvoted a Collection",
+      err: {},
+    });
+  } catch (error) {
+    return res.status(500).json({
+      data: {},
+      success: false,
+      message: "Not able to downvote the Collection",
+      err: error,
+    });
+  }
+}
+
 module.exports = {
   create,
   deleteCollection,
@@ -146,4 +168,6 @@ module.exports = {
   getAll,
   get,
   getAllWithTimeline,
+  upvote,
+  downvote
 };
