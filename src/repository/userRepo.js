@@ -88,6 +88,14 @@ class UserRepository {
       throw error;
     }
   }
+  async getUserBymail(userEmail){
+    try {
+      const response = await User.findOne({email : userEmail});
+      return response;
+    } catch (error) {
+       throw error;
+    }
+  }
 }
 
 module.exports = UserRepository;

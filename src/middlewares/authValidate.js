@@ -1,3 +1,6 @@
+const UserRepository = require('../repository/userRepo');
+const userRepo = new UserRepository();
+
 const validateUserAuthforSignUp = (req, res, next) => {
   //  console.log('middleware',req.body);
   if (!req.body.name || !req.body.email || !req.body.password) {
@@ -48,9 +51,25 @@ const validateGrantRoleRequest = (req, res, next) => {
   next();
 };
 
+const userExist = async (req,res,next) => {
+   const userEmail = req.body.email;
+   const user = await userRepo.getByEmail(userEmail);
+  // console.log(user);
+   if(user){
+    return res.status(400).json({
+      success: false,
+      err: "User already exits",
+      message: "Please login, Because this email exists",
+      data: {},
+    });
+  }
+  next();
+}
+
 module.exports = {
   validateUserAuthforSignIn,
   validateUserAuthforSignUp,
   validateisAdminRequest,
   validateGrantRoleRequest,
+  userExist
 };
