@@ -1,5 +1,6 @@
 const axios = require("axios");
 const User = require("../models/user");
+const { generateFromEmail, generateUsername } = require("unique-username-generator");
 const {
   GOOGLEREDIRECTURL,
   GOOGLECLIENTSECRET,
@@ -22,6 +23,7 @@ exports.googleAuth = async (req, res) => {
     user = await User.create({
       name: userData.name,
       email: userData.email,
+      username:generateUsername("", 3),
     });
   }
 
