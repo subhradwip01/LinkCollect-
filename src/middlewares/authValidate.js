@@ -71,6 +71,7 @@ const userExist = async (req,res,next) => {
 const isPublicCheck= async(req,res,next) => {
   const userId = req.body.userId;
   const collection = await collectionRepo.get(req.params.id);
+  
   if(!collection.isPublic && userId != collection.userId ){
     return res.status(400).json({
       success:false,

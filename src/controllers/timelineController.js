@@ -4,6 +4,7 @@ const timelineService = new TimelineService();
 const create = async (req, res) => {
   try {
     const { id: collectionId } = req.params;
+    console.log(collectionId);
     const timeline = await timelineService.create(req.body, collectionId);
     return res.status(201).json({
       data: timeline,

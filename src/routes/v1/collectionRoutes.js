@@ -13,7 +13,10 @@ const upload = multer({
 // Special Route
 router.get("/without-timelines", collectionController.getAll);
 
+
+// this route wants the userId in body and collectionId in query params
 router.get("/:id",isPublicCheck,collectionController.get);
+
 router.get("/", collectionController.getAllWithTimeline);
 router.post("/", upload.single("image"), collectionController.create);
 router.patch("/:id", upload.single("image"), collectionController.update);

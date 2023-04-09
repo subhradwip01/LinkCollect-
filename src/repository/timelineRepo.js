@@ -5,7 +5,6 @@ class TimelineRepo {
     try {
       // console.log("repositroy");
       const timeline = await Timeline.create(data);
-      console.log("success");
       //push into the corresponding collection
       const collection = await Collection.findById(collectionId);
       //  console.log(collection);
