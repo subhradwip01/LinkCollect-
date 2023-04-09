@@ -1,6 +1,9 @@
 const axios = require("axios");
 const User = require("../models/user");
-const { generateFromEmail, generateUsername } = require("unique-username-generator");
+const {
+  generateFromEmail,
+  generateUsername,
+} = require("unique-username-generator");
 const {
   GOOGLEREDIRECTURL,
   GOOGLECLIENTSECRET,
@@ -20,10 +23,10 @@ exports.googleAuth = async (req, res) => {
   let user = await User.findOne({ email: userData.email });
 
   if (!user) {
-      user = await User.create({
+    user = await User.create({
       name: userData.name,
       email: userData.email,
-      username:generateUsername("", 3),
+      username: generateUsername("", 3),
     });
   }
 
@@ -35,7 +38,7 @@ exports.googleAuth = async (req, res) => {
   if (PRODUCTION !== "production") {
     return res.redirect(`http://localhost:3000/login?token=${token}`);
   }
-  return res.redirect(`/?token=${token}`);
+  return res.redirect(`/login?token=${token}`);
 };
 
 async function getAccessTokenFromGoogle(codeFromGoogle) {

@@ -196,8 +196,8 @@ const verifyEmailtoken = async (req, res) => {
 
     if (PRODUCTION !== "production") {
       return res.redirect(`http://localhost:3000/login?token=${token}`);
-     } 
-    return res.redirect(`/?token=${token}`); 
+    }
+    return res.redirect(`/login?token=${token}`);
     // return res.status(201).json({
     //   success: true,
     //   message: "email verified",
