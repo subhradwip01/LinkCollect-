@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const collectionController = require("../../controllers/collectionController");
+const {isPublicCheck} = require('../../middlewares/authValidate');
 const multer = require("multer");
 const { storage } = require("../../cloudinary");
 const upload = multer({
@@ -12,7 +13,7 @@ const upload = multer({
 // Special Route
 router.get("/without-timelines", collectionController.getAll);
 
-router.get("/:id", collectionController.get);
+router.get("/:id",isPublicCheck,collectionController.get);
 router.get("/", collectionController.getAllWithTimeline);
 router.post("/", upload.single("image"), collectionController.create);
 router.patch("/:id", upload.single("image"), collectionController.update);

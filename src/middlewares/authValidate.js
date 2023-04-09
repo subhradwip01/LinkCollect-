@@ -1,5 +1,7 @@
 const UserRepository = require('../repository/userRepo');
 const userRepo = new UserRepository();
+const CollectionRepo = require('../repository/collectionRepo');
+const collectionRepo = new CollectionRepo();
 
 const validateUserAuthforSignUp = (req, res, next) => {
   //  console.log('middleware',req.body);
@@ -64,6 +66,20 @@ const userExist = async (req,res,next) => {
     });
   }
   next();
+};
+
+const isPublicCheck= async(req,res,next) => {
+  const userId = req.body.userId;
+  const collection = await collectionRepo.get(req.params.id);
+  if(!collection.isPublic && userId != collection.userId ){
+    return res.status(400).json({
+      success:false,
+      message:"Collection is not Public",
+      err: "Not a Public Collection",
+      data : {},
+    });
+  }
+  next();
 }
 
 module.exports = {
@@ -71,5 +87,6 @@ module.exports = {
   validateUserAuthforSignUp,
   validateisAdminRequest,
   validateGrantRoleRequest,
-  userExist
+  userExist,
+  isPublicCheck
 };
