@@ -6,11 +6,16 @@ const catchAsync = require("../../utils/catchAsync");
 const {
   validateUserAuthforSignIn,
   validateUserAuthforSignUp,
-  userExist
+  userExist,
 } = require("../../middlewares/authValidate");
 
 router.get("/get-user/:id", UserControllers.getByUserId);
-router.post("/signup", validateUserAuthforSignUp,userExist, UserControllers.create);
+router.post(
+  "/signup",
+  validateUserAuthforSignUp,
+  userExist,
+  UserControllers.create
+);
 router.post("/signin", validateUserAuthforSignIn, UserControllers.signIn);
 
 // For email verification
