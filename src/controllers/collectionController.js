@@ -86,6 +86,7 @@ const get = async (req, res) => {
 };
 const getAll = async (req, res) => {
   try {
+    console.log("hello");
     const collection = await collectionService.getAll(req.user);
     return res.status(201).json({
       data: collection,

@@ -12,6 +12,10 @@ const CollectionSchema = new mongoose.Schema(
     description: {
       type: String,
     },
+    isPublic : {
+        type : Boolean,
+        default : true,
+    },
     upvotes : [{
       type: mongoose.Schema.Types.ObjectId,
       ref: "Users",

@@ -26,7 +26,7 @@ exports.googleAuth = async (req, res) => {
     user = await User.create({
       name: userData.name,
       email: userData.email,
-      username: generateUsername("", 3),
+      username:userData.email.split('@')[0],
     });
   }
 

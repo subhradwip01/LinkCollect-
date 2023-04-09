@@ -8,6 +8,7 @@ class TimelineService {
       // console.log("up",data);
       // data.collectionId = mongoose.Types.ObjectId(data.collectionId); // this line creating problem
       // console.log(data);
+      data.collectionId = collectionId;
       const timeline = await this.timelineRepo.createtimeline(
         data,
         collectionId
