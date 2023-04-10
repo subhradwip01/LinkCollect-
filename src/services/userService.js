@@ -3,7 +3,6 @@ const { JWT_KEY, SALT } = require("../config");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 var randomBytes = require("randombytes");
-const { generateFromEmail, generateUsername } = require("unique-username-generator");
 
 class UserService {
   constructor() {
@@ -11,7 +10,7 @@ class UserService {
   }
   async create(data) {
     try {
-      data.username = generateUsername("", 3);
+      data.username = data.email.split('@')[0];
       data.emailToken = randomBytes(32).toString("hex");
       data.verified = 0;
       const user = await this.userRepository.create(data);
