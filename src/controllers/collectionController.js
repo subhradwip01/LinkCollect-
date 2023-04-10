@@ -9,7 +9,7 @@ const create = async (req, res) => {
       req.body.image = req.file.path;
     }
     //here i'm making a change
-    const collection = await collectionService.create(req.body, req.body.userId);
+    const collection = await collectionService.create(req.body, req.user);
     return res.status(201).json({
       data: collection,
       success: true,
@@ -121,10 +121,10 @@ const getAllWithTimeline = async (req, res) => {
   }
 };
 
-//here instead of req.body , you can also use req.user.id in production
-const upvote = async(req,res)=>{
+// here instead of req.body , you can also use req.user.id in production
+const upvote = async (req, res) => {
   try {
-    const collection = await collectionService.upvote(req.params.id,req.body.userId);
+    const collection = await collectionService.upvote(req.params.id, req.user);
     return res.status(201).json({
       data: collection,
       success: true,
@@ -139,12 +139,14 @@ const upvote = async(req,res)=>{
       err: error,
     });
   }
-}
+};
 //here instead of req.body , you can also use req.user.id in production
-const downvote = async(req,res)=>{
+const downvote = async (req, res) => {
   try {
-    console.log(req.body.userId);
-    const collection = await collectionService.downvote(req.params.id,req.body.userId);
+    const collection = await collectionService.downvote(
+      req.params.id,
+      req.user
+    );
     return res.status(201).json({
       data: collection,
       success: true,
@@ -159,7 +161,7 @@ const downvote = async(req,res)=>{
       err: error,
     });
   }
-}
+};
 
 module.exports = {
   create,
@@ -169,5 +171,5 @@ module.exports = {
   get,
   getAllWithTimeline,
   upvote,
-  downvote
+  downvote,
 };
