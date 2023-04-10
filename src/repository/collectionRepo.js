@@ -5,12 +5,16 @@ class CollectionRepo {
   create = async (data, userId) => {
     try {
       const collection = await Collection.create({ ...data, userId });
-      const user = await User.findById(userId);
-      user.collections.push(collection);
-      await user.save();
+      //console.log(collection);
+        const user = await User.findById(userId);
+        if(!user){
+          await Collection.findByIdAndDelete(collection._id);
+          throw new Error("User ID is not a Valid ID");
+        }
+        user.collections.push(collection);
+        await user.save();
       return collection;
     } catch (error) {
-      console.log(error);
       throw error;
     }
   };
