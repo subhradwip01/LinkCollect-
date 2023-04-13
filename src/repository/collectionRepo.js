@@ -1,4 +1,3 @@
-const { collection } = require("../models/collection");
 const { Collection, User } = require("../models/index");
 
 class CollectionRepo {
