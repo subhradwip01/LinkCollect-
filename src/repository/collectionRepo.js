@@ -17,6 +17,19 @@ class CollectionRepo {
       throw error;
     }
   };
+  async togglePrivacy(userId){
+    try {
+      //console.log("userid",userId);
+       const collection = await Collection.findById(userId);
+      collection.isPublic = !collection.isPublic;
+      await collection.save();
+     // console.log(collection);
+      return collection;
+    } catch (error) {
+      console.log("Something went wrong at repository layer", error);
+      throw error;
+    }
+  }
   delete = async (id) => {
     try {
       const collection = await Collection.findByIdAndRemove(id);

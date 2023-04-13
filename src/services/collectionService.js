@@ -14,6 +14,16 @@ class CollectionService {
       throw error;
     }
   };
+  async togglePrivacy(userId) {
+    try {
+     
+      const collection = await this.collectionRepo.togglePrivacy(userId);
+      return collection;
+    } catch (error) {
+      console.log("Something went wrong Service layer.");
+      throw error;
+    }
+  }
   update = async (id, data) => {
     try {
       const collection = await this.collectionRepo.update(id, data);

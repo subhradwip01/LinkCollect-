@@ -2,6 +2,7 @@ const CollectionService = require("../services/collectionService");
 const collectionService = new CollectionService();
 
 const create = async (req, res) => {
+  
   try {
     // Adding image url we got from cloudinary to req.body
     //console.log(req.body,req.user);
@@ -25,6 +26,28 @@ const create = async (req, res) => {
     });
   }
 };
+
+const togglePrivacy = async(req,res) => {
+  try {
+    const collection = await collectionService.togglePrivacy(req.params.id);
+    let isPublic;
+    isPublic = collection.isPublic?"Public":"Private";
+    return res.status(201).json({
+     success: true,
+     message: `Successfully made your collection ${isPublic}`,
+     data: collection,
+     err: {},
+     });
+  } catch (error) {
+    console.log(error);
+   return res.status(404).json({
+     message: error.message,
+     data: {},
+     success: false,
+     err: error.explanation,
+   });
+  }
+}
 const deleteCollection = async (req, res) => {
   try {
     const collection = await collectionService.delete(req.params.id);
@@ -173,4 +196,5 @@ module.exports = {
   getAllWithTimeline,
   upvote,
   downvote,
+  togglePrivacy
 };

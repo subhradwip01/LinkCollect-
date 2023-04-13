@@ -82,11 +82,12 @@ const isPublicCheck= async(req,res,next) => {
   }
   next();
 }
-const isPublicUserCheck = async(req,res,next) =>{
-  const userId = req.params.id;   // Can be done with username also
- // console.log(userId);
-  const user = await userRepo.getByUserId(userId);
-  if(!user.isPublic){
+const checkWhenSomeoneisFetchigCollection= async(req,res,next) => {
+  const collectionId = req.params.id;
+  const userId = req.body.userId;
+  const collection = await collectionRepo.get(collectionId);
+  const user = await userRepo.getByUserId(collection.userId);
+  if(user.id != userId && !user.isPublic) {
     return res.status(400).json({
       success:false,
       message:"User is not Public",
@@ -94,7 +95,30 @@ const isPublicUserCheck = async(req,res,next) =>{
       data : {},
     });
   }
-  console.log(user);
+  next();
+}
+const isPublicUserCheck = async(req,res,next) =>{
+  //const userId = req.params.id;   // Can be done with username also
+  const userId = req.body.userId;
+ // console.log(userId);
+  const user = await userRepo.getByUserId(userId);
+  if(!user){
+    return res.status(400).json({
+      success:false,
+      message:"User does not exist by this UserId",
+      err: "User not Exist",
+      data : {},
+    });
+  }
+  if(userId!==user.id&&!user.isPublic){
+    return res.status(400).json({
+      success:false,
+      message:"User is not Public",
+      err: "Not a Public User",
+      data : {},
+    });
+  }
+  //console.log(user);
   next();
 }
 
@@ -103,6 +127,7 @@ module.exports = {
   validateUserAuthforSignUp,
   validateisAdminRequest,
   validateGrantRoleRequest,
+  checkWhenSomeoneisFetchigCollection,
   userExist,
   isPublicCheck,
   isPublicUserCheck

@@ -18,6 +18,8 @@ router.post(
   UserControllers.create
 );
 router.post("/signin", validateUserAuthforSignIn, UserControllers.signIn);
+
+//toggle account privacy
 router.post('/toggleAccount/:id',UserControllers.togglePrivacy);
 
 // For email verification
