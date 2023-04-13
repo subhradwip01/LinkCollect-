@@ -84,7 +84,7 @@ const isPublicCheck= async(req,res,next) => {
 }
 const checkWhenSomeoneisFetchigCollection= async(req,res,next) => {
   const collectionId = req.params.id;
-  const userId = req.body.userId;
+  const userId = req.body.userId; // here you can do req.user
   const collection = await collectionRepo.get(collectionId);
   const user = await userRepo.getByUserId(collection.userId);
   if(user.id != userId && !user.isPublic) {
@@ -98,9 +98,9 @@ const checkWhenSomeoneisFetchigCollection= async(req,res,next) => {
   next();
 }
 const isPublicUserCheck = async(req,res,next) =>{
-  //const userId = req.params.id;   // Can be done with username also
-  const userId = req.body.userId;
- // console.log(userId);
+  const userId = req.params.id;   // Can be done with username also
+ // here we will need a userid which we want to fetch and the userId which is fetching that user,
+  const superUser = req.body.userId;
   const user = await userRepo.getByUserId(userId);
   if(!user){
     return res.status(400).json({
@@ -110,7 +110,8 @@ const isPublicUserCheck = async(req,res,next) =>{
       data : {},
     });
   }
-  if(userId!==user.id&&!user.isPublic){
+  //console.log(superUser,user.id);
+  if(superUser!==user.id &&!user.isPublic){
     return res.status(400).json({
       success:false,
       message:"User is not Public",

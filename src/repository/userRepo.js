@@ -69,7 +69,7 @@ class UserRepository {
   }
   async getByUserId(userId) {
     try {
-      const user = await User.findById(userId);
+      const user = await User.findById(userId).populate(({path:"collections"})).lean();
       return user;
     } catch (e) {
       console.log("Something went wrong in fetching the user");
