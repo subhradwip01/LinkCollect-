@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const collectionController = require("../../controllers/collectionController");
-const {isPublicCheck} = require('../../middlewares/authValidate');
+const {isPublicCheck} = require('../../middlewares/validateRequests');
 const multer = require("multer");
 const { storage } = require("../../cloudinary");
 const upload = multer({

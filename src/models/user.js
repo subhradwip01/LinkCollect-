@@ -26,6 +26,10 @@ const userSchema = new Schema(
     password: {
       type: String,
     },
+    isPublic : {
+      type:Boolean,
+      default : true
+    },
     collections: [
       {
         type: mongoose.Schema.Types.ObjectId,

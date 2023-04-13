@@ -13,7 +13,17 @@ class UserRepository {
       throw error;
     }
   }
-
+  async togglePrivacy(userId){
+    try {
+       const user = await User.findById(userId);
+      user.isPublic = !user.isPublic;
+      await user.save();
+      return user;
+    } catch (error) {
+      console.log("Something went wrong at repository layer", error);
+      throw error;
+    }
+  }
   async verifyEmailtoken(token) {
     try {
       const user = await User.findOne({ emailToken: token });
@@ -77,25 +87,7 @@ class UserRepository {
       throw error;
     }
   }
-
-  async getById(userId) {
-    try {
-      const user = await User.findAll({ id: userId });
-      // delete user.password;
-      return user;
-    } catch (error) {
-      console.log("Something went wrong at repository layer");
-      throw error;
-    }
+ 
   }
-  async getUserBymail(userEmail){
-    try {
-      const response = await User.findOne({email : userEmail});
-      return response;
-    } catch (error) {
-       throw error;
-    }
-  }
-}
 
 module.exports = UserRepository;

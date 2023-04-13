@@ -1,7 +1,7 @@
-const UserRepository = require('../repository/userRepo');
-const userRepo = new UserRepository();
-const CollectionRepo = require('../repository/collectionRepo');
+const CollectionRepo= require('../repository/collectionRepo');
+const UserRepo = require('../repository/userRepo');
 const collectionRepo = new CollectionRepo();
+const userRepo = new UserRepo();
 
 const validateUserAuthforSignUp = (req, res, next) => {
   //  console.log('middleware',req.body);
@@ -69,7 +69,7 @@ const userExist = async (req,res,next) => {
 };
 
 const isPublicCheck= async(req,res,next) => {
-  const userId = req.body.userId;
+  const userId = req.body.userId; // here you can change to req.user
   const collection = await collectionRepo.get(req.params.id);
   
   if(!collection.isPublic && userId != collection.userId ){
@@ -82,6 +82,21 @@ const isPublicCheck= async(req,res,next) => {
   }
   next();
 }
+const isPublicUserCheck = async(req,res,next) =>{
+  const userId = req.params.id;   // Can be done with username also
+ // console.log(userId);
+  const user = await userRepo.getByUserId(userId);
+  if(!user.isPublic){
+    return res.status(400).json({
+      success:false,
+      message:"User is not Public",
+      err: "Not a Public User",
+      data : {},
+    });
+  }
+  console.log(user);
+  next();
+}
 
 module.exports = {
   validateUserAuthforSignIn,
@@ -89,5 +104,6 @@ module.exports = {
   validateisAdminRequest,
   validateGrantRoleRequest,
   userExist,
-  isPublicCheck
+  isPublicCheck,
+  isPublicUserCheck
 };

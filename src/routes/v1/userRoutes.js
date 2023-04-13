@@ -7,9 +7,10 @@ const {
   validateUserAuthforSignIn,
   validateUserAuthforSignUp,
   userExist,
-} = require("../../middlewares/authValidate");
+  isPublicUserCheck
+} = require("../../middlewares/validateRequests");
 
-router.get("/get-user/:id", UserControllers.getByUserId);
+router.get("/get-user/:id",isPublicUserCheck,UserControllers.getByUserId);
 router.post(
   "/signup",
   validateUserAuthforSignUp,
@@ -17,6 +18,7 @@ router.post(
   UserControllers.create
 );
 router.post("/signin", validateUserAuthforSignIn, UserControllers.signIn);
+router.post('/toggleAccount/:id',UserControllers.togglePrivacy);
 
 // For email verification
 router.get("/verify-email", UserControllers.verifyEmailtoken);

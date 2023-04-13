@@ -20,6 +20,15 @@ class UserService {
       throw error;
     }
   }
+  async togglePrivacy(userId) {
+    try {
+      const user = await this.userRepository.togglePrivacy(userId);
+      return user;
+    } catch (error) {
+      console.log("Something went wrong Service layer.");
+      throw error;
+    }
+  }
   async destroy(data) {
     try {
       const user = await this.userRepository.destroy(data);

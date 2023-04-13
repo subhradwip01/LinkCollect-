@@ -5,11 +5,7 @@ const userService = new UserService();
 
 const create = async (req, res) => {
   try {
-    const response = await userService.create({
-      name: req.body.name,
-      email: req.body.email,
-      password: req.body.password,
-    });
+    const response = await userService.create(req.body);
     return res.status(201).json({
       success: true,
       message: "Successfully created a new user",
@@ -27,7 +23,27 @@ const create = async (req, res) => {
   }
 };
 
-
+const togglePrivacy = async(req,res) => {
+   try {
+     const user = await userService.togglePrivacy(req.params.id);
+     let isPublic;
+     isPublic = user.isPublic?"Public":"Private";
+     return res.status(201).json({
+      success: true,
+      message: `Successfully made your account ${isPublic}`,
+      data: user,
+      err: {},
+    });
+    
+   } catch (error) {
+    return res.status(error.statusCode).json({
+      message: error.message,
+      data: {},
+      success: false,
+      err: error.explanation,
+    });
+   }
+}
 
 const signIn = async (req, res) => {
   try {
@@ -162,6 +178,7 @@ module.exports = {
   create,
   // getUser,
   signIn,
+  togglePrivacy,
   isAuthenticated,
   verifyEmailtoken,
   getByUserId,
