@@ -1,4 +1,5 @@
 const TimelineRepo = require("../repository/timelineRepo");
+const CollectionRepo = require('../repository/collectionRepo');
 class TimelineService {
   constructor() {
     this.timelineRepo = new TimelineRepo();

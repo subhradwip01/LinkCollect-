@@ -6,7 +6,7 @@ const router = express.Router({ mergeParams: true }); // merge params will make 
 
 // Postioning of routes matter, let the specific routes come before general routes
 
-router.post("/", isCollectionOwner, timelineController.create);
+router.post("/", isCollectionOwner , timelineController.create);
 
 router.patch(
   "/:timelineId",

@@ -9,6 +9,7 @@ const create = async (req, res) => {
     if (req.file) {
       req.body.image = req.file.path;
     }
+    //console.log("hello");
     //here i'm making a change
     const collection = await collectionService.create(req.body, req.user);
     return res.status(201).json({
