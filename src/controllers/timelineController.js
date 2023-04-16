@@ -23,6 +23,7 @@ const create = async (req, res) => {
 const deleteTimeline = async (req, res) => {
   try {
     const { timelineId, id: collectionId } = req.params;
+    console.log(timelineId,collectionId);
     const timeline = await timelineService.delete(timelineId, collectionId);
     return res.status(201).json({
       data: timeline,
