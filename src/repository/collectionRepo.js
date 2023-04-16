@@ -1,29 +1,29 @@
 const { Collection, User } = require("../models/index");
 
 class CollectionRepo {
-  create = async (data, userId) => {
+  create = async (data) => {
     try {
-      const collection = await Collection.create({ ...data, userId });
+      const collection = await Collection.create({ ...data });
       //console.log(collection);
-        const user = await User.findById(userId);
-        if(!user){
-          await Collection.findByIdAndDelete(collection._id);
-          throw new Error("User ID is not a Valid ID");
-        }
-        user.collections.push(collection);
-        await user.save();
+      const user = await User.findById(data.userId);
+      if (!user) {
+        await Collection.findByIdAndDelete(collection._id);
+        throw new Error("User ID is not a Valid ID");
+      }
+      user.collections.push(collection);
+      await user.save();
       return collection;
     } catch (error) {
       throw error;
     }
   };
-  async togglePrivacy(userId){
+  async togglePrivacy(userId) {
     try {
       //console.log("userid",userId);
-       const collection = await Collection.findById(userId);
+      const collection = await Collection.findById(userId);
       collection.isPublic = !collection.isPublic;
       await collection.save();
-     // console.log(collection);
+      // console.log(collection);
       return collection;
     } catch (error) {
       console.log("Something went wrong at repository layer", error);
@@ -79,6 +79,27 @@ class CollectionRepo {
       throw error;
     }
   };
+
+  getAllByUsername = async (username, ownsUsername) => {
+    console.log(username)
+    try {
+      if (!ownsUsername) {
+        const collection = await Collection.find({ username, isPublic: true })
+          .populate({ path: "timelines" })
+          .lean();
+        return collection;
+      }
+      else {
+        const collection = await Collection.find({ username })
+          .populate({ path: "timelines" })
+          .lean();
+        return collection;
+      }
+    } catch (error) {
+      throw error;
+    }
+  };
+
   update = async (id, data) => {
     try {
       // console.log(data);
@@ -90,11 +111,11 @@ class CollectionRepo {
       throw error;
     }
   };
-  upvote = async(collectionId,userId)=>{
+  upvote = async (collectionId, userId) => {
     try {
       const collection = await Collection.findById(collectionId);
-      if(!collection){
-          throw new Error("Collection not found");
+      if (!collection) {
+        throw new Error("Collection not found");
       }
       collection.upvotes.addToSet(userId);
       await collection.save();
@@ -104,19 +125,19 @@ class CollectionRepo {
       throw error;
     }
   }
-  downvote = async(collectionId,userId)=>{
-     try {
-        const collection = await Collection.findById(collectionId);
-        console.log(collection);
-        if(!collection){
-          throw new Error("Collection not found");
+  downvote = async (collectionId, userId) => {
+    try {
+      const collection = await Collection.findById(collectionId);
+      console.log(collection);
+      if (!collection) {
+        throw new Error("Collection not found");
       }
       collection.upvotes.pull(userId);
       await collection.save();
       return collection;
-     } catch (error) {
+    } catch (error) {
       throw error;
-     }
+    }
   }
 }
 module.exports = CollectionRepo;

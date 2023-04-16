@@ -1,4 +1,4 @@
-const CollectionRepo= require('../repository/collectionRepo');
+const CollectionRepo = require('../repository/collectionRepo');
 const UserRepo = require('../repository/userRepo');
 const collectionRepo = new CollectionRepo();
 const userRepo = new UserRepo();
@@ -53,11 +53,11 @@ const validateGrantRoleRequest = (req, res, next) => {
   next();
 };
 
-const userExist = async (req,res,next) => {
-   const userEmail = req.body.email;
-   const user = await userRepo.getByEmail(userEmail);
+const userExist = async (req, res, next) => {
+  const userEmail = req.body.email;
+  const user = await userRepo.getByEmail(userEmail);
   // console.log(user);
-   if(user){
+  if (user) {
     return res.status(400).json({
       success: false,
       err: "User already exits",
@@ -68,58 +68,35 @@ const userExist = async (req,res,next) => {
   next();
 };
 
-const isPublicCheck= async(req,res,next) => {
-  const userId = req.body.userId; // here you can change to req.user
+// Change to req.userId
+const isPublicCheck = async (req, res, next) => {
+  const userId = req.userId;
   const collection = await collectionRepo.get(req.params.id);
-  
-  if(!collection.isPublic && userId != collection.userId ){
+
+  if (!collection.isPublic && userId != collection.userId) {
     return res.status(400).json({
-      success:false,
-      message:"Collection is not Public",
+      success: false,
+      message: "Collection is not Public",
       err: "Not a Public Collection",
-      data : {},
+      data: {},
     });
   }
   next();
 }
-const checkWhenSomeoneisFetchigCollection= async(req,res,next) => {
+
+const checkWhenSomeoneisFetchigCollection = async (req, res, next) => {
   const collectionId = req.params.id;
-  const userId = req.body.userId; // here you can do req.user
+  const userId = req.userId; // Change to req.userId
   const collection = await collectionRepo.get(collectionId);
   const user = await userRepo.getByUserId(collection.userId);
-  if(user.id != userId && !user.isPublic) {
+  if (user.id != userId && !user.isPublic) {
     return res.status(400).json({
-      success:false,
-      message:"User is not Public",
+      success: false,
+      message: "User is not Public",
       err: "Not a Public User",
-      data : {},
+      data: {},
     });
   }
-  next();
-}
-const isPublicUserCheck = async(req,res,next) =>{
-  const userId = req.params.id;   // Can be done with username also
- // here we will need a userid which we want to fetch and the userId which is fetching that user,
-  const superUser = req.body.userId;
-  const user = await userRepo.getByUserId(userId);
-  if(!user){
-    return res.status(400).json({
-      success:false,
-      message:"User does not exist by this UserId",
-      err: "User not Exist",
-      data : {},
-    });
-  }
-  //console.log(superUser,user.id);
-  if(superUser!==user.id &&!user.isPublic){
-    return res.status(400).json({
-      success:false,
-      message:"User is not Public",
-      err: "Not a Public User",
-      data : {},
-    });
-  }
-  //console.log(user);
   next();
 }
 
@@ -130,6 +107,5 @@ module.exports = {
   validateGrantRoleRequest,
   checkWhenSomeoneisFetchigCollection,
   userExist,
-  isPublicCheck,
-  isPublicUserCheck
+  isPublicCheck
 };
