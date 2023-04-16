@@ -7,10 +7,11 @@ const {
   validateUserAuthforSignIn,
   validateUserAuthforSignUp,
   userExist,
-  isPublicUserCheck
 } = require("../../middlewares/validateRequests");
 
-router.get("/get-user/:id",isPublicUserCheck,UserControllers.getByUserId);
+// This api is called by the user himself after login to set the user on client
+router.get("/get-user/:id", UserControllers.getByUserId);
+
 router.post(
   "/signup",
   validateUserAuthforSignUp,
@@ -20,7 +21,7 @@ router.post(
 router.post("/signin", validateUserAuthforSignIn, UserControllers.signIn);
 
 //toggle account privacy
-router.post('/toggleAccount/:id',UserControllers.togglePrivacy);
+router.post('/toggleAccount/:id', UserControllers.togglePrivacy);
 
 // For email verification
 router.get("/verify-email", UserControllers.verifyEmailtoken);

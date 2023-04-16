@@ -23,26 +23,26 @@ const create = async (req, res) => {
   }
 };
 
-const togglePrivacy = async(req,res) => {
-   try {
-     const user = await userService.togglePrivacy(req.params.id);
-     let isPublic;
-     isPublic = user.isPublic?"Public":"Private";
-     return res.status(201).json({
+const togglePrivacy = async (req, res) => {
+  try {
+    const user = await userService.togglePrivacy(req.params.id);
+    let isPublic;
+    isPublic = user.isPublic ? "Public" : "Private";
+    return res.status(201).json({
       success: true,
       message: `Successfully made your account ${isPublic}`,
       data: user,
       err: {},
     });
-    
-   } catch (error) {
+
+  } catch (error) {
     return res.status(error.statusCode).json({
       message: error.message,
       data: {},
       success: false,
       err: error.explanation,
     });
-   }
+  }
 }
 
 const signIn = async (req, res) => {
@@ -88,7 +88,7 @@ const getByUserId = async (req, res) => {
 };
 const getWithCollection = async (req, res) => {
   try {
-    const response = await userService.getWithCollection(req.user);
+    const response = await userService.getWithCollection(req.userId);
     return res.status(201).json({
       message: "Successfully fetched the user",
       data: response,

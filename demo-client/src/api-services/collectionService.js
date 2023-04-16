@@ -32,3 +32,7 @@ export function deleteCollection(collectionId) {
 export function getAllCollectionsWithoutTimelines() {
   return http.get(`${apiEndpoint}/without-timelines`);
 }
+
+export function getAllByUsername(username) {
+  return http.get(`${apiEndpoint}/user/${username}`);
+}

@@ -8,6 +8,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import jwt from "jsonwebtoken";
 import { setJwtInRequestHeader } from "./api-services/httpService";
+import ShowCollectionsByUsername from "./pages/ShowCollectionsByUsername";
 
 function App() {
   const [user, setUser] = useState();
@@ -45,6 +46,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home user={user} />} />
         <Route path="/collections/:id" element={<Collection />} />
+        <Route path="/:username/collections" element={<ShowCollectionsByUsername />} />
         <Route
           path="/login"
           element={<Login handleSetUser={handleSetUser} />}

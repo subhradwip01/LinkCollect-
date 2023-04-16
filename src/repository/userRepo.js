@@ -13,9 +13,9 @@ class UserRepository {
       throw error;
     }
   }
-  async togglePrivacy(userId){
+  async togglePrivacy(userId) {
     try {
-       const user = await User.findById(userId);
+      const user = await User.findById(userId);
       user.isPublic = !user.isPublic;
       await user.save();
       return user;
@@ -27,7 +27,7 @@ class UserRepository {
   async verifyEmailtoken(token) {
     try {
       const user = await User.findOne({ emailToken: token });
-      console.log("verifying user",token);
+      console.log("verifying user", token);
       if (!user) {
         console.log("User dosent exist");
         throw error;
@@ -69,7 +69,7 @@ class UserRepository {
   }
   async getByUserId(userId) {
     try {
-      const user = await User.findById(userId).populate(({path:"collections"})).lean();
+      const user = await User.findById(userId).populate(({ path: "collections" })).lean();
       return user;
     } catch (e) {
       console.log("Something went wrong in fetching the user");
@@ -87,7 +87,18 @@ class UserRepository {
       throw error;
     }
   }
- 
+
+  async getByUsername(username) {
+    try {
+      const user = await User.findOne({ username })
+      return user;
+    }
+    catch (error) {
+      console.log("Something went wrong in fetching the user")
+      throw error;
+    }
   }
+
+}
 
 module.exports = UserRepository;
