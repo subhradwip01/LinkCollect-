@@ -1,28 +1,17 @@
 import { useEffect, useState } from "react";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
-import { getUserById } from "./api-services/authService";
 import "./App.css";
 import Collection from "./pages/Collection";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import jwt from "jsonwebtoken";
 import { setJwtInRequestHeader } from "./api-services/httpService";
 import ShowCollectionsByUsername from "./pages/ShowCollectionsByUsername";
+// import jwt from "jsonwebtoken";
+// import { getUserById } from "./api-services/authService";
 
 function App() {
   const [user, setUser] = useState();
-
-  // To check for token as the app opens and set the user
-  useEffect(() => {
-    async function checkForToken() {
-      const token = localStorage.getItem("token");
-      if (!token) return;
-      const { user: userId } = jwt.decode(token);
-      const { data } = await getUserById(userId);
-      return setUser(data.data);
-    }
-  }, []);
 
   // To set JWT token in request header for authorization on each API call
   useEffect(() => {
@@ -44,7 +33,7 @@ function App() {
   return (
     <div className="app">
       <Routes>
-        <Route path="/" element={<Home user={user} />} />
+        <Route path="/" element={<Home />} />
         <Route path="/collections/:id" element={<Collection />} />
         <Route path="/:username/collections" element={<ShowCollectionsByUsername />} />
         <Route
@@ -58,3 +47,20 @@ function App() {
 }
 
 export default App;
+
+
+// Not in use right now
+
+  // To check for token as the app opens and sets the user - Not needed for now
+  // useEffect(() => {
+  //   async function checkForToken() {
+  //     const token = localStorage.getItem("token");
+  //     if (!token) return;
+  //     const { userId, username } = jwt.decode(token);
+  //     console.log(username, userId)
+  //     const { data } = await getUserById(userId);
+  //     return setUser(data.data);
+  //   }
+
+  //   checkForToken()
+  // }, []);

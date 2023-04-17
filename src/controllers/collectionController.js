@@ -9,7 +9,8 @@ const create = async (req, res) => {
       req.body.image = req.file.path;
     }
     // Change to req.userId
-    const collection = await collectionService.create({ ...req.body, userId: req.userId });
+    const { username, userId } = req;
+    const collection = await collectionService.create({ ...req.body, username, userId });
     return res.status(201).json({
       data: collection,
       success: true,
@@ -146,8 +147,8 @@ const getAllWithTimeline = async (req, res) => {
 
 const getAllByUsername = async (req, res) => {
   try {
-    const { username } = req.params;
-    const collection = await collectionService.getAllByUsername(username, req.ownsUsername);
+    const { ownsUsername, username } = req;
+    const collection = await collectionService.getAllByUsername(username, ownsUsername);
     return res.status(201).json({
       data: collection,
       success: true,

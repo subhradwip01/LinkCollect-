@@ -4,7 +4,7 @@ import { deleteCollection, getAllCollectionsWithoutTimelines } from '../api-serv
 import CreateCollection from './CreateCollection';
 import { createCollection } from '../api-services/collectionService';
 
-function Home({ user }) {
+function Home() {
   const [collections, setCollections] = useState([]);
   const navigate = useNavigate()
 
@@ -12,8 +12,8 @@ function Home({ user }) {
     if (!localStorage.getItem("token")) return navigate("/login")
   })
 
-  const getCollections = async (userId) => {
-    const { data } = await getAllCollectionsWithoutTimelines(userId);
+  const getCollections = async () => {
+    const { data } = await getAllCollectionsWithoutTimelines();
     setCollections(data.data);
   };
 
@@ -37,8 +37,7 @@ function Home({ user }) {
     formData.append("image", image.files[0])
     formData.append("description", description.value);
     formData.append("title", title.value);
-    formData.append("username", user?.username)  // Added
-
+    // Made changes
 
     const { data } = await createCollection(formData);
     const tempCollections = [...collections];

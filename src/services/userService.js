@@ -105,7 +105,7 @@ class UserService {
         console.log("Password dosen't match");
         throw { error: "Incorrect password" };
       }
-      const newJWTtoken = this.createToken({ user: user._id });
+      const newJWTtoken = this.createToken({ userId: user._id, username: user.username });
 
       return { userId: user._id, token: newJWTtoken };
     } catch (error) {
@@ -169,6 +169,6 @@ class UserService {
       throw error;
     }
   }
-  
+
 }
 module.exports = UserService;
