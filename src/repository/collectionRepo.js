@@ -30,9 +30,22 @@ class CollectionRepo {
       throw error;
     }
   }
+  deleteFromArray = (array, value) => {
+    let newArray = [];
+    for(let i =0;i<array.length;i++){
+      if(array[i]!=value){
+         newArray.push(array[i]);
+      }
+    }
+    return newArray;
+  }
   delete = async (id) => {
     try {
       const collection = await Collection.findByIdAndRemove(id);
+      const userId = collection.userId;
+      const user = User.findById(userId);
+      user.collections = this.deleteFromArray(user.collections,id);
+      await user.save();
       return collection;
     } catch (error) {
       throw error;
