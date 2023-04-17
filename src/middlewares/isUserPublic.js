@@ -4,7 +4,7 @@ const userRepo = new UserRepo();
 // To check if the user is Public
 
 const isUserPublic = async (req, res, next) => {
-    const { username } = req.params;
+    const { username, userId } = req;
     const user = await userRepo.getByUsername(username);
     if (!user) {
         return res.status(400).json({
@@ -17,7 +17,7 @@ const isUserPublic = async (req, res, next) => {
     //console.log(superUser,user.id);
     // And also checking username and userId (if logged in matches)
 
-    if (req.userId == user._id) {
+    if (userId == user._id) {
         req.ownsUsername = true;
         return next();
     }

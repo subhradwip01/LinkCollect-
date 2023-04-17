@@ -130,7 +130,7 @@ const verifyEmailtoken = async (req, res) => {
   try {
     const response = await userService.verifyEmailtoken(req.query.token);
     // Changes on production
-    const token = userService.createToken({ user: response._id });
+    const token = userService.createToken({ userId: response._id, username: response.username });
 
     if (PRODUCTION !== "production") {
       return res.redirect(`http://localhost:3000/login?token=${token}`);

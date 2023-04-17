@@ -12,6 +12,7 @@ const setUpAndStartServer = async () => {
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(decryptUser);
+
   app.use("/api", ApiRoutes);
   await connect();
   app.listen(PORT, async () => {

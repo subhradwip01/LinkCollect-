@@ -3,6 +3,7 @@ const { Collection } = require("../models");
 exports.isCollectionOwner = async (req, res, next) => {
   const collectionId = req.params.id;
   const { userId } = await Collection.findById(collectionId);
+  console.log(req.userId)
   if (req.userId != userId) {
     return res.status(400).json({
       success: false,
