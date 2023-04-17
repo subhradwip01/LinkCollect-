@@ -68,7 +68,6 @@ class CollectionRepo {
   };
 
   getAllByUsername = async (username, ownsUsername) => {
-    console.log(username)
     try {
       if (!ownsUsername) {
         const collection = await Collection.find({ username, isPublic: true })
@@ -86,6 +85,18 @@ class CollectionRepo {
       throw error;
     }
   };
+
+  doesLinkExist = async (collectionId, link) => {
+    try {
+      const collection = await Collection.findById(collectionId).populate("timelines")
+      const existingLink = collection.timelines.find(timeline => timeline.link === link)
+
+      if (existingLink) return true
+      return false;
+    } catch (error) {
+      throw error;
+    }
+  }
 
   update = async (id, data) => {
     try {
