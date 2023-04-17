@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { getCollection } from '../api-services/collectionService';
+import { checkLinkExist, getCollection } from '../api-services/collectionService';
 import CreateTimeline from './CreateTimeline';
 import Timeline from './Timeline';
 import { createTimeline, deleteTimeline, updateTimeline } from '../api-services/timelineService';
@@ -21,7 +21,14 @@ function Collection() {
 
     const handleCreateTimeline = async (e) => {
         e.preventDefault();
+
         const { link, note } = e.target;
+
+        // Check if the link Already Exist in the collection
+        const linkExist = (await checkLinkExist(collectionId, link.value)).data.data;
+        if (linkExist) return console.log("The link already exists")
+
+
         const time = new Date('14 Jun 2017 00:00:00 PDT').toUTCString();
         const timeline = { link: link.value, note: note.value, time }
         // For instant ui change

@@ -165,6 +165,29 @@ const getAllByUsername = async (req, res) => {
   }
 };
 
+
+const doesLinkExist = async (req, res) => {
+  const { link } = req.body;
+  try {
+    const response = await collectionService.doesLinkExist(req.params.id, link);
+    return res.status(201).json({
+      data: response,
+      success: true,
+      message: "Successfully checked for any duplicate links",
+      err: {},
+    });
+  }
+  catch (error) {
+    return res.status(500).json({
+      data: {},
+      success: false,
+      message: "Not able to check for duplicate link",
+      err: error,
+    });
+  }
+
+}
+
 // change to req.userId
 const upvote = async (req, res) => {
   try {
@@ -217,5 +240,6 @@ module.exports = {
   upvote,
   downvote,
   togglePrivacy,
-  getAllByUsername
+  getAllByUsername,
+  doesLinkExist
 };

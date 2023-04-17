@@ -68,6 +68,16 @@ class CollectionService {
     }
   };
 
+  doesLinkExist = async (collectionId, link) => {
+    try {
+      const response =
+        await this.collectionRepo.doesLinkExist(collectionId, link);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  };
+
   getAll = async (userId) => {
     try {
       const collection = await this.collectionRepo.getAll(userId);
