@@ -38,7 +38,7 @@ exports.googleAuth = async (req, res) => {
   if (PRODUCTION !== "production") {
     return res.redirect(`http://localhost:3000/login?token=${token}`);
   }
-  return res.redirect(`/login?token=${token}`);
+  return res.redirect(`https://api.linkcollect.io/login?token=${token}`);
 };
 
 async function getAccessTokenFromGoogle(codeFromGoogle) {
