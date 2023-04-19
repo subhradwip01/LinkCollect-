@@ -1,7 +1,7 @@
 const { PRODUCTION, PRODUCTION_FRONTEND_URL } = require("../config");
 const UserService = require("../services/userService");
 
-const userService = new UserService();
+const userService = new UserService()
 
 const create = async (req, res) => {
   try {
