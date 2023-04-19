@@ -18,6 +18,21 @@ class TimelineService {
       throw error;
     }
   };
+  createMultiple = async (data, collectionId) => {
+    try {
+      // Adding collectionId ref to each Timeline
+      data = data.map(timeline => {
+        return {...timeline, collectionId}
+      })
+      const timelines = await this.timelineRepo.createMultipleTimelines(
+        data,
+        collectionId
+      );
+      return timelines;
+    } catch (error) {
+      throw error;
+    }
+  };
   delete = async (id, collectionId) => {
     try {
       const timeline = await this.timelineRepo.delete(id, collectionId);
