@@ -26,8 +26,8 @@ function Login({ handleSetUser }) {
   const setUserAndRedirect = async (token) => {
     if (!token) return;
     const { userId } = jwt.decode(token);
-    const response = await getUserById(userId);
-    handleSetUser(response.data.data);
+    // const response = await getUserById(userId);
+    handleSetUser({userId});
     localStorage.setItem("token", token);
     return navigate("/");
   }
