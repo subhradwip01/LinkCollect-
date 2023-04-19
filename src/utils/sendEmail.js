@@ -1,5 +1,5 @@
 const nodemailer = require("nodemailer");
-const { USER, PASS, BACKEND_URL } = require("../config");
+const { USER, PASS, BACKEND_BASE_URL } = require("../config");
 
 let transporter = nodemailer.createTransport({
   service: "gmail",
@@ -21,7 +21,7 @@ module.exports = {
         text: "HELLO" + name,
         html: `<h2>HELLO ${name}<h2/>
                       <h3> Thanks for using our services, Please verify your email </h3>
-                      <a href="${BACKEND_URL}/v1/user/verify-email?token=${token}"> Verify You </a>
+                      <a href="${BACKEND_BASE_URL}/api/v1/user/verify-email?token=${token}"> Verify You </a>
                     `,
       });
       console.log(info.messageId);
