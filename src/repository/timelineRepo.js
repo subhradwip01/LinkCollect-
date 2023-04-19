@@ -85,7 +85,7 @@ class TimelineRepo {
   deleteFromArray = (array, value) => {
     let newArray = [];
     for(let i =0;i<array.length;i++){
-      if(array[i]!=value){
+      if(array[i].toString()!=value.toString()){
          newArray.push(array[i]);
       }
     }
