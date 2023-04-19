@@ -30,12 +30,11 @@ class CollectionRepo {
       throw error;
     }
   }
-  deleteFromArray = (array, value) => {
+  deleteFromArray = (array, value) => { // here's a scaling issue in future
     let newArray = [];
     for(let i =0;i<array.length;i++){
-      if(array[i]!=value){
+      if(array[i].toString()!=value.toString()){
          newArray.push(array[i]);
-         
       }
     }
     return newArray;
