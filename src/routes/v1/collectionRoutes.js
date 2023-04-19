@@ -15,8 +15,8 @@ const upload = multer({
 
 router.get("/without-timelines", collectionController.getAll);
 
-router.get("/user/:username", isUserPublic, collectionController.getAllByUsername);  // The username Route - Username is in req.body
 // Special Route to get all collections that are public by username by ANYONE
+router.get("/user/:username", isUserPublic, collectionController.getAllByUsername);  // The username Route - Username is in req.body
 
 // Check for duplicate link
 router.post("/:id/check-duplicate-link", collectionController.doesLinkExist)

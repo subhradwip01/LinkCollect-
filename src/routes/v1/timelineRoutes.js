@@ -19,6 +19,11 @@ router.delete(
   timelineController.deleteTimeline
 );
 
+// ----------------------------- SPECIAL ROUTES ---------------------------- //
+
+// To insert multiple timelines at once in a particular collection
+router.post("/create-multiple", isCollectionOwner, timelineController.createMultiple);
+
 module.exports = router;
 
 // Not Using

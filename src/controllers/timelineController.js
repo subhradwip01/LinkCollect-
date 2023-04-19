@@ -20,6 +20,27 @@ const create = async (req, res) => {
     });
   }
 };
+
+const createMultiple = async (req,res) =>{
+  try {
+    const { id: collectionId } = req.params;
+    const timelines = await timelineService.createMultiple(req.body, collectionId);
+    return res.status(201).json({
+      data: timelines,
+      success: true,
+      message: "Successfully created a Multiple Timelines",
+      err: {},
+    });
+  } catch (error) {
+    return res.status(500).json({
+      data: {},
+      success: false,
+      message: "Not able to create Multiple Timelines",
+      err: error,
+    });
+  }
+}
+
 const deleteTimeline = async (req, res) => {
   try {
     const { timelineId, id: collectionId } = req.params;
@@ -104,4 +125,5 @@ module.exports = {
   updateTimeline,
   getThatTimeline,
   getTimeline,
+  createMultiple
 };

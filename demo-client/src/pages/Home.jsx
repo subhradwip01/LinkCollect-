@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { deleteCollection, getAllCollectionsWithoutTimelines } from '../api-services/collectionService';
 import CreateCollection from './CreateCollection';
 import { createCollection } from '../api-services/collectionService';
+import { createMultipleTimelines } from '../api-services/timelineService';
 
 function Home() {
   const [collections, setCollections] = useState([]);

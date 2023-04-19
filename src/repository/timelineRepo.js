@@ -1,5 +1,6 @@
 const { collection } = require("../models/collection");
 const { Timeline, Collection } = require("../models/index");
+const { filterDuplicateTimelines } = require("../utils/filterDuplicateTimelines");
 
 class TimelineRepo {
   
@@ -16,6 +17,26 @@ class TimelineRepo {
       //saved
       return timeline;
     } catch (error) {
+      throw error;
+    }
+  };
+  createMultipleTimelines = async (data, collectionId) => {
+    try {
+      // Getting Collection and existing Timelines
+      const newTimelines = data;
+      const collection = await Collection.findById(collectionId).populate("timelines");
+
+      const validNewTimelines = [...filterDuplicateTimelines(collection.timelines, newTimelines)]
+      const timelines = await Timeline.create(validNewTimelines);
+      console.log(timelines)
+
+      //push into the corresponding collection and save
+      collection.timelines = [...collection.timelines, ...timelines];
+      await collection.save();
+
+      return timelines;
+    } catch (error) {
+      console.log(error)
       throw error;
     }
   };
