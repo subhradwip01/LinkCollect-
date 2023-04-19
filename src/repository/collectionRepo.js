@@ -43,7 +43,7 @@ class CollectionRepo {
     try {
       const collection = await Collection.findByIdAndRemove(id);
       const userId = collection.userId;
-      const user = User.findById(userId);
+      const user = await User.findById(userId);
       user.collections = this.deleteFromArray(user.collections,id);
       await user.save();
       return collection;
