@@ -3,7 +3,6 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 module.exports = {
-  PRODUCTION: process.env.PRODUCTION,
   GOOGLECLIENTID: process.env.GOOGLE_CLIENT_ID,
   GOOGLECLIENTSECRET: process.env.GOOGLE_SECRET_API_KEY,
   GOOGLEREDIRECTURL: process.env.GOOGLE_REDIRECT_URI,
@@ -16,5 +15,7 @@ module.exports = {
   CLOUDINARY_KEY: process.env.CLOUDINARY_KEY,
   CLOUDINARY_SECRET: process.env.CLOUDINARY_SECRET,
   PORT: process.env.PORT,
+  PRODUCTION: process.env.PRODUCTION,
   BACKEND_BASE_URL: process.env.BACKEND_BASE_URL,
+  PRODUCTION_FRONTEND_URL: process.env.PRODUCTION_FRONTEND_URL,
 };

@@ -1,4 +1,4 @@
-const { PRODUCTION } = require("../config");
+const { PRODUCTION, PRODUCTION_FRONTEND_URL } = require("../config");
 const UserService = require("../services/userService");
 
 const userService = new UserService();
@@ -135,7 +135,7 @@ const verifyEmailtoken = async (req, res) => {
     if (PRODUCTION !== "production") {
       return res.redirect(`http://localhost:3000/login?token=${token}`);
     }
-    return res.redirect(`https://api.linkcollect.io/login?token=${token}`);
+    return res.redirect(`${PRODUCTION_FRONTEND_URL}/login?token=${token}`);
     // return res.status(201).json({
     //   success: true,
     //   message: "email verified",
