@@ -6,19 +6,23 @@ const router = express.Router({ mergeParams: true }); // merge params will make 
 
 // Postioning of routes matter, let the specific routes come before general routes
 
-router.post("/", isCollectionOwner , timelineController.create);
-
+// CRUD Routes
+router.post("/", isCollectionOwner, timelineController.create);
 router.patch(
   "/:timelineId",
   isCollectionOwner,
   timelineController.updateTimeline
 );
-
 router.delete(
   "/:timelineId",
   isCollectionOwner,
   timelineController.deleteTimeline
 );
+
+// ----------------------------- SPECIAL ROUTES ---------------------------- //
+
+// To insert multiple timelines at once in a particular collection
+router.post("/create-multiple", isCollectionOwner, timelineController.createMultiple);
 
 module.exports = router;
 

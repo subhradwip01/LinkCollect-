@@ -5,10 +5,10 @@ class CollectionService {
   constructor() {
     this.collectionRepo = new CollectionRepo();
   }
-    create = async (data, userId) => {
-      try {
-      
-      const collection = await this.collectionRepo.create(data, userId);
+  create = async (data) => {
+    try {
+
+      const collection = await this.collectionRepo.create(data);
       return collection;
     } catch (error) {
       throw error;
@@ -16,7 +16,7 @@ class CollectionService {
   };
   async togglePrivacy(userId) {
     try {
-     
+
       const collection = await this.collectionRepo.togglePrivacy(userId);
       return collection;
     } catch (error) {
@@ -57,6 +57,27 @@ class CollectionService {
       throw error;
     }
   };
+
+  getAllByUsername = async (username, ownsUsername) => {
+    try {
+      const collection =
+        await this.collectionRepo.getAllByUsername(username, ownsUsername);
+      return collection;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  doesLinkExist = async (collectionId, link) => {
+    try {
+      const response =
+        await this.collectionRepo.doesLinkExist(collectionId, link);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  };
+
   getAll = async (userId) => {
     try {
       const collection = await this.collectionRepo.getAll(userId);
@@ -65,17 +86,17 @@ class CollectionService {
       throw error;
     }
   };
-  upvote = async(collectionId,userId) => {
+  upvote = async (collectionId, userId) => {
     try {
-      const collection = await this.collectionRepo.upvote(collectionId,userId);
+      const collection = await this.collectionRepo.upvote(collectionId, userId);
       return collection;
     } catch (error) {
       throw error;
     }
   };
-  downvote = async(collectionId,userId) => {
+  downvote = async (collectionId, userId) => {
     try {
-      const collection = await this.collectionRepo.downvote(collectionId,userId);
+      const collection = await this.collectionRepo.downvote(collectionId, userId);
       return collection;
     } catch (error) {
       throw error;

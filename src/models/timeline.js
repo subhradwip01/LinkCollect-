@@ -5,7 +5,7 @@ const TimelineSchema = new mongoose.Schema(
     collectionId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Collection",
-      required:true,
+      required: true,
     },
     title: {
       type: String,
@@ -17,6 +17,9 @@ const TimelineSchema = new mongoose.Schema(
     note: {
       type: String,
     },
+    favicon: {
+      type: String
+    }
   },
   { timestamps: true }
 );

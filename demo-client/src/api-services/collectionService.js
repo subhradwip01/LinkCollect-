@@ -32,3 +32,11 @@ export function deleteCollection(collectionId) {
 export function getAllCollectionsWithoutTimelines() {
   return http.get(`${apiEndpoint}/without-timelines`);
 }
+
+export function getAllByUsername(username) {
+  return http.get(`${apiEndpoint}/user/${username}`);
+}
+
+export function checkLinkExist(collectionId, link) {
+  return http.post(`${apiEndpoint}/${collectionId}/check-duplicate-link`, { link });
+}

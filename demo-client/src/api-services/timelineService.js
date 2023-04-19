@@ -17,3 +17,10 @@ export function updateTimeline(collectionId, timelineId, timeline) {
 export function deleteTimeline(collectionId, timelineId) {
   return http.delete(`${apiEndpoint}/${collectionId}/timelines/${timelineId}`);
 }
+
+// ---------------------------------- SPECIAL ROUTE -------------------------------------- //
+
+// for multiple timelines/links creation from left click
+export function createMultipleTimelines(collectionId, timelinesArray) {
+  return http.post(`${apiEndpoint}/${collectionId}/timelines/create-multiple`, timelinesArray);
+}

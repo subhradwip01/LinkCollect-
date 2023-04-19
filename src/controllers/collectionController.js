@@ -2,16 +2,15 @@ const CollectionService = require("../services/collectionService");
 const collectionService = new CollectionService();
 
 const create = async (req, res) => {
-  
   try {
     // Adding image url we got from cloudinary to req.body
-    //console.log(req.body,req.user);
+    //console.log(req.body,req.userId);
     if (req.file) {
       req.body.image = req.file.path;
     }
-    //console.log("hello");
-    //here i'm making a change
-    const collection = await collectionService.create(req.body, req.user);
+    // Change to req.userId
+    const { username, userId } = req;
+    const collection = await collectionService.create({ ...req.body, username, userId });
     return res.status(201).json({
       data: collection,
       success: true,
@@ -28,25 +27,25 @@ const create = async (req, res) => {
   }
 };
 
-const togglePrivacy = async(req,res) => {
+const togglePrivacy = async (req, res) => {
   try {
     const collection = await collectionService.togglePrivacy(req.params.id);
     let isPublic;
-    isPublic = collection.isPublic?"Public":"Private";
+    isPublic = collection.isPublic ? "Public" : "Private";
     return res.status(201).json({
-     success: true,
-     message: `Successfully made your collection ${isPublic}`,
-     data: collection,
-     err: {},
-     });
+      success: true,
+      message: `Successfully made your collection ${isPublic}`,
+      data: collection,
+      err: {},
+    });
   } catch (error) {
     console.log(error);
-   return res.status(404).json({
-     message: error.message,
-     data: {},
-     success: false,
-     err: error.explanation,
-   });
+    return res.status(404).json({
+      message: error.message,
+      data: {},
+      success: false,
+      err: error.explanation,
+    });
   }
 }
 const deleteCollection = async (req, res) => {
@@ -111,7 +110,7 @@ const get = async (req, res) => {
 const getAll = async (req, res) => {
   try {
     console.log("hello");
-    const collection = await collectionService.getAll(req.user);
+    const collection = await collectionService.getAll(req.userId);
     return res.status(201).json({
       data: collection,
       success: true,
@@ -129,7 +128,7 @@ const getAll = async (req, res) => {
 };
 const getAllWithTimeline = async (req, res) => {
   try {
-    const collection = await collectionService.getAllWithTimeline(req.user);
+    const collection = await collectionService.getAllWithTimeline(req.userId);
     return res.status(201).json({
       data: collection,
       success: true,
@@ -146,10 +145,53 @@ const getAllWithTimeline = async (req, res) => {
   }
 };
 
-// here instead of req.body , you can also use req.user.id in production
+const getAllByUsername = async (req, res) => {
+  try {
+    const { ownsUsername, username } = req;
+    const collection = await collectionService.getAllByUsername(username, ownsUsername);
+    return res.status(201).json({
+      data: collection,
+      success: true,
+      message: "Successfully fetched a Collection",
+      err: {},
+    });
+  } catch (error) {
+    return res.status(500).json({
+      data: {},
+      success: false,
+      message: "Not able to fetch the Collection",
+      err: error,
+    });
+  }
+};
+
+
+const doesLinkExist = async (req, res) => {
+  const { link } = req.body;
+  try {
+    const response = await collectionService.doesLinkExist(req.params.id, link);
+    return res.status(201).json({
+      data: response,
+      success: true,
+      message: "Successfully checked for any duplicate links",
+      err: {},
+    });
+  }
+  catch (error) {
+    return res.status(500).json({
+      data: {},
+      success: false,
+      message: "Not able to check for duplicate link",
+      err: error,
+    });
+  }
+
+}
+
+// change to req.userId
 const upvote = async (req, res) => {
   try {
-    const collection = await collectionService.upvote(req.params.id, req.user);
+    const collection = await collectionService.upvote(req.params.id, req.userId);
     return res.status(201).json({
       data: collection,
       success: true,
@@ -165,12 +207,12 @@ const upvote = async (req, res) => {
     });
   }
 };
-//here instead of req.body , you can also use req.user.id in production
+// Change to req.userId
 const downvote = async (req, res) => {
   try {
     const collection = await collectionService.downvote(
       req.params.id,
-      req.user
+      req.userId
     );
     return res.status(201).json({
       data: collection,
@@ -197,5 +239,7 @@ module.exports = {
   getAllWithTimeline,
   upvote,
   downvote,
-  togglePrivacy
+  togglePrivacy,
+  getAllByUsername,
+  doesLinkExist
 };
