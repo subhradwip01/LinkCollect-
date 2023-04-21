@@ -36,9 +36,16 @@ module.exports = {
                       <h3> Thanks for using our services, Please verify your email </h3>
                       <a href="${BACKEND_BASE_URL}/api/v1/user/verify-email?token=${token}"> Verify You </a>
                     `,
-      });
+      },function(error,result){
+        if(error){
+         console.log("err",error);
+        } else {
+          console.log(result);
+        }
+        transporter.close();}
+      );
     } catch (error) {
-      console.log(error);
+      console.log("error",error);
     }
   },
 };
