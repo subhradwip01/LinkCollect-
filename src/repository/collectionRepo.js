@@ -14,6 +14,7 @@ class CollectionRepo {
       await user.save();
       return collection;
     } catch (error) {
+      console.log(error);           
       throw error;
     }
   };
@@ -27,6 +28,7 @@ class CollectionRepo {
       return collection;
     } catch (error) {
       console.log("Something went wrong at repository layer", error);
+      console.log(error);           
       throw error;
     }
   }
@@ -48,6 +50,7 @@ class CollectionRepo {
       await user.save();
       return collection;
     } catch (error) {
+      console.log(error);           
       throw error;
     }
   };
@@ -58,6 +61,7 @@ class CollectionRepo {
       });
       return collection;
     } catch (error) {
+      console.log(error);           
       throw error;
     }
   };
@@ -66,6 +70,7 @@ class CollectionRepo {
       const collection = await Collection.find({ userId });
       return collection;
     } catch (error) {
+      console.log(error);           
       throw error;
     }
   };
@@ -76,6 +81,7 @@ class CollectionRepo {
         .lean();
       return collection;
     } catch (error) {
+      console.log(error);           
       throw error;
     }
   };
@@ -95,6 +101,7 @@ class CollectionRepo {
         return collection;
       }
     } catch (error) {
+      console.log(error);           
       throw error;
     }
   };
@@ -107,6 +114,7 @@ class CollectionRepo {
       if (existingLink) return true
       return false;
     } catch (error) {
+      console.log(error);           
       throw error;
     }
   }
@@ -119,6 +127,7 @@ class CollectionRepo {
       });
       return collection;
     } catch (error) {
+      console.log(error);           
       throw error;
     }
   };
@@ -133,13 +142,13 @@ class CollectionRepo {
       return collection;
 
     } catch (error) {
+      console.log(error);           
       throw error;
     }
   }
   downvote = async (collectionId, userId) => {
     try {
       const collection = await Collection.findById(collectionId);
-      console.log(collection);
       if (!collection) {
         throw new Error("Collection not found");
       }
@@ -147,6 +156,7 @@ class CollectionRepo {
       await collection.save();
       return collection;
     } catch (error) {
+      console.log(error);           
       throw error;
     }
   }

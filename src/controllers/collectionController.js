@@ -4,7 +4,6 @@ const collectionService = new CollectionService();
 const create = async (req, res) => {
   try {
     // Adding image url we got from cloudinary to req.body
-    //console.log(req.body,req.userId);
     if (req.file) {
       req.body.image = req.file.path;
     }
@@ -109,7 +108,6 @@ const get = async (req, res) => {
 };
 const getAll = async (req, res) => {
   try {
-    console.log("hello");
     const collection = await collectionService.getAll(req.userId);
     return res.status(201).json({
       data: collection,
