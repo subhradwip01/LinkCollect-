@@ -18,4 +18,7 @@ module.exports = {
   PRODUCTION: process.env.PRODUCTION,
   BACKEND_BASE_URL: process.env.BACKEND_BASE_URL,
   PRODUCTION_FRONTEND_URL: process.env.PRODUCTION_FRONTEND_URL,
+  CLIENT_ID_NodeMailer : process.env.client_id_NodeMailer,
+  CLIENT_SECRET_NodeMailer : process.env.client_secret_NodeMailer,
+  REFRESH_TOKEN : process.env.refresh_token
 };
