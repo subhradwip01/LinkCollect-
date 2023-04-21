@@ -17,6 +17,7 @@ class TimelineRepo {
       //saved
       return timeline;
     } catch (error) {
+      console.log(error);           
       throw error;
     }
   };
@@ -28,7 +29,6 @@ class TimelineRepo {
 
       const validNewTimelines = [...filterDuplicateTimelines(collection.timelines, newTimelines)]
       const timelines = await Timeline.create(validNewTimelines);
-      console.log(timelines)
 
       //push into the corresponding collection and save
       collection.timelines = [...collection.timelines, ...timelines];
@@ -37,6 +37,7 @@ class TimelineRepo {
       return timelines;
     } catch (error) {
       console.log(error)
+      console.log(error);           
       throw error;
     }
   };
@@ -48,10 +49,10 @@ class TimelineRepo {
       }
       const timeline = await Timeline.findByIdAndRemove(id);
       collection.timelines = this.deleteFromArray(collection.timelines,id);
-      console.log(collection);
       await collection.save();
       return timeline;
     } catch (error) {
+      console.log(error);           
       throw error;
     }
   };
@@ -60,6 +61,7 @@ class TimelineRepo {
       const timeline = await Timeline.findById(id);
       return timeline;
     } catch (error) {
+      console.log(error);           
       throw error;
     }
   };
@@ -69,6 +71,7 @@ class TimelineRepo {
       const timeline = await Timeline.find({ collectionId: id });
       return timeline;
     } catch (error) {
+      console.log(error);           
       throw error;
     }
   };
@@ -79,6 +82,7 @@ class TimelineRepo {
       });
       return timeline;
     } catch (error) {
+      console.log(error);           
       throw error;
     }
   };

@@ -24,8 +24,6 @@ module.exports = {
                       <a href="${BACKEND_BASE_URL}/api/v1/user/verify-email?token=${token}"> Verify You </a>
                     `,
       });
-      console.log(info.messageId);
-      console.log("Testing email functionality");
     } catch (error) {
       console.log(error);
     }

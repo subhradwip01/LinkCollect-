@@ -20,7 +20,6 @@ class CollectionService {
       const collection = await this.collectionRepo.togglePrivacy(userId);
       return collection;
     } catch (error) {
-      console.log("Something went wrong Service layer.");
       throw error;
     }
   }
