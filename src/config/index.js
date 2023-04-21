@@ -9,7 +9,7 @@ module.exports = {
   DBURL: process.env.DBURL,
   SALT: process.env.ROUNDS,
   JWT_KEY: process.env.JWT_KEY,
-  USER: process.env.USER,
+  USER: process.env.USER_for_Email,
   PASS: process.env.PASS,
   CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME,
   CLOUDINARY_KEY: process.env.CLOUDINARY_KEY,

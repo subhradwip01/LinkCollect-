@@ -6,7 +6,7 @@ const OAuth2_client = new OAuth2(CLIENT_ID_NodeMailer,CLIENT_SECRET_NodeMailer);
 OAuth2_client.setCredentials({refresh_token:REFRESH_TOKEN});
 
 
-console.log(USER, PASS, BACKEND_BASE_URL,CLIENT_ID_NodeMailer,CLIENT_SECRET_NodeMailer,REFRESH_TOKEN);
+//console.log(USER, PASS, BACKEND_BASE_URL,CLIENT_ID_NodeMailer,CLIENT_SECRET_NodeMailer,REFRESH_TOKEN);
 const accessToken  = OAuth2_client.getAccessToken();
 
 
