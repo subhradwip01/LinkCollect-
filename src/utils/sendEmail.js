@@ -4,7 +4,8 @@ const { USER, PASS, BACKEND_URL } = require("../config");
 let transporter = nodemailer.createTransport({
   service: "gmail",
   host: "smtp.gmail.com",
-  secure: false,
+  port: 465,
+  secure: true,
   auth: {
     user: USER,
     pass: PASS,
