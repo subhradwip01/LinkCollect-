@@ -4,12 +4,12 @@ const { verifyEmail } = require("../utils/sendEmail");
 class UserRepository {
   async create(data) {
     try {
-      console.log("repo", data);
       const user = await User.create(data);
       verifyEmail(user.name, user.email, user.emailToken);
       return user;
     } catch (error) {
       console.log("Something went wrong at repository layer", error);
+      console.log(error);           
       throw error;
     }
   }
@@ -21,16 +21,17 @@ class UserRepository {
       return user;
     } catch (error) {
       console.log("Something went wrong at repository layer", error);
+      console.log(error);           
       throw error;
     }
   }
   async verifyEmailtoken(token) {
     try {
       const user = await User.findOne({ emailToken: token });
-      console.log("verifying user", token);
       if (!user) {
         console.log("User dosent exist");
-        throw error;
+        console.log(error);           
+      throw error;
       }
       var data = {
         emailToken: null,
@@ -45,6 +46,7 @@ class UserRepository {
       return user;
     } catch (error) {
       console.log("Something went wrong in the verification of mail");
+      console.log(error);           
       throw error;
     }
   }
@@ -54,6 +56,7 @@ class UserRepository {
       return true;
     } catch (error) {
       console.log("Something went wrong at repository layer");
+      console.log(error);           
       throw error;
     }
   }
@@ -64,6 +67,7 @@ class UserRepository {
         .lean();
       return user;
     } catch (error) {
+      console.log(error);           
       throw error;
     }
   }
@@ -84,6 +88,7 @@ class UserRepository {
       return user;
     } catch (error) {
       console.log("Something went wrong in fetching the user");
+      console.log(error);           
       throw error;
     }
   }
@@ -95,6 +100,7 @@ class UserRepository {
     }
     catch (error) {
       console.log("Something went wrong in fetching the user")
+      console.log(error);           
       throw error;
     }
   }

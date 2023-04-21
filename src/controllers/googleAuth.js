@@ -9,6 +9,7 @@ const {
   GOOGLECLIENTSECRET,
   GOOGLECLIENTID,
   PRODUCTION,
+  PRODUCTION_FRONTEND_URL,
 } = require("../config");
 const UserService = require("../services/userService");
 
@@ -38,7 +39,7 @@ exports.googleAuth = async (req, res) => {
   if (PRODUCTION !== "production") {
     return res.redirect(`http://localhost:3000/login?token=${token}`);
   }
-  return res.redirect(`/login?token=${token}`);
+  return res.redirect(`${PRODUCTION_FRONTEND_URL}/login?token=${token}`);
 };
 
 async function getAccessTokenFromGoogle(codeFromGoogle) {

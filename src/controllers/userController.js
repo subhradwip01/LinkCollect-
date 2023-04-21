@@ -1,7 +1,7 @@
-const { PRODUCTION } = require("../config");
+const { PRODUCTION, PRODUCTION_FRONTEND_URL } = require("../config");
 const UserService = require("../services/userService");
 
-const userService = new UserService();
+const userService = new UserService()
 
 const create = async (req, res) => {
   try {
@@ -13,7 +13,6 @@ const create = async (req, res) => {
       err: {},
     });
   } catch (error) {
-    // console.log(error);
     return res.status(error.statusCode).json({
       message: error.message,
       data: {},
@@ -58,7 +57,6 @@ const signIn = async (req, res) => {
       success: true,
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       message: "Not able to sign-in",
       err: error,
@@ -77,7 +75,6 @@ const getByUserId = async (req, res) => {
       success: true,
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       message: "Not able to fetch",
       err: error,
@@ -96,7 +93,6 @@ const getWithCollection = async (req, res) => {
       success: true,
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       message: "Not able to fetch",
       err: error,
@@ -116,7 +112,6 @@ const isAuthenticated = async (req, res) => {
       message: "User is authenticated and token is verified",
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       message: "Not able to sign-in",
       err: error,
@@ -135,7 +130,7 @@ const verifyEmailtoken = async (req, res) => {
     if (PRODUCTION !== "production") {
       return res.redirect(`http://localhost:3000/login?token=${token}`);
     }
-    return res.redirect(`/login?token=${token}`);
+    return res.redirect(`${PRODUCTION_FRONTEND_URL}/login?token=${token}`);
     // return res.status(201).json({
     //   success: true,
     //   message: "email verified",
@@ -143,7 +138,6 @@ const verifyEmailtoken = async (req, res) => {
     //   err: {},
     // });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       message: "Not able to verify the email",
       err: error,
@@ -162,7 +156,6 @@ const destroy = async (req, res) => {
       err: {},
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       message: "Not able to delete the user",
       err: error,

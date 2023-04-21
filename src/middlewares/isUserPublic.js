@@ -30,7 +30,6 @@ const isUserPublic = async (req, res, next) => {
             data: {},
         });
     }
-    //console.log(user);
 
     next()
 

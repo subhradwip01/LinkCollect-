@@ -41,7 +41,6 @@ const validateisAdminRequest = (req, res, next) => {
 };
 
 const validateGrantRoleRequest = (req, res, next) => {
-  console.log(req.body);
   if (!req.body.name || !req.body.userid || !req.body.roleid) {
     return res.status(404).json({
       success: false,
