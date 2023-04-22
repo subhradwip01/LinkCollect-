@@ -91,6 +91,9 @@ const update = async (req, res) => {
 const get = async (req, res) => {
   try {
     const collection = await collectionService.get(req.params.id);
+    const timelinesReverse = collection.timelines.reverse();
+    collection.timelines = timelinesReverse;
+    
     return res.status(201).json({
       data: collection,
       success: true,
