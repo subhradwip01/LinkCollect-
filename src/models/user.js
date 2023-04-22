@@ -35,6 +35,7 @@ const userSchema = new Schema(
         type: mongoose.Schema.Types.ObjectId,
         ref: "Collection",
       },
+      
     ],
     emailToken: {
       type: String,
@@ -46,6 +47,9 @@ const userSchema = new Schema(
   { timestamps: true }
 );
 
+userSchema.path('collections').validate(function(collections) {
+  return collections.length <= 100; // set your limit here
+}, 'Too many collections');
 
 userSchema.pre("save", function (next) {
   if (!this.password || !this.isModified("password")||!this.isModified("username")) return next(); // Added for google auth and unnecessary hash changes whenever user.save is called (could have created bugs)
