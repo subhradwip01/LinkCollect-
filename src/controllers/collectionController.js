@@ -91,10 +91,10 @@ const update = async (req, res) => {
 const get = async (req, res) => {
   try {
     const collection = await collectionService.get(req.params.id);
-    // 
+    // reversing the timelines so that we get updated results
     const timelinesReverse = collection.timelines.reverse();
     collection.timelines = timelinesReverse;
-    console.log("timelineReverse", collection.timelines)
+    //console.log("timelineReverse", collection.timelines)
 
 
     return res.status(201).json({
