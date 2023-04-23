@@ -22,11 +22,12 @@ function Collection() {
     const handleCreateTimeline = async (e) => {
         e.preventDefault();
 
-        const { link, note } = e.target;
+        try{
+            const { link, note } = e.target;
 
-        // Check if the link Already Exist in the collection
-        const linkExist = (await checkLinkExist(collectionId, link.value)).data.data;
-        if (linkExist) return console.log("The link already exists")
+        // Check if the link Already Exist in the collection through route
+        // const linkExist = (await checkLinkExist(collectionId, link.value)).data.data;
+        // if (linkExist) return console.log("The link already exists")
 
 
         const time = new Date('14 Jun 2017 00:00:00 PDT').toUTCString();
@@ -41,6 +42,10 @@ function Collection() {
         const tempCollection = { ...collection };
         tempCollection.timelines.push(data.data);
         setCollection(tempCollection)
+        }
+        catch(err){
+            console.log(err.response.data.message)
+        }
     }
     console.log(collection)
 
