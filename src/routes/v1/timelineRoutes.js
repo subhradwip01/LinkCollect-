@@ -1,13 +1,14 @@
 const express = require("express");
 const timelineController = require("../../controllers/timelineController");
 const { isCollectionOwner } = require("../../middlewares/isCollectionOwner");
+const { checkDuplicateLink } = require("../../middlewares/checkDuplicateLink");
 const router = express.Router({ mergeParams: true }); // merge params will make the prefix param available from the index.js folder;
 // To get collection id in our case
 
 // Postioning of routes matter, let the specific routes come before general routes
 
 // CRUD Routes
-router.post("/", isCollectionOwner, timelineController.create);
+router.post("/", isCollectionOwner, checkDuplicateLink, timelineController.create);
 router.patch(
   "/:timelineId",
   isCollectionOwner,
