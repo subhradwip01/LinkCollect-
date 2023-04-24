@@ -1,31 +1,32 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { getAllByUsername } from "../api-services/collectionService";
 
 const ShowCollectionsByUsername = () => {
     const { username } = useParams()
     const [collections, setCollections] = useState([])
+    
+    console.log()
 
     useEffect(() => {
-        console.log(username)
         async function getAllUserCollections() {
-            console.log("hey")
-            const { data } = await getAllByUsername(username)
-            setCollections(data.data);
+            if(username){
+                const { data } = await getAllByUsername(username)
+                setCollections(data.data);
+            }
         }
         getAllUserCollections()
     }, [])
 
+    console.log(collections)
 
     return (
         <div>
+            <h1>Collections</h1>
             {collections.map((collection, index) => (
-                <div key={index}>
-                    <h1>{collection.title}</h1>
-                    {collection.timelines.map((timeline, i) => (
-                        <p key={i}>{timeline.link}</p>
-                    ))}
-                </div>
+                    <div>
+                        <Link key={index} to={`/${username}/collections/${collection._id}`}>{collection.title}</Link>
+                    </div>
             ))}
         </div>
     );

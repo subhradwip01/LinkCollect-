@@ -13,7 +13,6 @@ function Collection() {
     useEffect(() => {
         async function gettingCollection() {
             const { data } = await getCollection(collectionId)
-            console.log(data)
             setCollection(data.data);
         }
         gettingCollection()

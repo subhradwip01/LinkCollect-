@@ -7,6 +7,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import { setJwtInRequestHeader } from "./api-services/httpService";
 import ShowCollectionsByUsername from "./pages/ShowCollectionsByUsername";
+import ShowOneCollection from "./pages/ShowOneCollection";
 // import jwt from "jsonwebtoken";
 // import { getUserById } from "./api-services/authService";
 
@@ -36,6 +37,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/collections/:id" element={<Collection />} />
         <Route path="/:username/collections" element={<ShowCollectionsByUsername />} />
+        <Route path="/:username/collections/:id" element={<ShowOneCollection />} />
         <Route
           path="/login"
           element={<Login handleSetUser={handleSetUser} />}

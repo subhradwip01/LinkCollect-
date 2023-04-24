@@ -5,6 +5,7 @@ const { isPublicCheck, userExist, checkWhenSomeoneisFetchigCollection } = requir
 const multer = require("multer");
 const { storage } = require("../../cloudinary");
 const isUserPublic = require("../../middlewares/isUserPublic");
+const { isCollectionOwner } = require("../../middlewares/isCollectionOwner");
 const upload = multer({
   storage,
 });
@@ -16,7 +17,7 @@ const upload = multer({
 router.get("/without-timelines", collectionController.getAll);
 
 // Special Route to get all collections that are public by username by ANYONE
-router.get("/user/:username", isUserPublic, collectionController.getAllByUsername);  // The username Route - Username is in req.body
+router.get("/user/:username", isUserPublic, collectionController.getAllByUsername)
 
 // Check for duplicate link
 router.post("/:id/check-duplicate-link", collectionController.doesLinkExist)
@@ -27,8 +28,8 @@ router.post("/:id/check-duplicate-link", collectionController.doesLinkExist)
 router.get("/:id", collectionController.get);
 router.get("/", collectionController.getAllWithTimeline);
 router.post("/", upload.single("image"), collectionController.create);
-router.patch("/:id", upload.single("image"), collectionController.update);
-router.delete("/:id", collectionController.deleteCollection);
+router.patch("/:id", isCollectionOwner, upload.single("image"), collectionController.update);
+router.delete("/:id", isCollectionOwner, collectionController.deleteCollection);
 
 
 // UPVOTE ROUTES
