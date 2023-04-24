@@ -4,12 +4,13 @@ const userRepo = new UserRepo();
 // To check if the user is Public
 
 const isUserPublic = async (req, res, next) => {
-    const { username, userId } = req;
+    const { userId } = req;
+    const {username} = req.params
     const user = await userRepo.getByUsername(username);
     if (!user) {
         return res.status(400).json({
             success: false,
-            message: "User does not exist by this UserId",
+            message: "User does not exist by this Username",
             err: "User not Exist",
             data: {},
         });
@@ -31,8 +32,8 @@ const isUserPublic = async (req, res, next) => {
         });
     }
 
-    next()
-
+    req.username = username
+    return next()
 }
 
 module.exports = isUserPublic;

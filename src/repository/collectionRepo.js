@@ -90,14 +90,10 @@ class CollectionRepo {
     try {
       if (!ownsUsername) {
         const collection = await Collection.find({ username, isPublic: true })
-          .populate({ path: "timelines" })
-          .lean();
         return collection;
       }
       else {
         const collection = await Collection.find({ username })
-          .populate({ path: "timelines" })
-          .lean();
         return collection;
       }
     } catch (error) {
