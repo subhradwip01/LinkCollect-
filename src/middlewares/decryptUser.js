@@ -4,7 +4,6 @@ const jwt = require("jsonwebtoken");
 exports.decryptUser = (req, res, next) => {
   const token = req.header("Authorization");
   if (!token) return next(); // req.userId will stay undefined
-
   try {
     const { userId, username } = jwt.decode(token.split(" ")[1], process.env.JWT_SECRET);
     req.userId = userId;

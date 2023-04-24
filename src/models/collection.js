@@ -28,6 +28,10 @@ const CollectionSchema = new mongoose.Schema(
       type: String,
       required: true
     },
+    views: {
+      type: Number,
+      required: true
+    },
     timelines: [
       {
         type: mongoose.Schema.Types.ObjectId,

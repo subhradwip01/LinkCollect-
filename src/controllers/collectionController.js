@@ -1,3 +1,4 @@
+const { Collection } = require("../models");
 const CollectionService = require("../services/collectionService");
 const collectionService = new CollectionService();
 
@@ -93,18 +94,31 @@ const update = async (req, res) => {
 const get = async (req, res) => {
   try {
     const collection = await collectionService.get(req.params.id);
+
     // reversing the timelines so that we get updated results
     const timelinesReverse = collection.timelines.reverse();
     collection.timelines = timelinesReverse;
     //console.log("timelineReverse", collection.timelines)
 
 
-    return res.status(201).json({
+    res.status(201).json({
       data: collection,
       success: true,
       message: "Successfully fetched a Collection",
       err: {},
     });
+
+    // Intentionally doing this after the response is sent ... so that this doesn't slow down the response time
+
+    // Incrementing collection views only if the the get route was not made by the collection owner (For Dashboard)
+    if(req.userId != collection.userId && req.username != collection.username){
+      await Collection.findByIdAndUpdate(collection._id, { $inc: { views: 1 } },
+        { new: true })
+    }
+
+    // And added the return statement is added after the views is incremented for the collection
+    return
+
   } catch (error) {
     return res.status(500).json({
       data: {},
@@ -114,6 +128,7 @@ const get = async (req, res) => {
     });
   }
 };
+
 const getAll = async (req, res) => {
   try {
     const collection = await collectionService.getAll(req.userId);
