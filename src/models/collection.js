@@ -46,6 +46,14 @@ CollectionSchema.path('timelines').validate(function(timelines) {
 
 // Collection Image
 // Upvote
+CollectionSchema.pre("save",function (next) {
+  // validate timelines
+  if (this.collections.length > 30) {
+    const err = new Error('Too many Links');
+    return next(err);
+  }
+  next();
+});
 
 const Collection = mongoose.model("Collection", CollectionSchema);
 module.exports = Collection;
