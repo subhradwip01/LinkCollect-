@@ -48,7 +48,7 @@ const userSchema = new Schema(
 );
 
 userSchema.path('collections').validate(function(collections) {
-  return collections.length <= 100; // set your limit here
+  return collections.length <= 30; // set your limit here
 }, 'Too many collections');
 
 userSchema.pre("save", function (next) {

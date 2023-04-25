@@ -41,7 +41,7 @@ const CollectionSchema = new mongoose.Schema(
   { timestamps: true }
 );
 CollectionSchema.path('timelines').validate(function(timelines) {
-  return timelines.length <= 30; // set your limit here
+  return timelines.length <= 50; // set your limit here
 }, 'Too many Links');
 
 // Collection Image
