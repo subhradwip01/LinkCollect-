@@ -30,7 +30,6 @@ const CollectionSchema = new mongoose.Schema(
     },
     views: {
       type: Number,
-      required: true
     },
     timelines: [
       {
