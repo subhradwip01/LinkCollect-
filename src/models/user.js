@@ -53,6 +53,12 @@ userSchema.path('collections').validate(function(collections) {
 
 userSchema.pre("save", function (next) {
   if (!this.password || !this.isModified("password")||!this.isModified("username")) return next(); // Added for google auth and unnecessary hash changes whenever user.save is called (could have created bugs)
+ 
+  if (this.collections.length > 30) {
+    const err = new Error('Too many collections');
+    return next(err);
+  }
+  
   const encryptedPassword = bcrypt.hashSync(this.password, Number(SALT));
   this.password = encryptedPassword;
   next();
