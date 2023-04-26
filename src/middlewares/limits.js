@@ -21,4 +21,24 @@ const collectionLimit = async (req,res,next) => {
     next();
 }
 
-module.exports = collectionLimit;
+const LinkLimit = async (req,res,next) => {
+  console.log(req);
+
+   const collection = collectionRepo.get(req.id);
+   //console.log(user);
+
+   if(collection.timelines.length>50){
+   console.log("50 limit exceeded");
+   return res.status(404).json({
+       success: false,
+       data: {},
+       err: "Validation Error {Link Quota Exceeded}",
+       message: "Link limit exceeded",
+     });
+   }
+   next();
+}
+
+module.exports =  {
+  collectionLimit ,LinkLimit
+};
