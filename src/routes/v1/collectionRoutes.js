@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const collectionController = require("../../controllers/collectionController");
 const { isPublicCheck, userExist, checkWhenSomeoneisFetchigCollection } = require('../../middlewares/validateRequests');
+const collectionLimit = require('../../middlewares/collectionLimit');
 const multer = require("multer");
 const { storage } = require("../../cloudinary");
 const isUserPublic = require("../../middlewares/isUserPublic");
@@ -27,7 +28,7 @@ router.post("/:id/check-duplicate-link", collectionController.doesLinkExist)
 // CRUD ROUTES
 router.get("/:id", collectionController.get);
 router.get("/", collectionController.getAllWithTimeline);
-router.post("/", upload.single("image"), collectionController.create);
+router.post("/",collectionLimit ,upload.single("image"), collectionController.create);
 router.patch("/:id", isCollectionOwner, upload.single("image"), collectionController.update);
 router.delete("/:id", isCollectionOwner, collectionController.deleteCollection);
 
