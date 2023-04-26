@@ -24,7 +24,7 @@ const collectionLimit = async (req,res,next) => {
 const LinkLimit = async (req,res,next) => {
   console.log(req);
 
-   const collection = collectionRepo.get(req.id);
+   const collection = collectionRepo.get(req.params.id);
    //console.log(user);
 
    if(collection.timelines.length>50){
