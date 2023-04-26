@@ -22,7 +22,7 @@ const collectionLimit = async (req,res,next) => {
 }
 
 const LinkLimit = async (req,res,next) => {
-  console.log(req);
+  //console.log(req);
 
    const collection = collectionRepo.get(req.params.id);
    //console.log(user);
