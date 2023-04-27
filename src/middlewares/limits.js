@@ -9,7 +9,7 @@ const collectionLimit = async (req,res,next) => {
     const user = await userRepo.getByUserId(req.userId);
     //console.log(user);
 
-    if(user.collections.length>30){
+    if(user.collections.length>29){
     console.log("30 limit exceeded");
     return res.status(404).json({
         success: false,
