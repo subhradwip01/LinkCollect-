@@ -1,10 +1,6 @@
 const axios = require("axios");
 const User = require("../models/user");
 const {
-  generateFromEmail,
-  generateUsername,
-} = require("unique-username-generator");
-const {
   GOOGLEREDIRECTURL,
   GOOGLECLIENTSECRET,
   GOOGLECLIENTID,
