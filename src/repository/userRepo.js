@@ -60,6 +60,16 @@ class UserRepository {
       throw error;
     }
   }
+  async updateProfilePic({userId, profilePic}) {
+    try {
+      const user = await User.findByIdAndUpdate(userId, {profilePic});
+      return user.profilePic;
+    } catch (error) {
+      console.log("Something went wrong at repository layer");
+      console.log(error);           
+      throw error;
+    }
+  }
   async getwithCollection(userId) {
     try {
       const user = await User.findById(userId)

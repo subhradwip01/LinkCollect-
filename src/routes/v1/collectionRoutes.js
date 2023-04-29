@@ -3,10 +3,10 @@ const router = express.Router();
 const collectionController = require("../../controllers/collectionController");
 const { isPublicCheck, userExist, checkWhenSomeoneisFetchigCollection } = require('../../middlewares/validateRequests');
 const {collectionLimit} = require('../../middlewares/limits');
-const multer = require("multer");
 const { storage } = require("../../cloudinary");
 const isUserPublic = require("../../middlewares/isUserPublic");
 const { isCollectionOwner } = require("../../middlewares/isCollectionOwner");
+const multer = require("multer");
 const upload = multer({
   storage,
 });
@@ -30,7 +30,7 @@ router.get("/:id", collectionController.get);
 router.get("/", collectionController.getAllWithTimeline);
 
 //collection limit removing for testing
-router.post("/"/*,collectionLimit */,upload.single("image"), collectionController.create);
+router.post("/"/*,collectionLimit */, upload.single("image"), collectionController.create);
 router.patch("/:id", isCollectionOwner, upload.single("image"), collectionController.update);
 router.delete("/:id", isCollectionOwner, collectionController.deleteCollection);
 
