@@ -1,13 +1,5 @@
 const nodemailer = require("nodemailer");
 const { USER, PASS, BACKEND_BASE_URL,CLIENT_ID_NodeMailer,CLIENT_SECRET_NodeMailer,REFRESH_TOKEN } = require("../config");
-// const { google } = require('googleapis');
-// const OAuth2 = google.auth.OAuth2;
-// const OAuth2_client = new OAuth2(CLIENT_ID_NodeMailer,CLIENT_SECRET_NodeMailer);
-// OAuth2_client.setCredentials({refresh_token:REFRESH_TOKEN});
-
-
-//console.log(USER, PASS, BACKEND_BASE_URL,CLIENT_ID_NodeMailer,CLIENT_SECRET_NodeMailer,REFRESH_TOKEN);
-// const accessToken  = OAuth2_client.getAccessToken();
 
 
 
@@ -18,13 +10,10 @@ let transporter = nodemailer.createTransport({
   host:'smtp.gmail.com',
   secure:true,
          auth : {
-           // type :"OAuth2",
+          
             user : USER,
             pass : PASS
-            // clientId : CLIENT_ID_NodeMailer,
-            // clientSecret : CLIENT_SECRET_NodeMailer,
-            // refreshToken :REFRESH_TOKEN,
-            // accessToken :accessToken
+            
          }
 });
 
