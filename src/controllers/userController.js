@@ -185,8 +185,30 @@ const getByUsername = async(req,res) => {
   }
 }
 
+const updateProfilePic = async(req,res)=>{
+  try{
+  // Change to req.userId
+   const { username, userId } = req;
+   const profilePic = await userService.updateProfilePic({ profilePic: req.file.path, userId });
+   
+   return res.status(201).json({
+     data: profilePic,
+     success: true,
+     message: "Successfully Updated Profile Picture",
+     err: {},
+   });
+  } catch (error) {
+   return res.status(500).json({
+     data: {},
+     success: false,
+     message: "Not able to Update Profile Picture",
+     err: error,
+   });
+ }
+}
+
 module.exports = {
- 
+  updateProfilePic,
   destroy,
   getWithCollection,
   create,

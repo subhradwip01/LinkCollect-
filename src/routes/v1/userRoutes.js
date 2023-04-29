@@ -9,9 +9,14 @@ const {
   userExist,
 } = require("../../middlewares/validateRequests");
 const isOwner = require('../../middlewares/isOwner');
+const multer = require("multer");
+const upload = multer({
+  storage,
+});
 
 // This api is called by the user himself after login to set the user on client
 router.get("/get-user/:id", UserControllers.getByUserId);
+// Never use underscores
 router.get("/get_user/:username",UserControllers.getByUsername);
 
 
@@ -34,5 +39,8 @@ router.get("/isauthenticated", UserControllers.isAuthenticated);
 
 // Google auth route for both signup and signin
 router.get("/google-auth", catchAsync(googleAuth));
+
+// Update profile-pic Route
+router.update("/profile-pic",  upload.single("image"), UserControllers.updateProfilePic)
 
 module.exports = router;
