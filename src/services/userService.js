@@ -3,6 +3,7 @@ const { JWT_KEY, SALT } = require("../config");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 var randomBytes = require("randombytes");
+const { default: mongoose, isValidObjectId } = require("mongoose");
 
 class UserService {
   constructor() {
@@ -172,12 +173,22 @@ class UserService {
 
   async getByUsername(username,userId){
     try {
-        const user = await this.userRepository.getByUserId(userId);
-        const isSameUser =  (user.username === username);
+       
+        console.log(userId);
+        const validUserId = mongoose.isValidObjectId(userId);
+        if(!validUserId){
+          console.log("yes its null");
+        }
+        if(validUserId){
+              const user = await this.userRepository.getByUserId(userId);
+              var isSameUser =  (user.username === username);
+        } else {
+          isSameUser = false;
+        }
         const response = await this.userRepository.getByUsername(username);
         delete response.password;
         delete response.emailToken;
-       // console.log("isSameUser" ,isSameUser);
+        console.log("isSameUser" ,isSameUser);
         //console.log(response.collections);
         if(isSameUser){
           return response;
