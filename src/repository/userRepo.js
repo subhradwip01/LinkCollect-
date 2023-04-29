@@ -95,7 +95,9 @@ class UserRepository {
 
   async getByUsername(username) {
     try {
-      const user = await User.findOne({ username })
+    
+      const user = await User.findOne({ username }).populate({ path: "collections" ,populate : {path : "timelines"}})
+      .lean();
       return user;
     }
     catch (error) {

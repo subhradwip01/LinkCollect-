@@ -10,8 +10,8 @@ const create = async (req, res) => {
     }
     // Change to req.userId
    const { username, userId } = req;
-   const collection = await collectionService.create({ ...req.body, username, userId });
-    //const collection = await collectionService.create(req.body);
+    const collection = await collectionService.create({ ...req.body, username, userId });
+   // const collection = await collectionService.create(req.body);
     
     return res.status(201).json({
       data: collection,

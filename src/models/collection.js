@@ -40,12 +40,17 @@ const CollectionSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-CollectionSchema.path('timelines').validate(function(timelines) {
-  return timelines.length <= 50; // set your limit here
-}, 'Too many Links');
+// CollectionSchema.path('timelines').validate(function(timelines) {
+//   return timelines.length <= 50; // set your limit here
+// }, 'Too many Links');
 
 // Collection Image
 // Upvote
+// function autoPopulate(next) {
+//   this.populate('Timeline');
+//   next();
+// }
+// CollectionSchema.pre('findOne',autoPopulate);
 CollectionSchema.pre("save",function (next) {
   // validate timelines
   if (this.timelines.length > 100) {

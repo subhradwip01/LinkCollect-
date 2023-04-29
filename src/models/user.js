@@ -50,7 +50,11 @@ const userSchema = new Schema(
 // userSchema.path('collections').validate(function(collections) {
 //   return collections.length <= 30; // set your limit here
 // }, 'Too many collections',{abortEarly: false});
-
+// function autoPopulateCollections(next) {
+//   this.populate('Collection');
+//   next();
+// }
+// userSchema.pre('findOne',autoPopulateCollections);
 userSchema.pre("save", function (next) {
   if (!this.password || !this.isModified("password")||!this.isModified("username")) return next(); // Added for google auth and unnecessary hash changes whenever user.save is called (could have created bugs)
  

@@ -8,9 +8,11 @@ const {
   validateUserAuthforSignUp,
   userExist,
 } = require("../../middlewares/validateRequests");
+const isOwner = require('../../middlewares/isOwner');
 
 // This api is called by the user himself after login to set the user on client
 router.get("/get-user/:id", UserControllers.getByUserId);
+router.get("/get_user/:username",UserControllers.getByUsername);
 
 
 router.post(

@@ -9,7 +9,7 @@ const router = express.Router({ mergeParams: true }); // merge params will make 
 // Postioning of routes matter, let the specific routes come before general routes
 
 // CRUD Routes
-router.post("/", isCollectionOwner,LinkLimit, checkDuplicateLink, timelineController.create);
+router.post("/", isCollectionOwner,LinkLimit , checkDuplicateLink, timelineController.create);
 router.patch(
   "/:timelineId",
   isCollectionOwner,

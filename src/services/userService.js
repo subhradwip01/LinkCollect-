@@ -170,5 +170,34 @@ class UserService {
     }
   }
 
+  async getByUsername(username,userId){
+    try {
+        const user = await this.userRepository.getByUserId(userId);
+        const isSameUser =  (user.username === username);
+        const response = await this.userRepository.getByUsername(username);
+        delete response.password;
+        delete response.emailToken;
+       // console.log("isSameUser" ,isSameUser);
+        //console.log(response.collections);
+        if(isSameUser){
+          return response;
+        } else{
+             const collection = [];
+             //console.log(response.collections);
+             for(let i =0;i<response.collections.length;i++){
+                   if(response.collections[i].isPublic){
+                          collection.push(response.collections[i]);
+                   }
+             }
+             response.collections = collection;
+            // console.log("afterloop",response.collections);
+             return response;
+        }
+    } catch (error) {
+      console.log("Something went wrong in service layer!");
+      throw error;
+    }
+  }
+
 }
 module.exports = UserService;

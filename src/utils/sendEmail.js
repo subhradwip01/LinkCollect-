@@ -1,9 +1,6 @@
 const nodemailer = require("nodemailer");
 const { USER, PASS, BACKEND_BASE_URL,CLIENT_ID_NodeMailer,CLIENT_SECRET_NodeMailer,REFRESH_TOKEN } = require("../config");
 
-
-
-
 let transporter = nodemailer.createTransport({
   service :"gmail",
   port:587,
