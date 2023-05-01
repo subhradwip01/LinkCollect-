@@ -6,6 +6,7 @@ const { PORT } = require("./config/index");
 const ApiRoutes = require("./routes/index");
 const cors = require("cors");
 const { decryptUser } = require("./middlewares/decryptUser");
+const rateLimit = require('express-rate-limit');
 
 
 
