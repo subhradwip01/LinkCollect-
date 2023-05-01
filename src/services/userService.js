@@ -178,6 +178,7 @@ class UserService {
         const validUserId = mongoose.isValidObjectId(userId);
         if(!validUserId){
           console.log("yes its null");
+          return "Not a Valid user"
         }
         if(validUserId){
               const user = await this.userRepository.getByUserId(userId);
