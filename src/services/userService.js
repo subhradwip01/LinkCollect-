@@ -48,6 +48,15 @@ class UserService {
       throw error;
     }
   }
+  async updateProfilePic(data) {
+    try {
+      const profilePic = await this.userRepository.updateProfilePic(data);
+      return profilePic;
+    } catch (error) {
+      console.log("Something went wrong Service layer.");
+      throw error;
+    }
+  }
   async getUser(userId) {
     try {
       const user = await this.userRepository.getById(userId);
