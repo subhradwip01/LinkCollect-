@@ -7,7 +7,7 @@ exports.isCollectionOwner = async (req, res, next) => {
   if (req.userId != userId) {
     return res.status(400).json({
       success: false,
-      message: "You cannot edit or add to this collection",
+      message: "You cannot edit,read or add to this collection",
       err: "unauthorized to perform this action",
       data: {},
     });
