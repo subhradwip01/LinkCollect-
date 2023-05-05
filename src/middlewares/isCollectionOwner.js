@@ -14,3 +14,17 @@ exports.isCollectionOwner = async (req, res, next) => {
   }
   next();
 };
+
+exports.isCollectionPublic = async(req,res,next) => {
+  const collectionId = req.params.id;
+  const collection = await Collection.findById(collectionId);
+  if (req.userId != collection.userId && !collection.isPublic) {
+    return res.status(400).json({
+      success: false,
+      message: "The Collection you're trying to access is private!!!",
+      err: "unauthorized to perform this action",
+      data: {},
+    });
+  }
+  next();
+}

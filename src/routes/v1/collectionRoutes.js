@@ -5,7 +5,7 @@ const { isPublicCheck, userExist, checkWhenSomeoneisFetchigCollection } = requir
 const {collectionLimit} = require('../../middlewares/limits');
 const { storage } = require("../../cloudinary");
 const isUserPublic = require("../../middlewares/isUserPublic");
-const { isCollectionOwner } = require("../../middlewares/isCollectionOwner");
+const { isCollectionOwner ,isCollectionPublic} = require("../../middlewares/isCollectionOwner");
 const multer = require("multer");
 const upload = multer({
   storage,
@@ -26,7 +26,7 @@ router.post("/:id/check-duplicate-link", collectionController.doesLinkExist)
 // ---------------------------------------------------------------------- //
 
 // CRUD ROUTES
-router.get("/:id",isCollectionOwner ,collectionController.get);
+router.get("/:id",isCollectionPublic ,collectionController.get);
 router.get("/", collectionController.getAllWithTimeline);
 
 //collection limit removing for testing
