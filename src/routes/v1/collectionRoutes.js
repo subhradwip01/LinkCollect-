@@ -26,7 +26,7 @@ router.post("/:id/check-duplicate-link", collectionController.doesLinkExist)
 // ---------------------------------------------------------------------- //
 
 // CRUD ROUTES
-router.get("/:id", collectionController.get);
+router.get("/:id",isCollectionOwner ,collectionController.get);
 router.get("/", collectionController.getAllWithTimeline);
 
 //collection limit removing for testing
