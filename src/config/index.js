@@ -20,5 +20,6 @@ module.exports = {
   PRODUCTION_FRONTEND_URL: process.env.PRODUCTION_FRONTEND_URL,
   CLIENT_ID_NodeMailer : process.env.client_id_NodeMailer,
   CLIENT_SECRET_NodeMailer : process.env.client_secret_NodeMailer,
-  REFRESH_TOKEN : process.env.refresh_token
+  REFRESH_TOKEN : process.env.refresh_token,
+  STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY
 };
