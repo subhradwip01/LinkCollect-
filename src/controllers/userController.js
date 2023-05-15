@@ -168,7 +168,7 @@ const destroy = async (req, res) => {
 const getByUsername = async(req,res) => {
   try {
     // here i am taking as a body but take it as req.userId
-    const response = await userService.getByUsername(req.params.username,req.body.userId);
+    const response = await userService.getByUsername(req.params.username,req.userId);
     return res.status(201).json({
       success: true,
       message: "Fetched the user Successfully",
