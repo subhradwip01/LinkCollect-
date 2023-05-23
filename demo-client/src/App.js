@@ -9,6 +9,7 @@ import { setJwtInRequestHeader } from "./api-services/httpService";
 import ShowCollectionsByUsername from "./pages/ShowCollectionsByUsername";
 import ShowOneCollection from "./pages/ShowOneCollection";
 import StripeCheckout from "./pages/stripeCheckout";
+import StripeSuccess from "./pages/StripeSuccess";
 
 function App() {
   const [user, setUser] = useState();
@@ -42,6 +43,7 @@ function App() {
           element={<Login handleSetUser={handleSetUser} />}
         />
         <Route path="/stripe-checkout" element={<StripeCheckout />} />
+        <Route path="/success" element={<StripeSuccess />} />
         <Route path="/register" element={<Register />} />
       </Routes>
     </div>

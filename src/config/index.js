@@ -7,6 +7,7 @@ module.exports = {
   GOOGLECLIENTSECRET: process.env.GOOGLE_SECRET_API_KEY,
   GOOGLEREDIRECTURL: process.env.GOOGLE_REDIRECT_URI,
   DBURL: process.env.DBURL,
+  STRIPE_SIGNING_SECRET: process.env.STRIPE_SIGNING_SECRET,
   SALT: process.env.ROUNDS,
   JWT_KEY: process.env.JWT_KEY,
   USER: process.env.USER_for_Email,
