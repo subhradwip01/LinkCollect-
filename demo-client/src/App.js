@@ -8,8 +8,8 @@ import Register from "./pages/Register";
 import { setJwtInRequestHeader } from "./api-services/httpService";
 import ShowCollectionsByUsername from "./pages/ShowCollectionsByUsername";
 import ShowOneCollection from "./pages/ShowOneCollection";
-// import jwt from "jsonwebtoken";
-// import { getUserById } from "./api-services/authService";
+import StripeCheckout from "./pages/stripeCheckout";
+import StripeSuccess from "./pages/StripeSuccess";
 
 function App() {
   const [user, setUser] = useState();
@@ -42,6 +42,8 @@ function App() {
           path="/login"
           element={<Login handleSetUser={handleSetUser} />}
         />
+        <Route path="/stripe-checkout" element={<StripeCheckout />} />
+        <Route path="/success" element={<StripeSuccess />} />
         <Route path="/register" element={<Register />} />
       </Routes>
     </div>

@@ -7,11 +7,16 @@ const ApiRoutes = require("./routes/index");
 const cors = require("cors");
 const { decryptUser } = require("./middlewares/decryptUser");
 const rateLimit = require('express-rate-limit');
-
+const paymentController = require("./controllers/paymentController")
 
 
 const setUpAndStartServer = async () => {
   app.use(cors());
+
+  // This route needs to be above express body parser
+  // as we need the req as a stream rather than a parsed object
+  app.use("/api/v1/stripe-webhook", express.raw({type:"application/json"}), paymentController.webhook)
+
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(decryptUser);
