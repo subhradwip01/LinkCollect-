@@ -5,4 +5,4 @@ const apiEndpoint = api.baseUrl + "/user";
 
 export function getByUsername(username) {
     return http.get(`${apiEndpoint}/get_user/${username}`);
-  }
+}

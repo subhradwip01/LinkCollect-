@@ -26,6 +26,10 @@ const userSchema = new Schema(
     password: {
       type: String,
     },
+    isPremium: {
+      type: Boolean,
+      default: false
+    },
     isPublic : {
       type:Boolean,
       default : true
@@ -35,7 +39,6 @@ const userSchema = new Schema(
         type: mongoose.Schema.Types.ObjectId,
         ref: "Collection",
       },
-      
     ],
     emailToken: {
       type: String,

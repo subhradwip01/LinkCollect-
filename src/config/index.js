@@ -7,6 +7,7 @@ module.exports = {
   GOOGLECLIENTSECRET: process.env.GOOGLE_SECRET_API_KEY,
   GOOGLEREDIRECTURL: process.env.GOOGLE_REDIRECT_URI,
   DBURL: process.env.DBURL,
+  STRIPE_SIGNING_SECRET: process.env.STRIPE_SIGNING_SECRET,
   SALT: process.env.ROUNDS,
   JWT_KEY: process.env.JWT_KEY,
   USER: process.env.USER_for_Email,
@@ -20,5 +21,6 @@ module.exports = {
   PRODUCTION_FRONTEND_URL: process.env.PRODUCTION_FRONTEND_URL,
   CLIENT_ID_NodeMailer : process.env.client_id_NodeMailer,
   CLIENT_SECRET_NodeMailer : process.env.client_secret_NodeMailer,
-  REFRESH_TOKEN : process.env.refresh_token
+  REFRESH_TOKEN : process.env.refresh_token,
+  STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY
 };
