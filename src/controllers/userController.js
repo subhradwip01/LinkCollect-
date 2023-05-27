@@ -35,13 +35,34 @@ const togglePrivacy = async (req, res) => {
     });
 
   } catch (error) {
-    return res.status(error.statusCode).json({
+    return res.status(501).json({
       message: error.message,
       data: {},
       success: false,
       err: error.explanation,
     });
   }
+}
+
+const checkUsername = async(req,res) => {
+     try {
+      
+         const check = await userService.checkUsername(req.body);
+         console.log(check);
+         return res.status(201).json({
+          success: true,
+          message: `USername is available`,
+          data: check,
+          err: {},
+        });
+     } catch (error) {
+      return res.status(501).json({
+        message: "Username Not available",
+        data: {},
+        success: false,
+        err: error,
+      });
+     }
 }
 
 const signIn = async (req, res) => {
@@ -218,4 +239,5 @@ module.exports = {
   isAuthenticated,
   verifyEmailtoken,
   getByUserId,
+  checkUsername
 };

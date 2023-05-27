@@ -17,6 +17,9 @@ router.get("/get-user/:id", UserControllers.getByUserId);
 // Never use underscores
 router.get("/get_user/:username",UserControllers.getByUsername);
 
+//route for checking the availblity of a username
+router.get("/check-username",UserControllers.checkUsername);
+
 
 router.post(
   "/signup",

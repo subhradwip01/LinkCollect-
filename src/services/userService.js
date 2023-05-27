@@ -179,11 +179,19 @@ class UserService {
       throw error;
     }
   }
-
+  async checkUsername(username){
+    try {
+        console.log(username);
+        const response = await this.userRepository.checkUsername(username);
+        return response;
+    } catch (error) {
+      console.log("Something went wrong in service layer!");
+      throw error;
+    }
+  }
   async getByUsername(username,userId){
     try {
-       
-        console.log(userId);
+        console.log(username,userId);
         const validUserId = mongoose.isValidObjectId(userId);
         if(!validUserId){
           console.log("yes its null");

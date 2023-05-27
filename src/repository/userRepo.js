@@ -103,6 +103,21 @@ class UserRepository {
     }
   }
 
+  async checkUsername(username){
+    try {
+      const user = await User.findOne(username);
+      if(user){
+        throw new Error("Username is not available");
+      } else {
+        return "Username available";
+      } 
+    } catch (error) {
+      console.log("Something went wrong in fetching the user");
+      console.log(error);           
+      throw error;
+    }
+  }
+
   async getByUsername(username) {
     try {
       const user = await User.findOne({ username }).populate({ path: "collections" })
