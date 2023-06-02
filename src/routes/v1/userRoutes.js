@@ -3,6 +3,9 @@ const router = express.Router();
 const UserControllers = require("../../controllers/userController");
 const { googleAuth } = require("../../controllers/googleAuth");
 const catchAsync = require("../../utils/catchAsync");
+
+
+const checkSpecialCharacters = require("../../middlewares/checkSpecialCharacters");
 const {
   validateUserAuthforSignIn,
   validateUserAuthforSignUp,
@@ -18,7 +21,7 @@ router.get("/get-user/:id", UserControllers.getByUserId);
 router.get("/get_user/:username",UserControllers.getByUsername);
 
 //route for checking the availblity of a username
-router.get("/check-username",UserControllers.checkUsername);
+router.get("/check-username",checkSpecialCharacters,UserControllers.checkUsername);
 
 
 router.post(

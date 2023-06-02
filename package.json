@@ -35,7 +35,7 @@
     "nodemon": "^2.0.21",
     "query-string": "^8.1.0",
     "randombytes": "^2.1.0",
-    "stripe": "^12.5.0",
+    "stripe": "^12.8.0",
     "unique-username-generator": "^1.1.3"
   }
 }
