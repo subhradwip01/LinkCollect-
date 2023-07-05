@@ -29,6 +29,27 @@ const create = async (req, res) => {
   }
 };
 
+const saveCollection = async (req, res) => { 
+   
+  try {
+    const collection = await collectionService.save(req.params.id, req.userId);
+    
+    return res.status(201).json({
+      data: collection,
+      success: true,
+      message: "Successfully saved the Collection",
+      err: {},
+    });
+  } catch (error) {
+    return res.status(500).json({
+      data: {},
+      success: false,
+      message: "Not able to save Collections",
+      err: error,
+    });
+  }
+}
+
 const togglePrivacy = async (req, res) => {
   try {
     const collection = await collectionService.togglePrivacy(req.params.id);

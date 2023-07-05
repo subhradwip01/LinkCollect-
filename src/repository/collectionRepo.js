@@ -18,6 +18,26 @@ class CollectionRepo {
       throw error;
     }
   };
+
+  save = async (collectionId, userId) => {
+    try {
+      const collection = await Collection.findById(collectionId);
+      const user = await User.findById(userId);
+      if (!user) {
+        throw new Error("User ID is not a Valid ID");
+      }
+      if(!collection){
+        throw new Error("Collection ID is not a Valid ID");
+      }
+      user.savedCollections.push(collectionId.toString());
+      await user.save();
+      return collection;
+    } catch (error) {
+      console.log("Something went wrong at repository layer while saving collection", error);
+      throw error;
+    }
+
+  }
   async togglePrivacy(userId) {
     try {
       //console.log("userid",userId);

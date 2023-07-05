@@ -40,6 +40,11 @@ const userSchema = new Schema(
         ref: "Collection",
       },
     ],
+    savedCollections: [
+      {
+        type: String,
+      },
+    ],
     emailToken: {
       type: String,
     },

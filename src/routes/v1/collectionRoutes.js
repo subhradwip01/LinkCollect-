@@ -35,6 +35,11 @@ router.patch("/:id", isCollectionOwner, upload.single("image"), collectionContro
 router.delete("/:id", isCollectionOwner, collectionController.deleteCollection);
 
 
+// save collection routes
+
+router.post("/:id/save", collectionController.saveCollection);
+
+
 // UPVOTE ROUTES
 router.post("/:id/upvote", collectionController.upvote);
 router.post('/:id/downvote', collectionController.downvote);
