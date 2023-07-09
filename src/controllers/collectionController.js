@@ -33,6 +33,7 @@ const saveCollection = async (req, res) => {
    
   try {
     const collection = await collectionService.save(req.params.id, req.userId);
+    console.log("userId", req.userId)
     
     return res.status(201).json({
       data: collection,
@@ -45,6 +46,48 @@ const saveCollection = async (req, res) => {
       data: {},
       success: false,
       message: "Not able to save Collections",
+      err: error,
+    });
+  }
+}
+const unsaveCollection = async (req, res) => { 
+   
+  try {
+    const collection = await collectionService.unsave(req.params.id, req.userId);
+    console.log("userId", req.userId)
+    
+    return res.status(201).json({
+      data: collection,
+      success: true,
+      message: "Successfully unsaved the Collection",
+      err: {},
+    });
+  } catch (error) {
+    return res.status(500).json({
+      data: {},
+      success: false,
+      message: "Not able to unsave Collections",
+      err: error,
+    });
+  }
+}
+const getSavedCollections = async (req, res) => { 
+   
+  try {
+    const collection = await collectionService.getSavedCollections(req.params.id, req.userId);
+    console.log("userId", req.userId)
+    
+    return res.status(201).json({
+      data: collection,
+      success: true,
+      message: "Successfully unsaved the Collection",
+      err: {},
+    });
+  } catch (error) {
+    return res.status(500).json({
+      data: {},
+      success: false,
+      message: "Not able to unsave Collections",
       err: error,
     });
   }
@@ -283,5 +326,8 @@ module.exports = {
   downvote,
   togglePrivacy,
   getAllByUsername,
-  doesLinkExist
+  doesLinkExist, 
+  saveCollection,
+  unsaveCollection,
+  getSavedCollections
 };

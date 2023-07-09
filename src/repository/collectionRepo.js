@@ -1,4 +1,4 @@
-const { Collection, User } = require("../models/index");
+const { Collection, User, CollectionMapping } = require("../models/index");
 
 class CollectionRepo {
   create = async (data) => {
@@ -19,16 +19,21 @@ class CollectionRepo {
     }
   };
 
+
+  validUserAndCollection = async (user,collection) => {
+    if (!user) {
+      throw new Error("User ID is not a Valid ID");
+    }
+    if(!collection){
+      throw new Error("Collection ID is not a Valid ID");
+    }
+  }
+
   save = async (collectionId, userId) => {
     try {
       const collection = await Collection.findById(collectionId);
       const user = await User.findById(userId);
-      if (!user) {
-        throw new Error("User ID is not a Valid ID");
-      }
-      if(!collection){
-        throw new Error("Collection ID is not a Valid ID");
-      }
+      validUserAndCollection(user,collection)
       user.savedCollections.push(collectionId.toString());
       await user.save();
       return collection;
@@ -38,10 +43,55 @@ class CollectionRepo {
     }
 
   }
+  unsave = async (collectionId, userId) => {
+    try {
+      const collection = await Collection.findById(collectionId);
+      const user = await User.findById(userId);
+      validUserAndCollection(user,collection)
+      // user.savedCollections.push(collectionId.toString());
+  
+      user.savedCollections = this.deleteFromArray(user.savedCollections,collectionId);
+      await user.save();
+      return collection;
+    } catch (error) {
+      console.log("Something went wrong at repository layer while saving collection", error);
+      throw error;
+    }
+
+  }
+
+  getSavedCollections = async (userId) => {
+    try {
+  
+      const user = await User.findById(userId);
+      let allCollections = [];
+
+      for (let i = 0; i < user.savedCollections.length; i++) {
+        const collectId = array[i];
+        const Map = await CollectionMapping.find({collectionId: collectId})
+        // find if deleted or not, if deleted true -> remove collection from saved and also skip adding to return
+        if(Map.isDeleted) {
+          user.savedCollections = this.deleteFromArray(user.savedCollections,collectId);
+          await user.save();
+        } else {
+          allCollections.push();
+          }
+      }
+
+      return allCollections;
+
+    } catch (error) {
+      console.log("Err in repository layer getting saved collection failed", error);
+      throw error;
+    }
+  }
   async togglePrivacy(userId) {
     try {
       //console.log("userid",userId);
+    
+      const user = await User.findById(userId);
       const collection = await Collection.findById(userId);
+      validUserAndCollection(user,collection)
       collection.isPublic = !collection.isPublic;
       await collection.save();
       // console.log(collection);
@@ -53,12 +103,7 @@ class CollectionRepo {
     }
   }
   deleteFromArray = (array, value) => { // here's a scaling issue in future
-    let newArray = [];
-    for(let i =0;i<array.length;i++){
-      if(array[i].toString()!=value.toString()){
-         newArray.push(array[i]);
-      }
-    }
+    let newArray = array.filter((item) => item.toString() !== value.toString());
     return newArray;
   }
   delete = async (id) => {
@@ -177,5 +222,7 @@ class CollectionRepo {
       throw error;
     }
   }
+
+  
 }
 module.exports = CollectionRepo;

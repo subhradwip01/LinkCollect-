@@ -24,6 +24,24 @@ class CollectionService {
       throw error;
     }
   }
+  unsave = async (collectionId, userId) => {
+    try {
+
+      const collection = await this.collectionRepo.unsave(collectionId, userId);
+      return collection;
+    } catch (error) {
+      throw error;
+    }
+  }
+  getSavedCollections = async (userId) => {
+    try {
+
+      const collection = await this.collectionRepo.getSavedCollections(userId);
+      return collection;
+    } catch (error) {
+      throw error;
+    }
+  }
 
   async togglePrivacy(userId) {
     try {

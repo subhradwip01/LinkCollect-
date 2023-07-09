@@ -37,7 +37,10 @@ router.delete("/:id", isCollectionOwner, collectionController.deleteCollection);
 
 // save collection routes
 
+router.get("/:id/getSavedCollections", collectionController.getSavedCollections); // userId
 router.post("/:id/save", collectionController.saveCollection);
+router.post("/:id/unsave", collectionController.unsaveCollection);
+
 
 
 // UPVOTE ROUTES
