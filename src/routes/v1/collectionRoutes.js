@@ -61,4 +61,5 @@ router.post('/:id/downvote', collectionController.downvote);
 // PRIVACY ROUTES
 router.post('/togglePrivacy/:id', collectionController.togglePrivacy);
 
+
 module.exports = router;
