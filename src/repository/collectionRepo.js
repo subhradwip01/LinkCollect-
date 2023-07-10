@@ -3,16 +3,24 @@ const { Collection, User, CollectionMapping } = require("../models/index");
 class CollectionRepo {
   create = async (data) => {
     try {
-      const collection = await Collection.create({ ...data });
-      //console.log(collection);
-      const user = await User.findById(data.userId);
-      if (!user) {
-        await Collection.findByIdAndDelete(collection._id);
-        throw new Error("User ID is not a Valid ID");
+      if(data.tags.length <= 2 || data.title.length <= 59 || data.description.length <= 1000 ) {
+        const collection = await Collection.create({ ...data
+        });
+        const user = await User.findById(data.userId);
+        if (!user) {
+          await Collection.findByIdAndDelete(collection._id);
+          throw new Error("User ID is not a Valid ID");
+        }
+        user.collections.push(collection);
+        await user.save();
+        return collection;
       }
-      user.collections.push(collection);
-      await user.save();
-      return collection;
+      else {
+        throw "some issue in your data";
+      }
+    
+      //console.log(collection);
+     
     } catch (error) {
       console.log(error);           
       throw error;

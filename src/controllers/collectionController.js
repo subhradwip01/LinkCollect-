@@ -1,7 +1,7 @@
 const { Collection } = require("../models");
 const CollectionService = require("../services/collectionService");
 const collectionService = new CollectionService();
-
+const tags = require("../constants/tagfile")
 const create = async (req, res) => {
   try {
     // Adding image url we got from cloudinary to req.body
@@ -211,6 +211,35 @@ const getAll = async (req, res) => {
     });
   }
 };
+const getTags = async (req, res) => {
+  try {
+    if(tags) {
+      const tag = tags
+      return res.status(201).json({
+        data: tag,
+        success: true,
+        message: "Successfully fetched tags",
+        err: {},
+      });
+    }
+    else {
+      return res.status(201).json({
+        data: [],
+        success: true,
+        message: "failed",
+        err: {},
+      });
+    }
+   
+  } catch (error) {
+    return res.status(500).json({
+      data: {},
+      success: false,
+      message: "Not able to fetch the Collection",
+      err: error,
+    });
+  }
+};
 const getAllWithTimeline = async (req, res) => {
   try {
     const collection = await collectionService.getAllWithTimeline(req.userId);
@@ -329,5 +358,6 @@ module.exports = {
   doesLinkExist, 
   saveCollection,
   unsaveCollection,
-  getSavedCollections
+  getSavedCollections,
+  getTags
 };
