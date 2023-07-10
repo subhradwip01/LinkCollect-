@@ -20,12 +20,14 @@ class CollectionRepo {
   };
 
 
-  validUserAndCollection = async (user,collection) => {
+  validUserAndCollection =  (user,collection) => {
     if (!user) {
       throw new Error("User ID is not a Valid ID");
+      
     }
     if(!collection){
       throw new Error("Collection ID is not a Valid ID");
+ 
     }
   }
 
@@ -33,7 +35,7 @@ class CollectionRepo {
     try {
       const collection = await Collection.findById(collectionId);
       const user = await User.findById(userId);
-      validUserAndCollection(user,collection)
+      this.validUserAndCollection(user,collection)
       user.savedCollections.push(collectionId.toString());
       await user.save();
       return collection;
@@ -47,11 +49,12 @@ class CollectionRepo {
     try {
       const collection = await Collection.findById(collectionId);
       const user = await User.findById(userId);
-      validUserAndCollection(user,collection)
+      this.validUserAndCollection(user,collection)
       // user.savedCollections.push(collectionId.toString());
   
       user.savedCollections = this.deleteFromArray(user.savedCollections,collectionId);
       await user.save();
+    
       return collection;
     } catch (error) {
       console.log("Something went wrong at repository layer while saving collection", error);
@@ -67,17 +70,19 @@ class CollectionRepo {
       let allCollections = [];
 
       for (let i = 0; i < user.savedCollections.length; i++) {
-        const collectId = array[i];
+        const collectId = user.savedCollections[i];
         const Map = await CollectionMapping.find({collectionId: collectId})
         // find if deleted or not, if deleted true -> remove collection from saved and also skip adding to return
         if(Map.isDeleted) {
           user.savedCollections = this.deleteFromArray(user.savedCollections,collectId);
           await user.save();
         } else {
-          allCollections.push();
+          // console.log(collectId)
+          const collection = await Collection.findById(collectId);
+          allCollections.push(collection);
           }
       }
-
+      // console.log(allCollections)
       return allCollections;
 
     } catch (error) {
@@ -91,7 +96,7 @@ class CollectionRepo {
     
       const user = await User.findById(userId);
       const collection = await Collection.findById(userId);
-      validUserAndCollection(user,collection)
+      this.validUserAndCollection(user,collection)
       collection.isPublic = !collection.isPublic;
       await collection.save();
       // console.log(collection);
@@ -112,6 +117,7 @@ class CollectionRepo {
       const userId = collection.userId;
       const user = await User.findById(userId);
       user.collections = this.deleteFromArray(user.collections,id);
+      const map = await CollectionMapping.create({  collectionId: id, isDeleted:true });
       await user.save();
       return collection;
     } catch (error) {

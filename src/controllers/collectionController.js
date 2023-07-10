@@ -74,20 +74,20 @@ const unsaveCollection = async (req, res) => {
 const getSavedCollections = async (req, res) => { 
    
   try {
-    const collection = await collectionService.getSavedCollections(req.params.id, req.userId);
+    const collection = await collectionService.getSavedCollections(req.userId);
     console.log("userId", req.userId)
     
     return res.status(201).json({
       data: collection,
       success: true,
-      message: "Successfully unsaved the Collection",
+      message: "Successfully fetched the Collection",
       err: {},
     });
   } catch (error) {
     return res.status(500).json({
       data: {},
       success: false,
-      message: "Not able to unsave Collections",
+      message: "Not able to fetch sqved Collections",
       err: error,
     });
   }
