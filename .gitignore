@@ -2,3 +2,4 @@
 .env
 pending.txt
 pending-backend.txt
+.DS_Store

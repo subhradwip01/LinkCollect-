@@ -24,7 +24,7 @@ module.exports = {
         text: "HELLO" + name,
         html: `<h2>HELLO ${name}<h2/>
                       <h3> Thanks for using our services, Please verify your email </h3>
-                      <a href="${BACKEND_BASE_URL}/api/v1/user/verify-email?token=${token}"> Verify You </a>
+                      <a href=${BACKEND_BASE_URL}/api/v1/user/verify-email?token=${token}> Verify You </a>
                     `,
       },function(error,result){
         if(error){

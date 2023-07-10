@@ -3,16 +3,21 @@ const { Collection } = require("../models");
 exports.isCollectionOwner = async (req, res, next) => {
   const collectionId = req.params.id;
   // console.log(collectionId);
-  const { userId } = await Collection.findById(collectionId);
-  if (req.userId != userId) {
-    return res.status(400).json({
-      success: false,
-      message: "You cannot edit,read or add to this collection",
-      err: "unauthorized to perform this action",
-      data: {},
-    });
+  try{
+    const { userId } = await Collection.findById(collectionId);
+    if (req.userId != userId) {
+      return res.status(400).json({
+        success: false,
+        message: "You cannot edit,read or add to this collection",
+        err: "unauthorized to perform this action",
+        data: {},
+      });
+    }
+    next();
+  } catch(e) {
+    console.log(e)
   }
-  next();
+ 
 };
 
 exports.isCollectionPublic = async(req,res,next) => {

@@ -32,10 +32,10 @@ exports.googleAuth = async (req, res) => {
 
   // Sending user Token as query to the client
   // changes on production
-  if (PRODUCTION !== "production") {
-    return res.redirect(`http://localhost:3000/login?token=${token}`);
-  }
-  return res.redirect(`${PRODUCTION_FRONTEND_URL}/login?token=${token}`);
+  // if (PRODUCTION !== "production") {
+    return res.redirect(`http://localhost:3001/login?token=${token}`);
+  // }
+  // return res.redirect(`${PRODUCTION_FRONTEND_URL}/login?token=${token}`);
 };
 
 async function getAccessTokenFromGoogle(codeFromGoogle) {

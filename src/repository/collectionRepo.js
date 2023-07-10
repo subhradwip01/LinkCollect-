@@ -1,27 +1,110 @@
-const { Collection, User } = require("../models/index");
+const { Collection, User, CollectionMapping } = require("../models/index");
 
 class CollectionRepo {
   create = async (data) => {
     try {
-      const collection = await Collection.create({ ...data });
-      //console.log(collection);
-      const user = await User.findById(data.userId);
-      if (!user) {
-        await Collection.findByIdAndDelete(collection._id);
-        throw new Error("User ID is not a Valid ID");
+      if(data.tags.length <= 2 || data.title.length <= 59 || data.description.length <= 1000 ) {
+        const collection = await Collection.create({ ...data
+        });
+        const user = await User.findById(data.userId);
+        if (!user) {
+          await Collection.findByIdAndDelete(collection._id);
+          throw new Error("User ID is not a Valid ID");
+        }
+        user.collections.push(collection);
+        await user.save();
+        return collection;
       }
-      user.collections.push(collection);
-      await user.save();
-      return collection;
+      else {
+        throw "some issue in your data";
+      }
+    
+      //console.log(collection);
+     
     } catch (error) {
       console.log(error);           
       throw error;
     }
   };
+
+
+  validUserAndCollection =  (user,collection) => {
+    if (!user) {
+      throw new Error("User ID is not a Valid ID");
+      
+    }
+    if(!collection){
+      throw new Error("Collection ID is not a Valid ID");
+ 
+    }
+  }
+
+  save = async (collectionId, userId) => {
+    try {
+      const collection = await Collection.findById(collectionId);
+      const user = await User.findById(userId);
+      this.validUserAndCollection(user,collection)
+      user.savedCollections.push(collectionId.toString());
+      await user.save();
+      return collection;
+    } catch (error) {
+      console.log("Something went wrong at repository layer while saving collection", error);
+      throw error;
+    }
+
+  }
+  unsave = async (collectionId, userId) => {
+    try {
+      const collection = await Collection.findById(collectionId);
+      const user = await User.findById(userId);
+      this.validUserAndCollection(user,collection)
+      // user.savedCollections.push(collectionId.toString());
+  
+      user.savedCollections = this.deleteFromArray(user.savedCollections,collectionId);
+      await user.save();
+    
+      return collection;
+    } catch (error) {
+      console.log("Something went wrong at repository layer while saving collection", error);
+      throw error;
+    }
+
+  }
+
+  getSavedCollections = async (userId) => {
+    try {
+  
+      const user = await User.findById(userId);
+      let allCollections = [];
+
+      for (let i = 0; i < user.savedCollections.length; i++) {
+        const collectId = user.savedCollections[i];
+        const Map = await CollectionMapping.find({collectionId: collectId})
+        // find if deleted or not, if deleted true -> remove collection from saved and also skip adding to return
+        if(Map.isDeleted) {
+          user.savedCollections = this.deleteFromArray(user.savedCollections,collectId);
+          await user.save();
+        } else {
+          // console.log(collectId)
+          const collection = await Collection.findById(collectId);
+          allCollections.push(collection);
+          }
+      }
+      // console.log(allCollections)
+      return allCollections;
+
+    } catch (error) {
+      console.log("Err in repository layer getting saved collection failed", error);
+      throw error;
+    }
+  }
   async togglePrivacy(userId) {
     try {
       //console.log("userid",userId);
+    
+      const user = await User.findById(userId);
       const collection = await Collection.findById(userId);
+      this.validUserAndCollection(user,collection)
       collection.isPublic = !collection.isPublic;
       await collection.save();
       // console.log(collection);
@@ -33,12 +116,7 @@ class CollectionRepo {
     }
   }
   deleteFromArray = (array, value) => { // here's a scaling issue in future
-    let newArray = [];
-    for(let i =0;i<array.length;i++){
-      if(array[i].toString()!=value.toString()){
-         newArray.push(array[i]);
-      }
-    }
+    let newArray = array.filter((item) => item.toString() !== value.toString());
     return newArray;
   }
   delete = async (id) => {
@@ -47,6 +125,7 @@ class CollectionRepo {
       const userId = collection.userId;
       const user = await User.findById(userId);
       user.collections = this.deleteFromArray(user.collections,id);
+      const map = await CollectionMapping.create({  collectionId: id, isDeleted:true });
       await user.save();
       return collection;
     } catch (error) {
@@ -157,5 +236,7 @@ class CollectionRepo {
       throw error;
     }
   }
+
+  
 }
 module.exports = CollectionRepo;

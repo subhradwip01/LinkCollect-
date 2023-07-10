@@ -1,7 +1,7 @@
 const { Collection } = require("../models");
 const CollectionService = require("../services/collectionService");
 const collectionService = new CollectionService();
-
+const tags = require("../constants/tagfile")
 const create = async (req, res) => {
   try {
     // Adding image url we got from cloudinary to req.body
@@ -28,6 +28,70 @@ const create = async (req, res) => {
     });
   }
 };
+
+const saveCollection = async (req, res) => { 
+   
+  try {
+    const collection = await collectionService.save(req.params.id, req.userId);
+    console.log("userId", req.userId)
+    
+    return res.status(201).json({
+      data: collection,
+      success: true,
+      message: "Successfully saved the Collection",
+      err: {},
+    });
+  } catch (error) {
+    return res.status(500).json({
+      data: {},
+      success: false,
+      message: "Not able to save Collections",
+      err: error,
+    });
+  }
+}
+const unsaveCollection = async (req, res) => { 
+   
+  try {
+    const collection = await collectionService.unsave(req.params.id, req.userId);
+    console.log("userId", req.userId)
+    
+    return res.status(201).json({
+      data: collection,
+      success: true,
+      message: "Successfully unsaved the Collection",
+      err: {},
+    });
+  } catch (error) {
+    return res.status(500).json({
+      data: {},
+      success: false,
+      message: "Not able to unsave Collections",
+      err: error,
+    });
+  }
+}
+const getSavedCollections = async (req, res) => { 
+   
+  try {
+    const collection = await collectionService.getSavedCollections(req.userId);
+    console.log("userId", req.userId)
+    
+    return res.status(201).json({
+      data: collection,
+      success: true,
+      message: "Successfully fetched the Collection",
+      err: {},
+    });
+  } catch (error) {
+    return res.status(500).json({
+      data: {},
+      success: false,
+      message: "Not able to fetch sqved Collections",
+      err: error,
+    });
+  }
+}
 
 const togglePrivacy = async (req, res) => {
   try {
@@ -138,6 +202,35 @@ const getAll = async (req, res) => {
       message: "Successfully fetched a Collection",
       err: {},
     });
+  } catch (error) {
+    return res.status(500).json({
+      data: {},
+      success: false,
+      message: "Not able to fetch the Collection",
+      err: error,
+    });
+  }
+};
+const getTags = async (req, res) => {
+  try {
+    if(tags) {
+      const tag = tags
+      return res.status(201).json({
+        data: tag,
+        success: true,
+        message: "Successfully fetched tags",
+        err: {},
+      });
+    }
+    else {
+      return res.status(201).json({
+        data: [],
+        success: true,
+        message: "failed",
+        err: {},
+      });
+    }
+   
   } catch (error) {
     return res.status(500).json({
       data: {},
@@ -262,5 +355,9 @@ module.exports = {
   downvote,
   togglePrivacy,
   getAllByUsername,
-  doesLinkExist
+  doesLinkExist, 
+  saveCollection,
+  unsaveCollection,
+  getSavedCollections,
+  getTags
 };
