@@ -1,5 +1,5 @@
 const { Collection, User, CollectionMapping } = require("../models/index");
-
+ // Defining the CollectionRepository class
 class CollectionRepo {
   create = async (data) => {
     try {
@@ -26,8 +26,7 @@ class CollectionRepo {
       throw error;
     }
   };
-
-
+   // Method to validate user and collection
   validUserAndCollection =  (user,collection) => {
     if (!user) {
       throw new Error("User ID is not a Valid ID");
@@ -38,20 +37,21 @@ class CollectionRepo {
  
     }
   }
-
+   // Method to save a collection
   save = async (collectionId, userId) => {
     try {
       const collection = await Collection.findById(collectionId);
       const user = await User.findById(userId);
+      // Validate the user and collection
       this.validUserAndCollection(user,collection)
       user.savedCollections.push(collectionId.toString());
       await user.save();
+      // Return the collection
       return collection;
     } catch (error) {
       console.log("Something went wrong at repository layer while saving collection", error);
       throw error;
     }
-
   }
   unsave = async (collectionId, userId) => {
     try {
@@ -70,13 +70,13 @@ class CollectionRepo {
     }
 
   }
-
+   // Method to get all saved collections
   getSavedCollections = async (userId) => {
     try {
-  
+      // Find user by ID
       const user = await User.findById(userId);
       let allCollections = [];
-
+       // Loop through the user's saved collections
       for (let i = 0; i < user.savedCollections.length; i++) {
         const collectId = user.savedCollections[i];
         const Map = await CollectionMapping.find({collectionId: collectId})
@@ -85,7 +85,7 @@ class CollectionRepo {
           user.savedCollections = this.deleteFromArray(user.savedCollections,collectId);
           await user.save();
         } else {
-          // console.log(collectId)
+          // If the collection is not deleted, add it to the return array
           const collection = await Collection.findById(collectId);
           allCollections.push(collection);
           }
@@ -164,7 +164,7 @@ class CollectionRepo {
       throw error;
     }
   };
-
+   // Method to get all collections by username
   getAllByUsername = async (username, ownsUsername) => {
     try {
       if (!ownsUsername) {
@@ -180,7 +180,7 @@ class CollectionRepo {
       throw error;
     }
   };
-
+   // Method to check if a link exists in a collection
   doesLinkExist = async (collectionId, link) => {
     try {
       //
@@ -194,7 +194,7 @@ class CollectionRepo {
       throw error;
     }
   }
-
+   // Method to update a collection
   update = async (id, data) => {
     try {
       // console.log(data);

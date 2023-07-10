@@ -3,33 +3,56 @@ const { Collection } = require("../models");
 exports.isCollectionOwner = async (req, res, next) => {
   const collectionId = req.params.id;
   // console.log(collectionId);
-  try{
+  try {
     const { userId } = await Collection.findById(collectionId);
-    if (req.userId != userId) {
+    if (req.userId !== userId) {
       return res.status(400).json({
         success: false,
-        message: "You cannot edit,read or add to this collection",
-        err: "unauthorized to perform this action",
+        message: "You cannot edit, read, or add to this collection",
+        err: "Unauthorized to perform this action",
         data: {},
       });
     }
     next();
-  } catch(e) {
-    console.log(e)
-  }
- 
-};
-
-exports.isCollectionPublic = async(req,res,next) => {
-  const collectionId = req.params.id;
-  const collection = await Collection.findById(collectionId);
-  if (req.userId != collection.userId && !collection.isPublic) {
-    return res.status(400).json({
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
       success: false,
-      message: "The Collection you're trying to access is private!!!",
-      err: "unauthorized to perform this action",
+      message: "Internal Server Error",
+      err: "Error retrieving collection",
       data: {},
     });
   }
-  next();
-}
+};
+
+exports.isCollectionPublic = async (req, res, next) => {
+  const collectionId = req.params.id;
+  try {
+    const collection = await Collection.findById(collectionId);
+    if (!collection) {
+      return res.status(404).json({
+        success: false,
+        message: "Collection not found",
+        err: "Invalid collection ID",
+        data: {},
+      });
+    }
+    if (req.userId !== collection.userId && !collection.isPublic) {
+      return res.status(400).json({
+        success: false,
+        message: "The collection you're trying to access is private",
+        err: "Unauthorized to perform this action",
+        data: {},
+      });
+    }
+    next();
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      err: "Error retrieving collection",
+      data: {},
+    });
+  }
+};

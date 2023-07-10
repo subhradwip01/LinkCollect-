@@ -87,13 +87,9 @@ class TimelineRepo {
     }
   };
   deleteFromArray = (array, value) => {
-    let newArray = [];
-    for(let i =0;i<array.length;i++){
-      if(array[i].toString()!=value.toString()){
-         newArray.push(array[i]);
-      }
-    }
-    return newArray;
+    array.filter(
+      (timeline) => timeline.toString() !== value.toString()
+    );
   }
 }
 module.exports = TimelineRepo;
