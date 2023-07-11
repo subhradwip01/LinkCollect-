@@ -135,8 +135,13 @@ const { Collection, User, CollectionMapping } = require("../models/index");
         .skip((page - 1) * pageSize) // Skip the appropriate number of collections based on the page number
         .limit(Number(pageSize)); // Limit the number of collections to fetch per page
 
-        console.log("here",collections);
-      return collections;
+              // Sort the fetched collections in descending order based on the number of upvotes
+        const sortedCollections = collections.sort(
+        (a, b) => b.upvotes.length - a.upvotes.length
+      );
+
+        console.log("here",sortedCollections);
+      return sortedCollections;
     } catch (error) {
       console.log(
         "Err in repository layer getting saved collection failed",
