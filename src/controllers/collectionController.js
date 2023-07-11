@@ -1,7 +1,7 @@
 const { Collection } = require("../models");
 const CollectionService = require("../services/collectionService");
 const collectionService = new CollectionService();
-const tags = require("../constants/tagfile")
+
 const create = async (req, res) => {
   try {
     // Adding image url we got from cloudinary to req.body
@@ -33,7 +33,7 @@ const saveCollection = async (req, res) => {
    
   try {
     const collection = await collectionService.save(req.params.id, req.userId);
-    console.log("userId", req.userId)
+    // console.log("userId", req.userId)
     
     return res.status(201).json({
       data: collection,
@@ -54,7 +54,7 @@ const unsaveCollection = async (req, res) => {
    
   try {
     const collection = await collectionService.unsave(req.params.id, req.userId);
-    console.log("userId", req.userId)
+    // console.log("userId", req.userId)
     
     return res.status(201).json({
       data: collection,
@@ -87,7 +87,28 @@ const getSavedCollections = async (req, res) => {
     return res.status(500).json({
       data: {},
       success: false,
-      message: "Not able to fetch sqved Collections",
+      message: "Not able to fetch saved Collections",
+      err: error,
+    });
+  }
+}
+const getExplorePage = async (req, res) => { 
+   
+  try {
+    const { page = 1, pageSize = 20, tags } = req.query; // Get the page number and page size from the query parameters
+    const collection = await collectionService.getExplorePage(pageSize, page, tags);
+    
+    return res.status(201).json({
+      data: collection,
+      success: true,
+      message: "Successfully fetched the Explore Page",
+      err: {},
+    });
+  } catch (error) {
+    return res.status(500).json({
+      data: {},
+      success: false,
+      message: "Not able to fetch explore page Collections",
       err: error,
     });
   }
@@ -211,35 +232,27 @@ const getAll = async (req, res) => {
     });
   }
 };
+// get tags
 const getTags = async (req, res) => {
   try {
-    if(tags) {
-      const tag = tags
-      return res.status(201).json({
-        data: tag,
-        success: true,
-        message: "Successfully fetched tags",
-        err: {},
-      });
-    }
-    else {
-      return res.status(201).json({
-        data: [],
-        success: true,
-        message: "failed",
-        err: {},
-      });
-    }
-   
+    console.log("getTags")
+    const tags = await collectionService.getTags();
+    return res.status(201).json({
+      data: tags,
+      success: true,
+      message: "Successfully fetched tags",
+      err: {},
+    });
   } catch (error) {
     return res.status(500).json({
       data: {},
       success: false,
-      message: "Not able to fetch the Collection",
+      message: "Not able to fetch tags",
       err: error,
     });
   }
-};
+}
+
 const getAllWithTimeline = async (req, res) => {
   try {
     const collection = await collectionService.getAllWithTimeline(req.userId);
@@ -359,5 +372,6 @@ module.exports = {
   saveCollection,
   unsaveCollection,
   getSavedCollections,
-  getTags
+  getTags,
+  getExplorePage
 };

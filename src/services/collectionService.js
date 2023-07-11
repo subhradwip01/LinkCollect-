@@ -42,6 +42,15 @@ class CollectionService {
       throw error;
     }
   }
+  getExplorePage = async (pageSize, page, tags) => {
+    try {
+
+      const collection = await this.collectionRepo.getExplorePage(pageSize, page, tags);
+      return collection;
+    } catch (error) {
+      throw error;
+    }
+  }
 
   async togglePrivacy(userId) {
     try {
@@ -130,6 +139,16 @@ class CollectionService {
       throw error;
     }
   }
+
+  getTags = async () => {
+    try {
+      const tag = await this.collectionRepo.getTags();
+      return tag;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
+
 
 module.exports = CollectionService;

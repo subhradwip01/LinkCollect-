@@ -34,7 +34,7 @@ router.get("/:id",isCollectionPublic ,collectionController.get);
 router.get("/", collectionController.getAllWithTimeline);
 
 //collection limit removing for testing
-router.post("/",collectionLimit ,upload.single("image"), collectionController.create);
+router.post("/" ,upload.single("image"), collectionController.create);
 router.patch("/:id", isCollectionOwner, upload.single("image"), collectionController.update);
 router.delete("/:id", isCollectionOwner, collectionController.deleteCollection);
 
@@ -49,9 +49,6 @@ router.post("/:id/save", collectionController.saveCollection);
 router.post("/:id/unsave", collectionController.unsaveCollection);
 
 
-// GET VALID TAGS
-router.get("/alltags", collectionController.getTags); // userId
-
 
 
 // UPVOTE ROUTES
@@ -61,5 +58,11 @@ router.post('/:id/downvote', collectionController.downvote);
 // PRIVACY ROUTES
 router.post('/togglePrivacy/:id', collectionController.togglePrivacy);
 
+
+// GET VALID TAGS
+router.get("/tags/all", collectionController.getTags); // userId
+
+// Explore
+router.get("/page/explore/", collectionController.getExplorePage);
 
 module.exports = router;

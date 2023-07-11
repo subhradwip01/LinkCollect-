@@ -1,11 +1,15 @@
 const { Collection, User, CollectionMapping } = require("../models/index");
  // Defining the CollectionRepository class
-class CollectionRepo {
+ const tags = require("../constants/alltags"); 
+ class CollectionRepo {
   create = async (data) => {
     try {
-      if(data.tags.length <= 2 || data.title.length <= 59 || data.description.length <= 1000 ) {
-        const collection = await Collection.create({ ...data
-        });
+      if (
+        data.tags.length <= 2 ||
+        data.title.length <= 59 ||
+        data.description.length <= 1000
+      ) {
+        const collection = await Collection.create({ ...data });
         const user = await User.findById(data.userId);
         if (!user) {
           await Collection.findByIdAndDelete(collection._id);
@@ -14,15 +18,13 @@ class CollectionRepo {
         user.collections.push(collection);
         await user.save();
         return collection;
-      }
-      else {
+      } else {
         throw "some issue in your data";
       }
-    
+
       //console.log(collection);
-     
     } catch (error) {
-      console.log(error);           
+      console.log(error);
       throw error;
     }
   };
@@ -30,11 +32,9 @@ class CollectionRepo {
   validUserAndCollection =  (user,collection) => {
     if (!user) {
       throw new Error("User ID is not a Valid ID");
-      
     }
-    if(!collection){
+    if (!collection) {
       throw new Error("Collection ID is not a Valid ID");
- 
     }
   }
    // Method to save a collection
@@ -49,7 +49,10 @@ class CollectionRepo {
       // Return the collection
       return collection;
     } catch (error) {
-      console.log("Something went wrong at repository layer while saving collection", error);
+      console.log(
+        "Something went wrong at repository layer while saving collection",
+        error
+      );
       throw error;
     }
   }
@@ -57,15 +60,21 @@ class CollectionRepo {
     try {
       const collection = await Collection.findById(collectionId);
       const user = await User.findById(userId);
-      this.validUserAndCollection(user,collection)
+      this.validUserAndCollection(user, collection);
       // user.savedCollections.push(collectionId.toString());
-  
-      user.savedCollections = this.deleteFromArray(user.savedCollections,collectionId);
+
+      user.savedCollections = this.deleteFromArray(
+        user.savedCollections,
+        collectionId
+      );
       await user.save();
-    
+
       return collection;
     } catch (error) {
-      console.log("Something went wrong at repository layer while saving collection", error);
+      console.log(
+        "Something went wrong at repository layer while saving collection",
+        error
+      );
       throw error;
     }
 
@@ -79,57 +88,99 @@ class CollectionRepo {
        // Loop through the user's saved collections
       for (let i = 0; i < user.savedCollections.length; i++) {
         const collectId = user.savedCollections[i];
-        const Map = await CollectionMapping.find({collectionId: collectId})
+        const Map = await CollectionMapping.find({ collectionId: collectId });
         // find if deleted or not, if deleted true -> remove collection from saved and also skip adding to return
-        if(Map.isDeleted) {
-          user.savedCollections = this.deleteFromArray(user.savedCollections,collectId);
+        if (Map.isDeleted) {
+          user.savedCollections = this.deleteFromArray(
+            user.savedCollections,
+            collectId
+          );
           await user.save();
         } else {
           // If the collection is not deleted, add it to the return array
           const collection = await Collection.findById(collectId);
           allCollections.push(collection);
-          }
+        }
       }
       // console.log(allCollections)
       return allCollections;
-
     } catch (error) {
-      console.log("Err in repository layer getting saved collection failed", error);
+      console.log(
+        "Err in repository layer getting saved collection failed",
+        error
+      );
       throw error;
     }
-  }
+  };
+  getExplorePage = async (pageSize, page, tags) => {
+    try {
+      // If tags are provided, construct the tag query
+      let tagQuery = {};
+      if (tags) {
+        const tagsArray = Array.isArray(tags) ? tags : [tags]; // Convert single tag to array if needed
+        console.log("here",tagsArray)
+        // Build the query to match any of the provided tags
+        tagQuery = { tags: { $in: tagsArray } };
+      }
+
+      // Construct the main query with tag filtering and pagination
+      const query = {
+        isPublic: true , // Match public collections
+          ...tagQuery, // Apply tag filtering
+      };
+
+      // Fetch collections based on the criteria with tag filtering and pagination
+      const collections = await Collection.find(query)
+        .select("title image description tags timelines upvotes views") // Select the desired fields to return
+        .skip((page - 1) * pageSize) // Skip the appropriate number of collections based on the page number
+        .limit(Number(pageSize)); // Limit the number of collections to fetch per page
+
+        console.log("here",collections);
+      return collections;
+    } catch (error) {
+      console.log(
+        "Err in repository layer getting saved collection failed",
+        error
+      );
+      throw error;
+    }
+  };
   async togglePrivacy(userId) {
     try {
       //console.log("userid",userId);
-    
+
       const user = await User.findById(userId);
       const collection = await Collection.findById(userId);
-      this.validUserAndCollection(user,collection)
+      this.validUserAndCollection(user, collection);
       collection.isPublic = !collection.isPublic;
       await collection.save();
       // console.log(collection);
       return collection;
     } catch (error) {
       console.log("Something went wrong at repository layer", error);
-      console.log(error);           
+      console.log(error);
       throw error;
     }
   }
-  deleteFromArray = (array, value) => { // here's a scaling issue in future
+  deleteFromArray = (array, value) => {
+    // here's a scaling issue in future
     let newArray = array.filter((item) => item.toString() !== value.toString());
     return newArray;
-  }
+  };
   delete = async (id) => {
     try {
       const collection = await Collection.findByIdAndRemove(id);
       const userId = collection.userId;
       const user = await User.findById(userId);
-      user.collections = this.deleteFromArray(user.collections,id);
-      const map = await CollectionMapping.create({  collectionId: id, isDeleted:true });
+      user.collections = this.deleteFromArray(user.collections, id);
+      const map = await CollectionMapping.create({
+        collectionId: id,
+        isDeleted: true,
+      });
       await user.save();
       return collection;
     } catch (error) {
-      console.log(error);           
+      console.log(error);
       throw error;
     }
   };
@@ -140,7 +191,7 @@ class CollectionRepo {
       });
       return collection;
     } catch (error) {
-      console.log(error);           
+      console.log(error);
       throw error;
     }
   };
@@ -149,7 +200,7 @@ class CollectionRepo {
       const collection = await Collection.find({ userId });
       return collection;
     } catch (error) {
-      console.log(error);           
+      console.log(error);
       throw error;
     }
   };
@@ -160,7 +211,7 @@ class CollectionRepo {
         .lean();
       return collection;
     } catch (error) {
-      console.log(error);           
+      console.log(error);
       throw error;
     }
   };
@@ -168,15 +219,14 @@ class CollectionRepo {
   getAllByUsername = async (username, ownsUsername) => {
     try {
       if (!ownsUsername) {
-        const collection = await Collection.find({ username, isPublic: true })
+        const collection = await Collection.find({ username, isPublic: true });
         return collection;
-      }
-      else {
-        const collection = await Collection.find({ username })
+      } else {
+        const collection = await Collection.find({ username });
         return collection;
       }
     } catch (error) {
-      console.log(error);           
+      console.log(error);
       throw error;
     }
   };
@@ -184,13 +234,17 @@ class CollectionRepo {
   doesLinkExist = async (collectionId, link) => {
     try {
       //
-      const collection = await Collection.findById(collectionId).populate("timelines")
-      const existingLink = collection.timelines.find(timeline => timeline.link === link)
+      const collection = await Collection.findById(collectionId).populate(
+        "timelines"
+      );
+      const existingLink = collection.timelines.find(
+        (timeline) => timeline.link === link
+      );
 
-      if (existingLink) return true
+      if (existingLink) return true;
       return false;
     } catch (error) {
-      console.log(error);           
+      console.log(error);
       throw error;
     }
   }
@@ -203,7 +257,7 @@ class CollectionRepo {
       });
       return collection;
     } catch (error) {
-      console.log(error);           
+      console.log(error);
       throw error;
     }
   };
@@ -216,12 +270,11 @@ class CollectionRepo {
       collection.upvotes.addToSet(userId);
       await collection.save();
       return collection;
-
     } catch (error) {
-      console.log(error);           
+      console.log(error);
       throw error;
     }
-  }
+  };
   downvote = async (collectionId, userId) => {
     try {
       const collection = await Collection.findById(collectionId);
@@ -232,11 +285,22 @@ class CollectionRepo {
       await collection.save();
       return collection;
     } catch (error) {
-      console.log(error);           
+      console.log(error);
       throw error;
     }
-  }
+  };
 
-  
+  getTags = async () => {
+    try {
+      if (!tags) {
+        throw new Error("Collection not found");
+      }
+      return tags;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+   
+  }
 }
 module.exports = CollectionRepo;
