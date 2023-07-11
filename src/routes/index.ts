@@ -12,7 +12,9 @@ router.use((req: any, res: any, next: any) => {
 
 router.use((err, req, res, next) => {
   console.error(err);
-  res.status(err.status || 500).json({ error: err.message || "Internal Server Error" });
+  res
+    .status(err.status || 500)
+    .json({ error: err.message || "Internal Server Error" });
 });
 
-export default router ;
+export default router;

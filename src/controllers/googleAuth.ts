@@ -1,13 +1,13 @@
 import axios from "axios";
 import { Request, Response } from "express";
-import User , {IUser} from "../models/user";
-import config  from "../config/index";
+import User, { IUser } from "../models/user";
+import config from "../config/index";
 
 import UserService from "../services/userService";
 
 const userService = new UserService();
 // const User: IUser = require("../models/user");
- export const googleAuth = async (req: Request, res: Response) => {
+export const googleAuth = async (req: Request, res: Response) => {
   const { code } = req.query;
 
   const accessToken = await getAccessTokenFromGoogle(code as string);
@@ -19,11 +19,14 @@ const userService = new UserService();
     user = await User.create({
       name: userData.name,
       email: userData.email,
-      username: userData.email.split('@')[0],
+      username: userData.email.split("@")[0],
     });
   }
 
-  const token = userService.createToken({ userId: user._id, username: user.username });
+  const token = userService.createToken({
+    userId: user._id,
+    username: user.username,
+  });
 
   if (config.PRODUCTION !== "production") {
     return res.redirect(`http://localhost:3001/login?token=${token}`);

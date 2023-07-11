@@ -22,10 +22,13 @@ const create = async (req, res) => {
   }
 };
 
- const createMultiple = async (req, res) => {
+const createMultiple = async (req, res) => {
   try {
     const { id: collectionId } = req.params;
-    const timelines = await timelineService.createMultiple(req.body, collectionId);
+    const timelines = await timelineService.createMultiple(
+      req.body,
+      collectionId
+    );
     return res.status(201).json({
       data: timelines,
       success: true,
@@ -42,7 +45,7 @@ const create = async (req, res) => {
   }
 };
 
- const deleteTimeline = async (req, res) => {
+const deleteTimeline = async (req, res) => {
   try {
     const { timelineId, id: collectionId } = req.params;
     const timeline = await timelineService.delete(timelineId, collectionId);
@@ -62,9 +65,12 @@ const create = async (req, res) => {
   }
 };
 
- const updateTimeline = async (req, res) => {
+const updateTimeline = async (req, res) => {
   try {
-    const timeline = await timelineService.update(req.params.timelineId, req.body);
+    const timeline = await timelineService.update(
+      req.params.timelineId,
+      req.body
+    );
     return res.status(201).json({
       data: timeline,
       success: true,

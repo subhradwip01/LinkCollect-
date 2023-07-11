@@ -8,7 +8,7 @@ const STRIPE_SIGNING_SECRET: string = env.STRIPE_SIGNING_SECRET!; // Make sure S
 const STRIPE_SECRET_KEY: string = env.STRIPE_SECRET_KEY!; // Make sure STRIPE_SIGNING_SECRET has a value
 
 const config: Stripe.StripeConfig = {
-  apiVersion: '2022-11-15', // Specify the appropriate API version here
+  apiVersion: "2022-11-15", // Specify the appropriate API version here
 };
 const stripe = new Stripe(STRIPE_SECRET_KEY, config);
 
@@ -44,7 +44,11 @@ const webhook = async (req, res) => {
   try {
     const sign = req.headers["stripe-signature"];
     let event;
-    event = stripe.webhooks.constructEvent(req.body, sign, STRIPE_SIGNING_SECRET);
+    event = stripe.webhooks.constructEvent(
+      req.body,
+      sign,
+      STRIPE_SIGNING_SECRET
+    );
 
     if (event.type === "checkout.session.completed") {
       const session = event.data.object;
@@ -59,7 +63,10 @@ const webhook = async (req, res) => {
 };
 
 async function fulfillTheOrder(session) {
-  const user = await User.findOneAndUpdate({ email: session.metadata.email }, { isPremium: true });
+  const user = await User.findOneAndUpdate(
+    { email: session.metadata.email },
+    { isPremium: true }
+  );
   console.log(user);
 }
 

@@ -1,9 +1,5 @@
-import CollectionRepo from './collectionRepo';
-import TimelineRepo from './timelineRepo';
-import UserRepository from './userRepo';
+import CollectionRepo from "./collectionRepo";
+import TimelineRepo from "./timelineRepo";
+import UserRepository from "./userRepo";
 
-export {
-  CollectionRepo,
-  TimelineRepo,
-  UserRepository
-};
+export { CollectionRepo, TimelineRepo, UserRepository };

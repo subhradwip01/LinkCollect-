@@ -77,13 +77,15 @@ class CollectionRepo {
   getSavedCollections = async (userId) => {
     try {
       const user: any = await User.findById(userId);
-      if(!user) {
+      if (!user) {
         throw "User not found";
       }
       let allCollections: any = [];
       for (let i = 0; i < user.savedCollections.length; i++) {
         const collectId = user.savedCollections[i];
-        const Map: any = await CollectionMapping.find({ collectionId: collectId });
+        const Map: any = await CollectionMapping.find({
+          collectionId: collectId,
+        });
         if (Map.isDeleted) {
           user.savedCollections = this.deleteFromArray(
             user.savedCollections,
@@ -119,9 +121,9 @@ class CollectionRepo {
       };
 
       const collections = await Collection.find(query)
-      .select("title image description tags timelines upvotes views")
-      .skip((parseInt(page) - 1) * parseInt(pageSize))
-      .limit(parseInt(pageSize));
+        .select("title image description tags timelines upvotes views")
+        .skip((parseInt(page) - 1) * parseInt(pageSize))
+        .limit(parseInt(pageSize));
 
       const sortedCollections = collections.sort(
         (a, b) => b.upvotes.length - a.upvotes.length
@@ -153,9 +155,7 @@ class CollectionRepo {
   }
 
   deleteFromArray = (array, value) => {
-    let newArray = array.filter(
-      (item) => item.toString() !== value.toString()
-    );
+    let newArray = array.filter((item) => item.toString() !== value.toString());
     return newArray;
   };
 

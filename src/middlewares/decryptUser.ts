@@ -11,8 +11,11 @@ interface AuthenticatedRequest extends Request {
   username?: string;
 }
 
-
-export const decryptUser = (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {
+export const decryptUser = (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+): void => {
   const token = req.header("Authorization");
   if (!token) return next(); // req.userId will stay undefined
   try {

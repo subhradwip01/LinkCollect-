@@ -4,7 +4,11 @@ interface AuthenticatedRequest extends Request {
   userId?: string;
 }
 
-export const isLoggedIn = (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {
+export const isLoggedIn = (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+): void => {
   if (!req.userId) {
     res.status(400).json({
       success: false,

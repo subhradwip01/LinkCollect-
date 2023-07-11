@@ -1,5 +1,5 @@
-import CollectionRepo from '../repository/collectionRepo';
-import UserRepo from '../repository/userRepo';
+import CollectionRepo from "../repository/collectionRepo";
+import UserRepo from "../repository/userRepo";
 
 const collectionRepo = new CollectionRepo();
 const userRepo = new UserRepo();
@@ -173,5 +173,5 @@ export default {
   validateGrantRoleRequest,
   checkWhenSomeoneisFetchigCollection,
   userExist,
-  isPublicCheck
+  isPublicCheck,
 };

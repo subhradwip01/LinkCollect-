@@ -71,7 +71,9 @@ class UserRepository {
 
   async getWithCollection(userId) {
     try {
-      const user = await User.findById(userId).populate({ path: "collections" }).lean();
+      const user = await User.findById(userId)
+        .populate({ path: "collections" })
+        .lean();
       return user;
     } catch (error) {
       console.log(error);
@@ -81,7 +83,9 @@ class UserRepository {
 
   async getByUserId(userId) {
     try {
-      const user = await User.findById(userId).populate({ path: "collections" }).lean();
+      const user = await User.findById(userId)
+        .populate({ path: "collections" })
+        .lean();
       return user;
     } catch (error) {
       console.log("Something went wrong in fetching the user");
@@ -117,7 +121,9 @@ class UserRepository {
 
   async getByUsername(username) {
     try {
-      const user = await User.findOne({ username }).populate({ path: "collections" }).lean();
+      const user = await User.findOne({ username })
+        .populate({ path: "collections" })
+        .lean();
       return user;
     } catch (error) {
       console.log("Something went wrong in fetching the user");
@@ -127,4 +133,4 @@ class UserRepository {
   }
 }
 
-export default  UserRepository;
+export default UserRepository;

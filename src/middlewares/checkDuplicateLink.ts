@@ -4,8 +4,12 @@ export const checkDuplicateLink = async (req, res, next) => {
   try {
     const { id: collectionId } = req.params;
     const { link } = req.body;
-    const collection = await Collection.findById(collectionId).populate("timelines");
-    const existingLink = collection?.timelines.find((timeline: any) => timeline.link === link);
+    const collection = await Collection.findById(collectionId).populate(
+      "timelines"
+    );
+    const existingLink = collection?.timelines.find(
+      (timeline: any) => timeline.link === link
+    );
 
     if (existingLink) {
       return res.status(400).json({

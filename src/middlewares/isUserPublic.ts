@@ -1,5 +1,5 @@
-import UserRepo from '../repository/userRepo';
-import {AuthenticatedRequest} from '../interface/Request';
+import UserRepo from "../repository/userRepo";
+import { AuthenticatedRequest } from "../interface/Request";
 
 const userRepo = new UserRepo();
 

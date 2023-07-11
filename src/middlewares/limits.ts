@@ -1,12 +1,19 @@
-
-import CollectionRepo from '../repository/collectionRepo';
-import UserRepo from '../repository/userRepo';
-import {AuthenticatedRequest, IResponse,INextFunction} from '../interface/Request';
+import CollectionRepo from "../repository/collectionRepo";
+import UserRepo from "../repository/userRepo";
+import {
+  AuthenticatedRequest,
+  IResponse,
+  INextFunction,
+} from "../interface/Request";
 
 const collectionRepo = new CollectionRepo();
 const userRepo = new UserRepo();
 
-export const collectionLimit = async (req: AuthenticatedRequest, res: IResponse, next: INextFunction) => {
+export const collectionLimit = async (
+  req: AuthenticatedRequest,
+  res: IResponse,
+  next: INextFunction
+) => {
   try {
     const user = await userRepo.getByUserId(req.userId);
     if (user.collections.length > 29) {
@@ -30,7 +37,11 @@ export const collectionLimit = async (req: AuthenticatedRequest, res: IResponse,
   }
 };
 
-export const LinkLimit = async (req: AuthenticatedRequest, res: IResponse, next: INextFunction) => {
+export const LinkLimit = async (
+  req: AuthenticatedRequest,
+  res: IResponse,
+  next: INextFunction
+) => {
   try {
     const collection: any = await collectionRepo.get(req.params.id);
     if (collection.timelines.length > 50) {
@@ -53,5 +64,3 @@ export const LinkLimit = async (req: AuthenticatedRequest, res: IResponse, next:
     });
   }
 };
-
-

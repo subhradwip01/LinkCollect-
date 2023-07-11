@@ -1,6 +1,6 @@
-import { Request, Response } from 'express';
-import { Collection } from '../models';
-import CollectionService from '../services/collectionService';
+import { Request, Response } from "express";
+import { Collection } from "../models";
+import CollectionService from "../services/collectionService";
 
 interface AuthenticatedRequest extends Request {
   userId?: string;
@@ -17,7 +17,11 @@ const create = async (req: AuthenticatedRequest, res: Response) => {
       req.body.image = req.file.path;
     }
     const { username, userId } = req;
-    const collection = await collectionService.create({ ...req.body, username, userId });
+    const collection = await collectionService.create({
+      ...req.body,
+      username,
+      userId,
+    });
 
     return res.status(201).json({
       data: collection,
@@ -38,7 +42,7 @@ const create = async (req: AuthenticatedRequest, res: Response) => {
 const saveCollection = async (req: AuthenticatedRequest, res: Response) => {
   try {
     const collection = await collectionService.save(req.params.id, req.userId);
-    
+
     return res.status(201).json({
       data: collection,
       success: true,
@@ -57,8 +61,11 @@ const saveCollection = async (req: AuthenticatedRequest, res: Response) => {
 
 const unsaveCollection = async (req: AuthenticatedRequest, res: Response) => {
   try {
-    const collection = await collectionService.unsave(req.params.id, req.userId);
-    
+    const collection = await collectionService.unsave(
+      req.params.id,
+      req.userId
+    );
+
     return res.status(201).json({
       data: collection,
       success: true,
@@ -75,10 +82,13 @@ const unsaveCollection = async (req: AuthenticatedRequest, res: Response) => {
   }
 };
 
-const getSavedCollections = async (req: AuthenticatedRequest, res: Response) => {
+const getSavedCollections = async (
+  req: AuthenticatedRequest,
+  res: Response
+) => {
   try {
     const collection = await collectionService.getSavedCollections(req.userId);
-    
+
     return res.status(201).json({
       data: collection,
       success: true,
@@ -98,8 +108,12 @@ const getSavedCollections = async (req: AuthenticatedRequest, res: Response) => 
 const getExplorePage = async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { page = 1, pageSize = 20, tags } = req.query;
-    const collection = await collectionService.getExplorePage(pageSize, page, tags);
-    
+    const collection = await collectionService.getExplorePage(
+      pageSize,
+      page,
+      tags
+    );
+
     return res.status(201).json({
       data: collection,
       success: true,
@@ -120,7 +134,7 @@ const togglePrivacy = async (req: AuthenticatedRequest, res: Response) => {
   try {
     const collection = await collectionService.togglePrivacy(req.params.id);
     const isPublic = collection.isPublic ? "Public" : "Private";
-    
+
     return res.status(201).json({
       success: true,
       message: `Successfully made your collection ${isPublic}`,
@@ -141,7 +155,7 @@ const togglePrivacy = async (req: AuthenticatedRequest, res: Response) => {
 const deleteCollection = async (req: AuthenticatedRequest, res: Response) => {
   try {
     const collection = await collectionService.delete(req.params.id);
-    
+
     return res.status(201).json({
       data: collection,
       success: true,
@@ -164,7 +178,7 @@ const update = async (req: AuthenticatedRequest, res: Response) => {
       req.body.image = req.file.path;
     }
     const collection = await collectionService.update(req.params.id, req.body);
-    
+
     return res.status(201).json({
       data: collection,
       success: true,
@@ -194,8 +208,15 @@ const get = async (req: AuthenticatedRequest, res: Response) => {
       err: {},
     });
 
-    if (req.userId != collection.userId && req.username != collection.username) {
-      await Collection.findByIdAndUpdate(collection._id, { $inc: { views: 1 } }, { new: true });
+    if (
+      req.userId != collection.userId &&
+      req.username != collection.username
+    ) {
+      await Collection.findByIdAndUpdate(
+        collection._id,
+        { $inc: { views: 1 } },
+        { new: true }
+      );
     }
 
     return;
@@ -212,7 +233,7 @@ const get = async (req: AuthenticatedRequest, res: Response) => {
 const getAll = async (req: AuthenticatedRequest, res: Response) => {
   try {
     const collection = await collectionService.getAll(req.userId);
-    
+
     return res.status(201).json({
       data: collection,
       success: true,
@@ -231,9 +252,9 @@ const getAll = async (req: AuthenticatedRequest, res: Response) => {
 
 const getTags = async (req: Request, res: Response) => {
   try {
-    console.log("getTags")
+    console.log("getTags");
     const tags = await collectionService.getTags();
-    
+
     return res.status(201).json({
       data: tags,
       success: true,
@@ -253,7 +274,7 @@ const getTags = async (req: Request, res: Response) => {
 const getAllWithTimeline = async (req: AuthenticatedRequest, res: Response) => {
   try {
     const collection = await collectionService.getAllWithTimeline(req.userId);
-    
+
     return res.status(201).json({
       data: collection,
       success: true,
@@ -273,8 +294,11 @@ const getAllWithTimeline = async (req: AuthenticatedRequest, res: Response) => {
 const getAllByUsername = async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { ownsUsername, username } = req;
-    const collection = await collectionService.getAllByUsername(username, ownsUsername);
-    
+    const collection = await collectionService.getAllByUsername(
+      username,
+      ownsUsername
+    );
+
     return res.status(201).json({
       data: collection,
       success: true,
@@ -295,15 +319,14 @@ const doesLinkExist = async (req: Request, res: Response) => {
   const { link } = req.body;
   try {
     const response = await collectionService.doesLinkExist(req.params.id, link);
-    
+
     return res.status(201).json({
       data: response,
       success: true,
       message: "Successfully checked for any duplicate links",
       err: {},
     });
-  }
-  catch (error) {
+  } catch (error) {
     return res.status(500).json({
       data: {},
       success: false,
@@ -315,8 +338,11 @@ const doesLinkExist = async (req: Request, res: Response) => {
 
 const upvote = async (req: AuthenticatedRequest, res: Response) => {
   try {
-    const collection = await collectionService.upvote(req.params.id, req.userId);
-    
+    const collection = await collectionService.upvote(
+      req.params.id,
+      req.userId
+    );
+
     return res.status(201).json({
       data: collection,
       success: true,
@@ -335,8 +361,11 @@ const upvote = async (req: AuthenticatedRequest, res: Response) => {
 
 const downvote = async (req: AuthenticatedRequest, res: Response) => {
   try {
-    const collection = await collectionService.downvote(req.params.id, req.userId);
-    
+    const collection = await collectionService.downvote(
+      req.params.id,
+      req.userId
+    );
+
     return res.status(201).json({
       data: collection,
       success: true,
@@ -370,6 +399,6 @@ const collectionController = {
   getSavedCollections,
   getTags,
   getExplorePage,
-}
+};
 
 export default collectionController;

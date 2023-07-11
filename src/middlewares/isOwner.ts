@@ -5,7 +5,11 @@ interface AuthenticatedRequest extends Request {
   userId?: string;
 }
 
-const isOwner = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+const isOwner = async (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const isSameUser = false;
     console.log(req.params.username, "hello", req.body.username);

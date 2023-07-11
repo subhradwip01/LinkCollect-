@@ -5,7 +5,11 @@ interface AuthenticatedRequest extends Request {
   userId?: string;
 }
 
-export const isCollectionOwner = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
+export const isCollectionOwner = async (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
   const collectionId = req.params.id;
   try {
     const collection = await CollectionModel.findById(collectionId);
@@ -37,7 +41,11 @@ export const isCollectionOwner = async (req: AuthenticatedRequest, res: Response
   }
 };
 
-export const isCollectionPublic = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
+export const isCollectionPublic = async (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
   const collectionId = req.params.id;
   try {
     const collection = await CollectionModel.findById(collectionId);
@@ -48,7 +56,10 @@ export const isCollectionPublic = async (req: AuthenticatedRequest, res: Respons
         err: "Invalid collection ID",
         data: {},
       });
-    } else if (req.userId !== collection.userId.toString() && !collection.isPublic) {
+    } else if (
+      req.userId !== collection.userId.toString() &&
+      !collection.isPublic
+    ) {
       res.status(400).json({
         success: false,
         message: "The collection you're trying to access is private",

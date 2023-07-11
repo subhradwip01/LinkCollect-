@@ -18,8 +18,13 @@ class TimelineRepo {
   createMultipleTimelines = async (data, collectionId) => {
     try {
       const newTimelines = data;
-      const collection: any = await Collection.findById(collectionId).populate("timelines");
-      const validNewTimelines = filterDuplicateTimelines(collection.timelines, newTimelines);
+      const collection: any = await Collection.findById(collectionId).populate(
+        "timelines"
+      );
+      const validNewTimelines = filterDuplicateTimelines(
+        collection.timelines,
+        newTimelines
+      );
       const timelines: any = await Timeline.create(validNewTimelines);
       collection.timelines = [...collection.timelines, ...timelines];
       await collection.save();
@@ -46,7 +51,7 @@ class TimelineRepo {
     }
   };
 
-  get = async (id: String | Number | bigint ) => {
+  get = async (id: String | Number | bigint) => {
     try {
       const timeline = await Timeline.findById(id);
       return timeline;
@@ -56,7 +61,7 @@ class TimelineRepo {
     }
   };
 
-  getAll = async (id: String | Number | bigint ) => {
+  getAll = async (id: String | Number | bigint) => {
     try {
       const timeline = await Timeline.find({ collectionId: id });
       return timeline;
@@ -66,7 +71,7 @@ class TimelineRepo {
     }
   };
 
-  update = async (id: String | Number | bigint , data: any) => {
+  update = async (id: String | Number | bigint, data: any) => {
     try {
       const timeline = await Timeline.findByIdAndUpdate(id, data, {
         new: true,
@@ -79,7 +84,9 @@ class TimelineRepo {
   };
 
   deleteFromArray = (array: any, value: any) => {
-    return array.filter((timeline: any) => timeline.toString() !== value.toString());
+    return array.filter(
+      (timeline: any) => timeline.toString() !== value.toString()
+    );
   };
 }
 

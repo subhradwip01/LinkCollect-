@@ -7,7 +7,11 @@ const getAll = async (req, res) => {
     const users = await User.find();
     const timelines = await Timeline.find();
 
-    const data = { collections: collections.length, users: users.length, timelines: timelines.length };
+    const data = {
+      collections: collections.length,
+      users: users.length,
+      timelines: timelines.length,
+    };
 
     return res.status(201).json({
       data,

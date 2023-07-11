@@ -1,10 +1,10 @@
-import  config  from "../config/index";
+import config from "../config/index";
 import UserService from "../services/userService";
 
 const userService = new UserService();
 const PRODUCTION: string = process.env.PRODUCTION!; // Make sure production has a value
 
- const create = async (req, res) => {
+const create = async (req, res) => {
   try {
     const response = await userService.create(req.body);
     return res.status(201).json({
@@ -23,7 +23,7 @@ const PRODUCTION: string = process.env.PRODUCTION!; // Make sure production has 
   }
 };
 
- const togglePrivacy = async (req, res) => {
+const togglePrivacy = async (req, res) => {
   try {
     const user = await userService.togglePrivacy(req.params.id);
     let isPublic;
@@ -64,9 +64,12 @@ const checkUsername = async (req, res) => {
   }
 };
 
- const signIn = async (req, res) => {
+const signIn = async (req, res) => {
   try {
-    const response = await userService.signIn(req.body.email, req.body.password);
+    const response = await userService.signIn(
+      req.body.email,
+      req.body.password
+    );
     return res.status(201).json({
       message: "Successfully Signed In",
       data: response,
@@ -83,7 +86,7 @@ const checkUsername = async (req, res) => {
   }
 };
 
- const getByUserId = async (req, res) => {
+const getByUserId = async (req, res) => {
   try {
     const response = await userService.getUserById(req.params.id);
     return res.status(201).json({
@@ -102,7 +105,7 @@ const checkUsername = async (req, res) => {
   }
 };
 
- const getWithCollection = async (req, res) => {
+const getWithCollection = async (req, res) => {
   try {
     const response = await userService.getWithCollection(req.userId);
     return res.status(201).json({
@@ -121,7 +124,7 @@ const checkUsername = async (req, res) => {
   }
 };
 
- const isAuthenticated = async (req, res) => {
+const isAuthenticated = async (req, res) => {
   try {
     const token = req.headers["x-access-token"];
     const response = await userService.isAuthenticated(token);
@@ -141,15 +144,20 @@ const checkUsername = async (req, res) => {
   }
 };
 
- const verifyEmailtoken = async (req, res) => {
+const verifyEmailtoken = async (req, res) => {
   try {
     const response = await userService.verifyEmailtoken(req.query.token);
-    const token = userService.createToken({ userId: response._id, username: response.username });
+    const token = userService.createToken({
+      userId: response._id,
+      username: response.username,
+    });
 
     if (PRODUCTION !== "production") {
       return res.redirect(`http://localhost:3000/login?token=${token}`);
     }
-    return res.redirect(`${config.PRODUCTION_FRONTEND_URL}/login?token=${token}`);
+    return res.redirect(
+      `${config.PRODUCTION_FRONTEND_URL}/login?token=${token}`
+    );
   } catch (error) {
     return res.status(500).json({
       message: "Not able to verify the email",
@@ -160,7 +168,7 @@ const checkUsername = async (req, res) => {
   }
 };
 
- const destroy = async (req, res) => {
+const destroy = async (req, res) => {
   try {
     const response = await userService.destroy(req.params.id);
     return res.status(201).json({
@@ -179,9 +187,12 @@ const checkUsername = async (req, res) => {
   }
 };
 
- const getByUsername = async (req, res) => {
+const getByUsername = async (req, res) => {
   try {
-    const response = await userService.getByUsername(req.params.username, req.userId);
+    const response = await userService.getByUsername(
+      req.params.username,
+      req.userId
+    );
     return res.status(201).json({
       success: true,
       message: "Fetched the user Successfully",
@@ -198,10 +209,13 @@ const checkUsername = async (req, res) => {
   }
 };
 
- const updateProfilePic = async (req, res) => {
+const updateProfilePic = async (req, res) => {
   try {
     const { username, userId } = req;
-    const profilePic = await userService.updateProfilePic({ profilePic: req.file.path, userId });
+    const profilePic = await userService.updateProfilePic({
+      profilePic: req.file.path,
+      userId,
+    });
 
     return res.status(201).json({
       data: profilePic,
