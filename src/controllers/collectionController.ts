@@ -151,6 +151,27 @@ const togglePrivacy = async (req: AuthenticatedRequest, res: Response) => {
     });
   }
 };
+const togglePin = async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const collection = await collectionService.togglePrivacy(req.params.id);
+    const isPublic = collection.isPublic ? "Public" : "Private";
+
+    return res.status(201).json({
+      success: true,
+      message: `Successfully made your collection ${isPublic}`,
+      data: collection,
+      err: {},
+    });
+  } catch (error: any) {
+    console.log(error);
+    return res.status(404).json({
+      message: error.message,
+      data: {},
+      success: false,
+      err: error.explanation,
+    });
+  }
+};
 
 const deleteCollection = async (req: AuthenticatedRequest, res: Response) => {
   try {
@@ -399,6 +420,7 @@ const collectionController = {
   getSavedCollections,
   getTags,
   getExplorePage,
+  togglePin,
 };
 
 export default collectionController;

@@ -165,6 +165,14 @@ class CollectionService {
       throw error;
     }
   };
+  togglePin = async () => {
+    try {
+      const tag = await this.collectionRepo.togglePin();
+      return tag;
+    } catch (error) {
+      throw error;
+    }
+  };
 }
 
 export default CollectionService;

@@ -1,6 +1,6 @@
 import { Collection, User, CollectionMapping } from "../models/index";
 import tags from "../constants/alltags";
-import { IUser } from "models/user";
+
 
 class CollectionRepo {
   create = async (data) => {
@@ -145,6 +145,20 @@ class CollectionRepo {
       const collection: any = await Collection.findById(userId);
       this.validUserAndCollection(user, collection);
       collection.isPublic = !collection.isPublic;
+      await collection.save();
+      return collection;
+    } catch (error) {
+      console.log("Something went wrong at repository layer", error);
+      console.log(error);
+      throw error;
+    }
+  }
+  async togglePin(userId: String | Number | bigint) {
+    try {
+      const user: any = await User.findById(userId);
+      const collection: any = await Collection.findById(userId);
+      this.validUserAndCollection(user, collection);
+      collection.isPinned = !collection.isPinned;
       await collection.save();
       return collection;
     } catch (error) {

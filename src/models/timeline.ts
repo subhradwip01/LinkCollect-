@@ -4,6 +4,7 @@ export interface ITimeline extends Document {
   collectionId: Schema.Types.ObjectId;
   title?: string;
   link: string;
+  isPinned?: boolean;
   note?: string;
   favicon?: string;
 }
@@ -17,6 +18,10 @@ const timelineSchema: Schema = new Schema(
     },
     title: {
       type: String,
+    },
+    isPinned: {
+      type: Boolean,
+      default: true,
     },
     link: {
       type: String,

@@ -5,6 +5,7 @@ interface ICollection extends Document {
   image?: string;
   description?: string;
   isPublic: boolean;
+  isPinned: boolean;
   upvotes: mongoose.Schema.Types.ObjectId[];
   userId: mongoose.Schema.Types.ObjectId;
   username: string;
@@ -27,6 +28,10 @@ const CollectionSchema: Schema<ICollection> = new Schema(
       type: String,
     },
     isPublic: {
+      type: Boolean,
+      default: true,
+    },
+    isPinned: {
       type: Boolean,
       default: true,
     },

@@ -55,6 +55,10 @@ router.post("/:id/unsave", collectionController.unsaveCollection);
 router.post("/:id/upvote", collectionController.upvote);
 router.post('/:id/downvote', collectionController.downvote);
 
+
+// Pin Unpin Routes
+router.post("/togglePin/:id", collectionController.togglePin);
+
 // PRIVACY ROUTES
 router.post('/togglePrivacy/:id', collectionController.togglePrivacy);
 
