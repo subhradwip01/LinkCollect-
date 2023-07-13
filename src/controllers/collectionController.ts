@@ -158,7 +158,7 @@ const togglePin = async (req: AuthenticatedRequest, res: Response) => {
 
     return res.status(201).json({
       success: true,
-      message: `Successfully made your collection ${isPublic}`,
+      message: `Successfully made your collection pin ${isPublic}`,
       data: collection,
       err: {},
     });

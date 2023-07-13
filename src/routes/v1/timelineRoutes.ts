@@ -16,11 +16,15 @@ router.post(
   checkDuplicateLink,
   timelineController.create
 );
+
+router.post("/togglePin/:timelineId", isCollectionOwner, timelineController.togglePin);
+
 router.patch(
   "/:timelineId",
   isCollectionOwner,
   timelineController.updateTimeline
 );
+
 router.delete(
   "/:timelineId",
   isCollectionOwner,

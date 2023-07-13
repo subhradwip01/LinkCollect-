@@ -64,6 +64,16 @@ class TimelineService {
       throw error;
     }
   };
+
+  togglePin = async (timelineId: any) => {
+    try {
+      const tag = await this.timelineRepo.togglePin(timelineId);
+      return tag;
+    } catch (error) {
+      throw error;
+    }
+  };
+
 }
 
 export default TimelineService;

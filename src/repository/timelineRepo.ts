@@ -88,6 +88,22 @@ class TimelineRepo {
       (timeline: any) => timeline.toString() !== value.toString()
     );
   };
+
+  async togglePin(timelineId: String | Number | bigint) {
+    try {
+      const timeline: any = await Timeline.findById(timelineId);
+      if(!timeline) {
+        throw "invalid id"
+      }
+      timeline.isPinned = !timeline.isPinned;
+      await timeline.save();
+      return timeline;
+    } catch (error) {
+      console.log("Something went wrong at repository layer of timeline", error);
+      console.log(error);
+      throw error;
+    }
+  }
 }
 
 export default TimelineRepo;

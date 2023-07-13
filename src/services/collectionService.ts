@@ -165,9 +165,9 @@ class CollectionService {
       throw error;
     }
   };
-  togglePin = async () => {
+  togglePin = async (userId: any) => {
     try {
-      const tag = await this.collectionRepo.togglePin();
+      const tag = await this.collectionRepo.togglePin(userId);
       return tag;
     } catch (error) {
       throw error;

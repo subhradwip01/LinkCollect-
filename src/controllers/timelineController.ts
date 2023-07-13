@@ -124,6 +124,24 @@ const getThatTimeline = async (req, res) => {
     });
   }
 };
+const togglePin = async (req, res) => {
+  try {
+    const timeline = await timelineService.getAll(req.params.timelineId);
+    return res.status(201).json({
+      data: timeline,
+      success: true,
+      message: "Successfully toggled ",
+      err: {},
+    });
+  } catch (error) {
+    return res.status(500).json({
+      data: {},
+      success: false,
+      message: "Not able to fetch toggle",
+      err: error,
+    });
+  }
+};
 
 const timelineController = {
   create,
@@ -132,6 +150,7 @@ const timelineController = {
   updateTimeline,
   getTimeline,
   getThatTimeline,
+  togglePin
 };
 
 export default timelineController;
