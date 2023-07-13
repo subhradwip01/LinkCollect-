@@ -130,7 +130,7 @@ const togglePin = async (req, res) => {
     return res.status(201).json({
       data: timeline,
       success: true,
-      message: "Successfully toggled ",
+      message: "Successfully toggled timeline pin",
       err: {},
     });
   } catch (error) {
