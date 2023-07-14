@@ -1,0 +1,139 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DBURL")
+}
+
+model Collection {
+  id          String             @id @default(cuid()) @map("_id")
+  title       String             @unique
+  image       String?
+  description String?
+  isPublic    Boolean            @default(true)
+  isPinned    Boolean            @default(true)
+  username    String
+  tags        String[]
+  views       Int?
+  timelines   Timeline[]
+  upvotes     CollectionUpvote[]
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+  User        User?              @relation(fields: [userId], references: [id])
+  userId      String?
+}
+
+model CollectionMapping {
+  id           String  @id @default(cuid()) @map("_id")
+  collectionId String  @unique
+  isDeleted    Boolean @default(false)
+}
+
+model Timeline {
+  id           String     @id @default(cuid()) @map("_id")
+  collection   Collection @relation(fields: [collectionId], references: [id])
+  collectionId String
+  title        String?
+  isPinned     Boolean    @default(true)
+  link         String
+  note         String?
+  favicon      String?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}
+
+model User {
+  id               String             @id @default(cuid()) @map("_id")
+  name             String
+  email            String             @unique
+  username         String             @unique
+  profilePic       String?
+  password         String?
+  isPremium        Boolean            @default(false)
+  isPublic         Boolean            @default(true)
+  collections      Collection[]
+  savedCollections String[]
+  emailToken       String?
+  verified         Int?
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  CollectionUpvote CollectionUpvote[]
+}
+
+model CollectionUpvote {
+  id           String     @id @default(cuid()) @map("_id")
+  user         User       @relation(fields: [userId], references: [id])
+  userId       String
+  collection   Collection @relation(fields: [collectionId], references: [id])
+  collectionId String
+  createdAt    DateTime   @default(now())
+}
+
+// // This is your Prisma schema file,
+// // learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// generator client {
+//   provider = "prisma-client-js"
+// }
+
+// // DATABASE_URL="postgresql://janedoe:janedoe@localhost:5432/janedoe?schema=hello-prisma"
+// datasource db {
+//   provider = "mongodb"
+//   url      = env("DBURL")
+// }
+
+// model Collection {
+//   id        String   @id @default(cuid()) @map("_id")
+//   title     String   @unique
+//   image     String?
+//   description String?
+//   isPublic  Boolean  @default(true)
+//   isPinned  Boolean  @default(true)
+//   userId      String  @map("userId")
+//   user        User    @relation("CreatedCollections", fields: [userId], references: [id])
+//   upvotes  User[]    @relation("Upvotes", references: [id])  // userId    String
+//   username  String
+//   tags      String[]
+//   views     Int?
+//   timelines Timeline[]
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+// }
+
+// model CollectionMapping {
+//   id         String   @id @default(cuid()) @map("_id")
+//   collectionId String @unique
+//   isDeleted  Boolean  @default(false)
+// }
+
+// model Timeline {
+//   id           String     @id @default(cuid()) @map("_id")
+//   collection   Collection @relation(fields: [collectionId], references: [id])
+//   collectionId String
+//   title        String?
+//   isPinned     Boolean    @default(true)
+//   link         String
+//   note         String?
+//   favicon      String?
+//   createdAt    DateTime   @default(now())
+//   updatedAt    DateTime   @updatedAt
+// }
+
+// model User {
+//   id              String        @id @default(cuid()) @map("_id")
+//   name            String
+//   email           String        @unique
+//   username        String        @unique
+//   profilePic      String?
+//   password        String?
+//   isPremium       Boolean       @default(false)
+//   isPublic        Boolean       @default(true)
+//   collections     Collection[]  @relation("CreatedCollections", references: [id])
+//   savedCollection Collection[]  @relation("SavedCollections", references: [id])
+//   emailToken      String?
+//   verified        Int?
+//   createdAt       DateTime      @default(now())
+//   updatedAt       DateTime      @updatedAt
+// }

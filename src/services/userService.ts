@@ -19,7 +19,7 @@ class UserService {
       const user = await this.userRepository.create(data);
       return user;
     } catch (error) {
-      console.log("Something went wrong Service layer.");
+      console.log("Something went wrong Service layer. ");
       throw error;
     }
   }
