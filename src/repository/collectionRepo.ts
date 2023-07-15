@@ -121,15 +121,12 @@ class CollectionRepo {
       };
 
       const collections = await Collection.find(query)
-        .select("title image description tags timelines upvotes views")
-        .skip((parseInt(page) - 1) * parseInt(pageSize))
-        .limit(parseInt(pageSize));
+      .select("title image description tags timelines upvotes views")
+      .sort({ upvotes: -1 }) // Sort by upvotes in descending order
+      .skip((parseInt(page) - 1) * parseInt(pageSize)) // skip the first n items, where n = (page - 1) * pageSize
+      .limit(parseInt(pageSize)); // limit the number of items to pageSize
 
-      const sortedCollections = collections.sort(
-        (a, b) => b.upvotes.length - a.upvotes.length
-      );
-
-      return sortedCollections;
+      return collections;
     } catch (error) {
       console.log(
         "Err in repository layer getting saved collection failed",
