@@ -4,7 +4,9 @@
   "description": "LinkCollect-",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node src/app.ts"
+    "start": "NODE_PATH=./build node build/index.js",
+    "build": "tsc -p .",
+    "dev": "nodemon src/app.ts"
   },
   "repository": {
     "type": "git",
