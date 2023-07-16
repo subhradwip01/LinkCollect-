@@ -24,6 +24,7 @@ WORKDIR /app/LinkCollect-
 
 # Install dependencies
 RUN npm install
+RUN npm run build
 
 # Start the Node.js backend with PM2
 CMD ["pm2-runtime", "npm", "--", "start"]

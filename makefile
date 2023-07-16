@@ -15,3 +15,9 @@ run:
 
 createnetwork:
 	docker network create example-net
+
+rmi:
+	docker rmi -f $$(docker images --filter "reference=*linkcollect*" -q) 
+
+rmiall: 
+	docker rmi -f $$(docker images -q)
