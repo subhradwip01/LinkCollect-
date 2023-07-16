@@ -3,13 +3,13 @@ version: '3'
 
 services:
     ts-node-docker:
-        container_name: ts-node
+        container_name: ts-node-docker
         build:
             context: .
             dockerfile: ./images/nodejs.dockerfile
             target: base
         volumes:
-        - ./src:/home/node/app/src
+        - ./src:/app/LinkCollect-/src
         - ./nodemon.json:/home/node/app/nodemon.json
         ports:
             - "3000:3000" 
@@ -19,7 +19,10 @@ services:
             - mongo
     mongo:
         container_name: mongo
-        image: mongo
+        build:
+            context: .
+            dockerfile: ./images/mongo.dockerfile
+            target: base
         volumes:
             - ./data:/data/db
         ports:

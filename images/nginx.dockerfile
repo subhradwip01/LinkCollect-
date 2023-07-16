@@ -1,8 +1,8 @@
 # Use the nginx base image
-FROM nginx
+FROM nginx as base
 
 # Copy the nginx configuration file to the container
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY images/configs/nginx.conf /etc/nginx/nginx.conf
 
 # Expose ports
 EXPOSE 80
