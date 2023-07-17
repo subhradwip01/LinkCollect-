@@ -1,30 +1,23 @@
 # Base stage
-FROM node:18 as base
+FROM node:alpine as base
 
-# Install git
-RUN apt-get update && apt-get install -y git
-
-RUN apt-get install -y build-essential curl
-# Install PM2 globally
-RUN npm install -g pm2
-
-RUN mkdir app
 # Set the working directory
 WORKDIR /app
-# Copy the .env file
 
-# Clone the repository and checkout the "newTS" branch
-RUN git clone https://github.com/linkcollect/LinkCollect-.git && \
-    cd LinkCollect- && \
-    git checkout newTs
+# Copy package.json and package-lock.json
+COPY package*.json ./
 
-COPY .env /app/LinkCollect-/.env
-# Change to the repository directory
-WORKDIR /app/LinkCollect-
+# Copy .env file
+COPY .env ./
 
 # Install dependencies
-RUN npm install
-RUN npm run build
+RUN npm i 
 
-# Start the Node.js backend with PM2
-CMD ["pm2-runtime", "npm", "--", "start"]
+# Install PM2 globally
+RUN npm i pm2 -g
+
+# Copy source code
+COPY build/src ./src
+
+# Start the app using PM2
+CMD ["pm2-runtime", "start", "src/app.js", "--name", "my-app"]

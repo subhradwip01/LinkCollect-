@@ -1,5 +1,5 @@
 
-version: '3'
+version: '3.9'
 
 services:
     ts-node-docker:
@@ -24,7 +24,7 @@ services:
             dockerfile: ./images/mongo.dockerfile
             target: base
         volumes:
-            - ./data:/data/db
+            - ./mongo:/data/db
         ports:
             - "27017:27017" 
         networks:
@@ -46,3 +46,6 @@ services:
 networks:
   example-net:
     external: true
+
+volumes:
+    mongo: {}

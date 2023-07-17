@@ -1,8 +1,12 @@
 build:
 	docker-compose build 
-	
-up:
+
+up: 
+	make down
+	-make rmi
+	npm run build
 	docker-compose up -d --build
+	docker-compose logs --follow
 
 up-prod:
 	docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --build

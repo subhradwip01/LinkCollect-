@@ -1,4 +1,4 @@
-FROM mongo:latest as base
+FROM mongo:7.0-rc as base 
 
 # Add custom configuration if needed
 # COPY mongod.conf /etc/mongod.conf

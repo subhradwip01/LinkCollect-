@@ -1,5 +1,5 @@
 # Use the nginx base image
-FROM nginx as base
+FROM nginx:alpine as base
 
 # Copy the nginx configuration file to the container
 COPY images/configs/nginx.conf /etc/nginx/nginx.conf
