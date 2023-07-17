@@ -5,3 +5,4 @@ pending-backend.txt
 .DS_Store
 /mongo
 /build
+/demo-client
