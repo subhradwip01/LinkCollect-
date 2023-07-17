@@ -1,0 +1,24 @@
+# Ignore directories
+node_modules/
+dist/
+build/
+coverage/
+demo-client/
+
+# Ignore specific files
+*.log
+*.txt
+*.md
+*.json
+
+# Ignore all files in a specific directory
+<!-- public/*.js
+src/generated/*.js -->
+
+# Ignore specific file patterns
+**/*.config.js
+**/*.test.js
+
+# Ignore files starting with a specific prefix
+<!-- _/generated/*.js
+_/temp/*.js -->

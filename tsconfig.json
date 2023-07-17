@@ -10,7 +10,7 @@
     "moduleResolution": "node",             // Specify module resolution strategy
     "resolveJsonModule": true,              // Enable importing JSON modules
     "baseUrl": "./src",                     // Specify base directory for module resolution
-    "outDir": "./dist",                     // Specify output directory for compiled files
+    "outDir": "./build",                     // Specify output directory for compiled files
     "rootDir": "./",                // Specify root directory for source files
     "noImplicitAny": false,                 // Specify false to allow implicit any
   },

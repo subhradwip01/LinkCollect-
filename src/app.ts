@@ -31,13 +31,12 @@ const setUpAndStartServer = async () => {
     legacyHeaders: false, // Disable the `X-RateLimit-*` headers
   });
   app.use(limiter);
-
   app.use("/api", ApiRoutes);
   await connect();
   app.listen(env.PORT, async () => {
     console.log(`Server Started at ${env.PORT}`);
   });
-};
+}; 
 
 setUpAndStartServer();
 

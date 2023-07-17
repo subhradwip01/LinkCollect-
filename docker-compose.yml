@@ -1,0 +1,51 @@
+
+version: '3.9'
+
+services:
+    ts-node-docker:
+        container_name: ts-node-docker
+        build:
+            context: .
+            dockerfile: ./images/nodejs.dockerfile
+            target: base
+        volumes:
+        - ./src:/app/LinkCollect-/src
+        - ./nodemon.json:/home/node/app/nodemon.json
+        ports:
+            - "3000:3000" 
+        networks:
+            - example-net
+        depends_on:
+            - mongo
+    mongo:
+        container_name: mongo
+        build:
+            context: .
+            dockerfile: ./images/mongo.dockerfile
+            target: base
+        volumes:
+            - ./mongo:/data/db
+        ports:
+            - "27017:27017" 
+        networks:
+            - example-net 
+    nginx:
+        build:
+            context: .
+            dockerfile: ./images/nginx.dockerfile
+            target: base
+        container_name: nginx
+        hostname: nginx
+        ports:
+            - "80:80" 
+        depends_on:
+            - ts-node-docker
+        networks:
+            - example-net
+
+networks:
+  example-net:
+    external: true
+
+volumes:
+    mongo: {}
