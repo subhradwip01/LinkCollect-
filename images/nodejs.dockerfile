@@ -19,5 +19,8 @@ RUN npm i pm2 -g
 # Copy source code
 COPY build/src ./src
 
-# Start the app using PM2
-CMD ["pm2-runtime", "start", "src/app.js", "--name", "my-app"]
+# Start the app using PM2, this will be used in production
+# CMD ["pm2-runtime", "start", "src/app.js", "--name", "my-app"]
+
+# for development purpose only
+CMD ["npm", "run", "devdoc"]
