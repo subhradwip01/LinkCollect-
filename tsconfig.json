@@ -10,9 +10,12 @@
     "moduleResolution": "node",             // Specify module resolution strategy
     "resolveJsonModule": true,              // Enable importing JSON modules
     "baseUrl": "./src",                     // Specify base directory for module resolution
-    "outDir": "./build",                     // Specify output directory for compiled files
+    "outDir": "./build",  
+    "strictPropertyInitialization": false,  
     "rootDir": "./",                // Specify root directory for source files
     "noImplicitAny": false,                 // Specify false to allow implicit any
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
   },
   "include": ["src/**/*.ts"],               // Specify files to include in compilation
   "exclude": ["node_modules"]               // Specify files to exclude from compilation

@@ -151,7 +151,7 @@ const verifyEmailtoken = async (req, res) => {
       userId: response._id,
       username: response.username,
     });
-
+    console.log("verified email")
     if (PRODUCTION !== "production") {
       return res.redirect(`http://localhost:3000/login?token=${token}`);
     }

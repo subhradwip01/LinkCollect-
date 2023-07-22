@@ -11,6 +11,7 @@ export interface AuthenticatedRequest extends Request {
 
 export interface IResponse extends Response {
   //
+  status: any;
   }
   
 export interface INextFunction extends NextFunction {

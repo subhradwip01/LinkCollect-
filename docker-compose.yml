@@ -29,6 +29,10 @@ services:
             - "27017:27017" 
         networks:
             - example-net 
+        # environment:
+            # - MONGO_INITDB_ROOT_USERNAME=harshlinkcollect01
+            # - MONGO_INITDB_ROOT_PASSWORD=harshlinkcollect01
+            # - MONGO_INITDB_DATABASE=linkcollect
     nginx:
         build:
             context: .

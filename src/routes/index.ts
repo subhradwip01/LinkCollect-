@@ -1,16 +1,18 @@
 import express from "express";
 const router = express.Router();
 import v1ApiRoutes from "./v1/index";
-
+import { AuthenticatedRequest, IResponse, INextFunction } from "interface/Request";
 router.use("/v1", v1ApiRoutes);
 
-router.use((req: any, res: any, next: any) => {
+router.use((err: any,req: AuthenticatedRequest , res: IResponse, next: any) => {
   const error = new Error("Invalid route");
-  res.status = 404;
+  res
+    .status(err.status || 500)
+    .json({ error: err.message || "Internal Server Error" });
   next(error);
 });
 
-router.use((err, req, res, next) => {
+router.use((err: any, req: AuthenticatedRequest, res: IResponse, next: INextFunction ) => {
   console.error(err);
   res
     .status(err.status || 500)
