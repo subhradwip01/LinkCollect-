@@ -69,4 +69,7 @@ router.get("/tags/all", collectionController.getTags); // userId
 // Explore
 router.get("/page/explore/", collectionController.getExplorePage);
 
+// Search in Explore page or global search
+router.get("/page/explore/search", collectionController.searchInExplorePage);
+
 export default router;

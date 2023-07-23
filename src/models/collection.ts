@@ -49,11 +49,7 @@ const CollectionSchema: Schema<ICollection> = new Schema(
       type: String,
       required: true,
     },
-    tags: [
-      {
-        type: String,
-      },
-    ],
+    tags: [String],
     views: {
       type: Number,
     },
@@ -67,6 +63,11 @@ const CollectionSchema: Schema<ICollection> = new Schema(
   { timestamps: true }
 );
 
+
+  // For the Collection collection
+  // CollectionSchema.index({ title: "text", tags: "text" });
+
+   
 CollectionSchema.pre<ICollection>("save", function (next) {
   if (this.timelines.length > 100) {
     const err = new Error("Too many Links");
@@ -74,6 +75,8 @@ CollectionSchema.pre<ICollection>("save", function (next) {
   }
   next();
 });
+
+
 
 const Collection = mongoose.model<ICollection>("Collection", CollectionSchema);
 

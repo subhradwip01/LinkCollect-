@@ -13,14 +13,28 @@ COPY .env ./
 # Install dependencies
 RUN npm i 
 
-# Install PM2 globally
-RUN npm i pm2 -g
+# Install PM2 globally - prod
+# RUN npm i pm2 -g
 
-# Copy source code
-COPY build/src ./src
+# Copy source code - for prod
+# COPY build/src ./src
+
+# Copy everything
+COPY  . .
 
 # Start the app using PM2, this will be used in production
 # CMD ["pm2-runtime", "start", "src/app.js", "--name", "my-app"]
 
 # for development purpose only
-CMD ["npm", "run", "devdoc"]
+
+FROM base as production
+
+# Install PM2 globally - prod
+RUN npm i pm2 -g
+
+
+ENV NODE_PATH=./build
+
+RUN npm run build
+
+# CMD ["npm", "run", "dev"]

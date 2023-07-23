@@ -37,5 +37,8 @@ const timelineSchema: Schema = new Schema(
   { timestamps: true }
 );
 
+ // For the Link collection
+//  timelineSchema.index({ title: "text" });
+
 const Timeline = mongoose.model<ITimeline>('Timeline', timelineSchema);
 export default Timeline;

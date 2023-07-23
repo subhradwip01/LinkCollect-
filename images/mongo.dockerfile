@@ -5,3 +5,5 @@ FROM mongo:7.0-rc as base
 
 # Start MongoDB
 CMD ["mongod", "--bind_ip_all"]
+
+FROM base as production

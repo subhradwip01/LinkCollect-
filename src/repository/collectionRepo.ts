@@ -1,6 +1,5 @@
-import { Collection, User, CollectionMapping } from "../models/index";
+import { Collection, User, CollectionMapping, Timeline } from "../models/index";
 import tags from "../constants/alltags";
-
 
 class CollectionRepo {
   create = async (data) => {
@@ -121,11 +120,72 @@ class CollectionRepo {
       };
 
       const collections = await Collection.find(query)
-      .select("title image description tags timelines upvotes views")
-      .sort({ upvotes: -1 }) // Sort by upvotes in descending order
-      .skip((parseInt(page) - 1) * parseInt(pageSize)) // skip the first n items, where n = (page - 1) * pageSize
-      .limit(parseInt(pageSize)); // limit the number of items to pageSize
+        .select("title image description tags timelines upvotes views")
+        .sort({ upvotes: -1 }) // Sort by upvotes in descending order
+        .skip((parseInt(page) - 1) * parseInt(pageSize)) // skip the first n items, where n = (page - 1) * pageSize
+        .limit(parseInt(pageSize)); // limit the number of items to pageSize
 
+      return collections;
+    } catch (error) {
+      console.log(
+        "Err in repository layer getting saved collection failed",
+        error
+      );
+      throw error;
+    }
+  };
+
+  searchInExplorePage = async (queryFor) => {
+    try {
+
+      if(queryFor.length < 3){
+        throw "search term should be atleast 3 characters long";
+      }
+// Create a regex pattern for the search term
+const regexPattern = new RegExp(queryFor, "i");
+
+const collections = await Collection.aggregate([
+  {
+    $match: {
+      isPublic: true, // Filter by public collections only
+      $or: [
+        { title: { $regex: regexPattern } }, // Case-insensitive search in title
+        { tags: { $elemMatch: { $regex: regexPattern } } }, // Case-insensitive search in tags array
+        { username: { $regex: regexPattern } }, // Case-insensitive search in username
+      ],
+    },
+  },
+  {
+    $addFields: {
+      sortOrder: {
+        $switch: {
+          branches: [
+            { case: { $regexMatch: { input: "$title", regex: regexPattern } }, then: 1 }, // If title matches, sortOrder = 1
+            { case: { $regexMatch: { input: "$username", regex: regexPattern } }, then: 2 }, // If username matches, sortOrder = 2
+          ],
+          default: 4, // If no match, sortOrder = 4 (higher value to be at the bottom)
+        },
+      },
+    },
+  },
+  {
+    $sort: { sortOrder: 1, upvotes: -1 }, // Sort by sortOrder (ascending) and upvotes (descending)
+  },
+]).exec();
+
+
+      // Search in the 'collections' collection based on the 'searchTerm' in title and tags
+
+      // const collections = await Collection.find({
+      //   $or: [
+      //     { title: { $regex: queryFor, $options: "i" } }, // Case-insensitive search in title
+      //     { tags: { $elemMatch: { $regex: queryFor, $options: "i" } } }, // Case-insensitive search in tags array
+      //     { username: { $regex: queryFor, $options: "i" } }, // Case-insensitive search in username 
+      //   ],
+      //   isPublic: true, // Filter by public collections only
+      // }).sort({ upvotes: -1 }).exec();
+
+ 
       return collections;
     } catch (error) {
       console.log(
