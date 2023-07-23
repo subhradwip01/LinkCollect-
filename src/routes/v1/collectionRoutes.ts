@@ -67,9 +67,9 @@ router.post('/togglePrivacy/:id', collectionController.togglePrivacy);
 router.get("/tags/all", collectionController.getTags); // userId
 
 // Explore
-router.get("/page/explore/", collectionController.getExplorePage);
+router.get("/page/explore", collectionController.getExplorePage);
 
 // Search in Explore page or global search
-router.get("/page/explore/search", collectionController.searchInExplorePage);
+router.get("/explore/search", collectionController.searchInExplorePage);
 
 export default router;
