@@ -55,6 +55,16 @@ class CollectionService {
       throw error;
     }
   };
+  searchInExplorePage = async (queryFor: any) => {
+    try {
+      const collection = await this.collectionRepo.searchInExplorePage(
+        queryFor
+      );
+      return collection;
+    } catch (error) {
+      throw error;
+    }
+  };
 
   togglePrivacy = async (userId) => {
     try {
@@ -107,12 +117,12 @@ class CollectionService {
     try {
       const collection = await this.collectionRepo.getAllByUsername(
         username,
-        ownsUsername
+        ownsUsername // if the user owns the username
       );
       return collection;
     } catch (error) {
       throw error;
-    }
+    } 
   };
 
   doesLinkExist = async (collectionId, link) => {
@@ -124,7 +134,7 @@ class CollectionService {
       return response;
     } catch (error) {
       throw error;
-    }
+    } 
   };
 
   getAll = async (userId) => {

@@ -9,14 +9,15 @@ services:
             dockerfile: ./images/nodejs.dockerfile
             target: base
         volumes:
-        - ./src:/app/LinkCollect-/src
-        - ./nodemon.json:/home/node/app/nodemon.json
+        - ./src:/app/src
+        - ./nodemon.json:/app/nodemon.json
         ports:
             - "3000:3000" 
         networks:
             - example-net
         depends_on:
             - mongo
+        command: npm run dev
     mongo:
         container_name: mongo
         build:

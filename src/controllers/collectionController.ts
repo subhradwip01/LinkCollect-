@@ -129,6 +129,33 @@ const getExplorePage = async (req: AuthenticatedRequest, res: Response) => {
     });
   }
 };
+const searchInExplorePage = async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const queryFor  = req.query.queryFor as string;
+
+    if (!queryFor || queryFor.trim() === '') {
+     // If 'for' parameter is empty or undefined, return an empty result
+     return res.json({ collections: [], links: [] });
+    }
+    const collection = await collectionService.searchInExplorePage(
+      queryFor
+    );
+
+    return res.status(201).json({
+      data: collection,
+      success: true,
+      message: "Successfully searched the Explore Page",
+      err: {},
+    });
+  } catch (error) {
+    return res.status(500).json({
+      data: {},
+      success: false,
+      message: "Not able to search in explore page Collections",
+      err: error,
+    });
+  }
+};
 
 const togglePrivacy = async (req: AuthenticatedRequest, res: Response) => {
   try {
@@ -421,6 +448,7 @@ const collectionController = {
   getTags,
   getExplorePage,
   togglePin,
+  searchInExplorePage
 };
 
 export default collectionController;
