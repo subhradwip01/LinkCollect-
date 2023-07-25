@@ -1,6 +1,8 @@
 import { Collection, User, CollectionMapping, Timeline } from "../models/index";
 import tags from "../constants/alltags";
-import { EventEmitter } from "../events/io"
+import Emit from "../events/events";
+
+let emit = new Emit();
 class CollectionRepo {
 
   create = async (data) => {
@@ -24,7 +26,7 @@ class CollectionRepo {
           collection: collection
         } 
        
-        EventEmitter("collection:created", payload);
+        emit.collectionCreated(payload);
         return collection;
       } else {
         throw "some issue in your data";
@@ -255,7 +257,7 @@ const collections = await Collection.aggregate([
         collection: collection
       } 
      
-      EventEmitter("collection:deleted", payload);
+      emit.collectionDeleted(payload);
       return collection;
     } catch (error) {
       console.log(error);
@@ -357,7 +359,7 @@ const collections = await Collection.aggregate([
         userId: collection.userId,
         collection: collection
       } 
-      EventEmitter("collection:upvoted", payload);
+      emit.collectionUpvoted(payload);
       return collection;
     } catch (error) {
       console.log(error);
@@ -378,7 +380,7 @@ const collections = await Collection.aggregate([
         userId: collection.userId,
         collection: collection
       } 
-      EventEmitter("collection:downvoted", payload);
+      emit.collectionDownvoted(payload);
       return collection;
     } catch (error) {
       console.log(error);
