@@ -1,7 +1,8 @@
 import { Collection, User, CollectionMapping, Timeline } from "../models/index";
 import tags from "../constants/alltags";
-
+import { EventEmitter } from "../events/io"
 class CollectionRepo {
+
   create = async (data) => {
     try {
       if (
@@ -17,6 +18,13 @@ class CollectionRepo {
         }
         user.collections.push(collection);
         await user.save();
+
+        const payload = {
+          userId: user._id,
+          collection: collection
+        } 
+       
+        EventEmitter("collection:created", payload);
         return collection;
       } else {
         throw "some issue in your data";
@@ -241,6 +249,13 @@ const collections = await Collection.aggregate([
         isDeleted: true,
       });
       await user.save();
+
+      const payload = {
+        userId: user._id,
+        collection: collection
+      } 
+     
+      EventEmitter("collection:deleted", payload);
       return collection;
     } catch (error) {
       console.log(error);
@@ -337,6 +352,12 @@ const collections = await Collection.aggregate([
       }
       collection.upvotes.addToSet(userId);
       await collection.save();
+      //emit event
+      const payload = {
+        userId: collection.userId,
+        collection: collection
+      } 
+      EventEmitter("collection:upvoted", payload);
       return collection;
     } catch (error) {
       console.log(error);
@@ -352,6 +373,12 @@ const collections = await Collection.aggregate([
       }
       collection.upvotes.pull(userId);
       await collection.save();
+       //emit event
+      const payload = {
+        userId: collection.userId,
+        collection: collection
+      } 
+      EventEmitter("collection:downvoted", payload);
       return collection;
     } catch (error) {
       console.log(error);

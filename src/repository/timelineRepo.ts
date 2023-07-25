@@ -1,6 +1,6 @@
 import { Timeline, Collection } from "../models/index";
 import { filterDuplicateTimelines } from "../utils/filterDuplicateTimelines";
-
+import { EventEmitter } from "../events/io"
 class TimelineRepo {
   createTimeline = async (data, collectionId) => {
     try {
@@ -8,6 +8,14 @@ class TimelineRepo {
       const collection: any = await Collection.findById(collectionId);
       collection.timelines.push(timeline);
       await collection.save();
+
+      const payload = {
+        collectionId: collection._id,
+        bookmark: timeline
+      } 
+     
+      EventEmitter("bookmark:added", payload);
+
       return timeline;
     } catch (error) {
       console.log(error);
@@ -44,6 +52,13 @@ class TimelineRepo {
       const timeline = await Timeline.findByIdAndRemove(id);
       collection.timelines = this.deleteFromArray(collection.timelines, id);
       await collection.save();
+      
+      const payload = {
+        collectionId: collection._id,
+        bookmark: timeline
+      } 
+     
+      EventEmitter("bookmark:deleted", payload);
       return timeline;
     } catch (error) {
       console.log(error);
