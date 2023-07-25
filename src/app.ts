@@ -7,8 +7,18 @@ import cors from "cors";
 import { decryptUser } from "./middlewares/decryptUser";
 import rateLimit from "express-rate-limit";
 import paymentController from "./controllers/paymentController";
-
+import http from "http";
 const app = express();
+
+// import {Socket, Server} from "socket.io";
+import { Server, Socket } from "socket.io";
+
+
+// socket io imports
+
+import {ConnectSocketIo} from "./events/io"
+
+
 const setUpAndStartServer = async () => {
   app.use(cors());
 
@@ -32,12 +42,33 @@ const setUpAndStartServer = async () => {
   });
   app.use(limiter);
   app.use("/api", ApiRoutes);
+
+
   await connect();
-  app.listen(env.PORT, async () => {
+  const server = http.createServer(app);
+
+  server.listen(env.PORT, async () => {
     console.log(`Server Started at ${env.PORT}`);
   });
+
+  const io = new Server(server, {
+    cors: {
+      origin: "*",
+      // origin: "https://linkcollect.io", // production
+    },
+  });
+
+  const onConnection = (socket) => {
+    console.log("here")
+    ConnectSocketIo(io, socket);
+
+  }
+
+  io.on("connection", onConnection);
+
 }; 
 
 setUpAndStartServer();
 
+export default app;
 // export {};

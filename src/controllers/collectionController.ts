@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import { Collection } from "../models";
 import CollectionService from "../services/collectionService";
 
+
+
 interface AuthenticatedRequest extends Request {
   userId?: string;
   username?: string;
