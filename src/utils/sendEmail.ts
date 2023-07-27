@@ -1,7 +1,7 @@
 const nodemailer = require("nodemailer");
 // const { USER, PASS, BACKEND_BASE_URL,CLIENT_ID_NodeMailer,CLIENT_SECRET_NodeMailer,REFRESH_TOKEN } = require("../config/index");
 import env from "../config/index";
-
+import { sendOTPMail } from "../constants/emailTemps/sendOTPMail";
 
 let transporter = nodemailer.createTransport({
   service :"gmail",
@@ -25,12 +25,9 @@ let transporter = nodemailer.createTransport({
       let info = await transporter.sendMail({
         from: `LinkCollect ${env.USER}`,
         to: userEmail,
-        subject: "Email Verification",
-        text: "HELLO" + name,
-        html: `<h2>HELLO ${name}<h2/>
-                      <h3> Thanks for using our services, Please verify your email </h3>
-                      <a href=${env.BACKEND_BASE_URL}/api/v1/user/verify-email?token=${token}> Verify You </a>
-                    `,
+        subject: "LinkCollect Verification Link",
+        text: "LinkCollect Verification Link for " + name,
+        html: sendOTPMail(name, env.BACKEND_BASE_URL, token),
       },function(error,result){
         if(error){
          console.log("err",error);
@@ -42,7 +39,7 @@ let transporter = nodemailer.createTransport({
     } catch (error) {
       console.log("error",error);
     }
-  },
+  }, 
 };
 
 export default Email;
