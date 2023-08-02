@@ -232,6 +232,30 @@ const updateProfilePic = async (req, res) => {
     });
   }
 };
+const setPremium = async (req, res) => {
+  try {
+    const data = req.body;
+    const userID = req.userId;
+    const data2 = await userService.setPremium(
+     data, 
+     userID
+    );
+
+    return res.status(201).json({
+      data: data2,
+      success: true,
+      message: "Successfully Updated prem vals",
+      err: {},
+    });
+  } catch (error) {
+    return res.status(500).json({
+      data: {},
+      success: false,
+      message: "Not able to change prem vals",
+      err: error,
+    });
+  }
+};
 
 const userController = {
   create,
@@ -245,6 +269,7 @@ const userController = {
   updateProfilePic,
   togglePrivacy,
   checkUsername,
+  setPremium
 };
 
 export default userController;

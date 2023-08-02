@@ -182,12 +182,21 @@ class UserService {
       throw error;
     }
   }
+  async setPremium(data, userId){
+    try {
+      const response = await this.userRepository.setPremium(data, userId);
+      return response;
+    } catch (error) {
+      console.log("Something went wrong in service layer!");
+      throw error;
+    }
+  }
   async getByUsername(username,userId){
     try {
       console.log(username,userId);
       const validUserId = mongoose.isValidObjectId(userId);
       if(!validUserId){
-        console.log("yes its null");
+        console.log("userService.getByUsername says userid its null");
       }
       if(validUserId){
         const user = await this.userRepository.getByUserId(userId);

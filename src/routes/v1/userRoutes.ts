@@ -41,6 +41,9 @@ router.get("/isauthenticated", UserControllers.isAuthenticated);
 router.get("/google-auth", catchAsync(googleAuth));
 
 
+router.get("/setPremium", UserControllers.setPremium);
+
+
 //giving error on local @TODO
 // Update profile-pic Route
 //router.update("/profile-pic",  upload.single("image"), UserControllers.updateProfilePic)

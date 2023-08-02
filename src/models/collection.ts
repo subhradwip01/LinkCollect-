@@ -33,7 +33,7 @@ const CollectionSchema: Schema<ICollection> = new Schema(
     },
     isPinned: {
       type: Boolean,
-      default: true,
+      default: false,
     },
     upvotes: [
       {

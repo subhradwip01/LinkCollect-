@@ -131,6 +131,48 @@ class UserRepository {
       throw error;
     }
   }
+
+  async setPremium(data, userId) {
+    try {
+
+  console.log("here", data, userId)
+      const user = await User.findOne({ _id: userId });
+      if (!user) {
+        throw new Error("Username is not available");
+      }
+      console.log("user", user.username)
+      if(user.username !== "askwhyharsh" ) {
+        throw new Error("no admin");
+      }
+      // run a loop for each data value, data consist a list of objects. each object has a userId and a premium value (bool); we need to update the premium value of the user with the given userId
+      if(!data.list) {
+        throw new Error("No data provided")
+      }
+
+
+      console.log("here")
+      for (let i = 0; i < data.list.length; i++) {
+
+        let user = await User.findOne({username: data.list[i].username});
+        if(!user || !data.list[i].premium) {
+          continue
+        }
+        user.isPremium = data.list[i].premium;
+        await user.save();
+        // console.log("user", user)
+      }
+   
+      return data;
+    } catch (error) {
+      console.log("Something went wrong in fetching the user");
+      console.log(error);
+      throw error;
+    }
+
+
+  }
+
+
 }
 
 export default UserRepository;
