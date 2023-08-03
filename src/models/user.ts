@@ -42,6 +42,7 @@ const userSchema: Schema = new Schema(
       type: Boolean,
       default: false,
     },
+
     isPublic: {
       type: Boolean,
       default: true,
@@ -52,11 +53,8 @@ const userSchema: Schema = new Schema(
         ref: 'Collection',
       },
     ],
-    savedCollections: [
-      {
-        type: String,
-      },
-    ],
+    savedCollections: [String],
+    socials: [String],
     emailToken: {
       type: String,
     },
