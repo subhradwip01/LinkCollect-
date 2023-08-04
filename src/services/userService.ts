@@ -109,8 +109,10 @@ class UserService {
         throw { error: "Incorrect password" };
       }
       const newJWTtoken = this.createToken({ userId: user._id, username: user.username });
+      console.log("->", user, user._doc)
+      const { password, ...userData } = user._doc;
 
-      return { userId: user._id, token: newJWTtoken };
+      return { userId: user._id, token: newJWTtoken, userData: userData};
     } catch (error) {
       console.log("Something went wrong in signIn process");
       throw error;
