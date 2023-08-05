@@ -1,11 +1,18 @@
 import User from "../models/user";
 import Email from "../utils/sendEmail";
+import { Collection} from "../models/index";
 
 class UserRepository {
   async create(data) {
     try {
+
+      // const collection: any = await Collection.create({ title: "Untitled Private Collection 🔥", description: "you  can create many such collection using linkcollect, and share them across devices and friends. You can edit everything about this collections easily", isPublic: false});
+      // data.collections = [collection];
+
       const user = await User.create(data);
       Email.verifyEmail(user.name, user.email, user.emailToken);
+      await user.save();
+
       return user;
     } catch (error) {
       console.log("Something went wrong at repository layer", error);
@@ -34,11 +41,15 @@ class UserRepository {
         console.log("User doesn't exist");
         throw "User doesn't exist";
       }
+
       var data = {
         emailToken: null,
         verified: 1,
       };
+      console.log("data",data);
       await User.findOneAndUpdate({ emailToken: token }, data);
+
+
       return user;
     } catch (error) {
       console.log("Something went wrong in the verification of mail");

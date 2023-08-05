@@ -8,9 +8,9 @@ class CollectionRepo {
   create = async (data) => {
     try {
       if (
-        data.tags.length <= 2 ||
-        data.title.length <= 59 ||
-        data.description.length <= 1000
+        data.tags?.length <= 2 ||
+        data.title?.length <= 59 ||
+        data.description?.length <= 1000
       ) {
         const collection: any = await Collection.create({ ...data });
         const user = await User.findById(data.userId);
@@ -130,7 +130,7 @@ class CollectionRepo {
       };
 
       const collections = await Collection.find(query)
-        .select("title image description tags timelines upvotes views")
+        .select("title username timestamps update image description tags timelines upvotes views")
         .sort({ upvotes: -1 }) // Sort by upvotes in descending order
         .skip((parseInt(page) - 1) * parseInt(pageSize)) // skip the first n items, where n = (page - 1) * pageSize
         .limit(parseInt(pageSize)); // limit the number of items to pageSize
