@@ -7,6 +7,7 @@ const PRODUCTION: string = process.env.PRODUCTION!; // Make sure production has 
 const create = async (req, res) => {
   try {
     const response = await userService.create(req.body);
+    console.log("1", 1);
     return res.status(201).json({
       success: true,
       message: "Successfully created a new user",
@@ -14,7 +15,7 @@ const create = async (req, res) => {
       err: {},
     });
   } catch (error: any) {
-    return res.status(error.statusCode).json({
+    return res.status(500).json({
       message: error.message,
       data: {},
       success: false,

@@ -1,19 +1,42 @@
 import User from "../models/user";
 import Email from "../utils/sendEmail";
-import { Collection} from "../models/index";
-
+import { Collection } from "../models/index";
+// import CollectionRepo from "./collectionRepo";
 class UserRepository {
   async create(data) {
     try {
+      console.log("3", 3);
 
       // const collection: any = await Collection.create({ title: "Untitled Private Collection 🔥", description: "you  can create many such collection using linkcollect, and share them across devices and friends. You can edit everything about this collections easily", isPublic: false});
-      // data.collections = [collection];
+      // console.log("collection", collection, data.collections)
 
       const user = await User.create(data);
       Email.verifyEmail(user.name, user.email, user.emailToken);
-      await user.save();
+      // await user.save();
 
+      /** 
+      const existingCollection = await Collection.findOne({
+        userId: user._id,
+        title: "Untitled Private Collection 🔥"
+      });
+      
+      let collection: any;
+      if (!existingCollection) {
+        collection = await Collection.create({
+          title: "Untitled Private Collection 🔥",
+          description: "you can create many such collections using linkcollect, and share them across devices and friends. You can edit everything about these collections easily",
+          isPublic: true,
+          userId: user._id,
+          tags: ["Science"],
+          username: user.username
+        }); */
+
+
+
+      // user.collections.push(collection); 
+      await user.save();
       return user;
+      
     } catch (error) {
       console.log("Something went wrong at repository layer", error);
       console.log(error);
@@ -21,7 +44,7 @@ class UserRepository {
     }
   }
 
-  async togglePrivacy(userId) {
+  async togglePrivacy(userId) { 
     try {
       const user: any = await User.findById(userId);
       user.isPublic = !user.isPublic;
@@ -42,6 +65,8 @@ class UserRepository {
         throw "User doesn't exist";
       }
 
+
+
       var data = {
         emailToken: null,
         verified: 1,
@@ -49,6 +74,8 @@ class UserRepository {
       console.log("data",data);
       await User.findOneAndUpdate({ emailToken: token }, data);
 
+
+      await user.save(); 
 
       return user;
     } catch (error) {
