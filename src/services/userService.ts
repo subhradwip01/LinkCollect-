@@ -92,10 +92,11 @@ class UserService {
   }
   async verifyEmailtoken(token) {
     try {
-      const user = await this.userRepository.verifyEmailtoken(token);
+      console.log("token", token);
+      const user = await this.userRepository.verifyEmailToken(token);
       return user;
     } catch (error) {
-      console.log("Something went wrong Service layer.");
+      console.log("Something went wrong Service layer.", error);
       throw error;
     }
   }
