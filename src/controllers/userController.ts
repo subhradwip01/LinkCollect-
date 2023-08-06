@@ -7,7 +7,7 @@ const PRODUCTION: string = process.env.PRODUCTION!; // Make sure production has 
 const create = async (req, res) => {
   try {
     const response = await userService.create(req.body);
-    console.log("1", 1);
+    // console.log("1", 1);
     return res.status(201).json({
       success: true,
       message: "Successfully created a new user",
@@ -48,7 +48,7 @@ const togglePrivacy = async (req, res) => {
 const checkUsername = async (req, res) => {
   try {
     const check = await userService.checkUsername(req.body);
-    console.log(check);
+    // console.log(check);
     return res.status(201).json({
       success: true,
       message: "Username is available",
@@ -152,7 +152,7 @@ const verifyEmailtoken = async (req, res) => {
       userId: response._id,
       username: response.username,
     });
-    console.log("verified email")
+    // console.log("verified email")
     if (PRODUCTION !== "production") {
       return res.redirect(`http://localhost:3000/login?token=${token}`);
     }
@@ -258,13 +258,13 @@ const setPremium = async (req, res) => {
   }
 };
 const createSocials = async (req,res) =>{
-  console.log("hererere");
+  // console.log("hererere");
   try {
     const data = req.body;
-    console.log(req);
+    // console.log(req);
     //change this to req.userId here in production, for testing im checking from req.params
     const userID = req.params.id;
-    console.log(userID);
+    // console.log(userID);
     const data2 = await userService.setSocials(
      data, 
      userID

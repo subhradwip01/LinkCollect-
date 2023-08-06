@@ -5,7 +5,7 @@ import { Collection } from "../models/index";
 class UserRepository {
   async create(data) {
     try {
-      console.log("3", 3);
+      // console.log("3", 3);
 
       // const collection: any = await Collection.create({ title: "Untitled Private Collection 🔥", description: "you  can create many such collection using linkcollect, and share them across devices and friends. You can edit everything about this collections easily", isPublic: false});
       // console.log("collection", collection, data.collections)
