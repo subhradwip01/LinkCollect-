@@ -29,7 +29,7 @@ const CollectionSchema: Schema<ICollection> = new Schema(
     },
     isPublic: {
       type: Boolean,
-      default: true,
+      default: false,
     },
     isPinned: {
       type: Boolean,
