@@ -31,4 +31,8 @@ router.delete(
   timelineController.deleteTimeline
 );
 
+
+// To insert multiple timelines at once in a particular collection
+router.post("/create-multiple", isCollectionOwner, timelineController.createMultiple);
+
 export default router;
