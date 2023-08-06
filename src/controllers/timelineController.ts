@@ -25,6 +25,8 @@ const create = async (req, res) => {
 const createMultiple = async (req, res) => {
   try {
     const { id: collectionId } = req.params;
+    console.log("in multiple timelines", collectionId)
+
     const timelines = await timelineService.createMultiple(
       req.body,
       collectionId

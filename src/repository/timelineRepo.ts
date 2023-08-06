@@ -27,6 +27,7 @@ class TimelineRepo {
 
   createMultipleTimelines = async (data, collectionId) => {
     try {
+      console.log("in multiple timelines", collectionId)
       const newTimelines = data;
       const collection: any = await Collection.findById(collectionId).populate(
         "timelines"
