@@ -34,7 +34,7 @@ router.get("/:id",isCollectionPublic ,collectionController.get);
 router.get("/", collectionController.getAllWithTimeline);
 
 //collection limit removing for testing
-router.post("/" ,upload.single("image"), collectionController.create);
+router.post("/" ,upload.single("image"), collectionLimit ,collectionController.create);
 router.patch("/:id", isCollectionOwner, upload.single("image"), collectionController.update);
 router.delete("/:id", isCollectionOwner, collectionController.deleteCollection);
 

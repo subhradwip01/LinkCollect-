@@ -14,7 +14,7 @@ export const ConnectSocketIo = (ioInit, socketInit: Socket) => {
 export const EventEmitter =  (event, payload ) => {
 
     if(!isSetup){
-        console.log("io not setup");
+        // console.log("io not setup");
         return;
     }
 
