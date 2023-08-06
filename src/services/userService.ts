@@ -16,18 +16,22 @@ class UserService {
       data.emailToken = randomBytes(32).toString("hex");
       data.verified = 0;
 
-      if (data.username.length < 3) {
+      if (data.username && data.username.length < 3) {
         data.username = data.username + randomBytes(3).toString("hex"); // to make username unique and not too long add 2 randome numbers and two chars
       }
 
-      const check = await this.userRepository.checkUsername({
-        username: data.username,
-      });
-      if ("Username available" !== check) {
-        data.username = data.username + randomBytes(3).toString("hex"); // to make username unique and not too long add 2 randome numbers and two chars
+      if (data.username) {
+        const check = await this.userRepository.checkUsername({
+          username: data.username,
+        });
+        if ("Username available" !== check) {
+          data.username = data.username + randomBytes(3).toString("hex"); // to make username unique and not too long add 2 randome numbers and two chars
+        }
       }
 
-      if (data.social.length != 0) {
+     
+
+      if (data.social && data.social.length != 0) {
         let socialData = data.social;
         let social: Array<{ [key: string]: string }> = [];
         socialData.forEach((url) => {
@@ -39,7 +43,7 @@ class UserService {
       const user = await this.userRepository.create(data);
       return user;
     } catch (error) {
-      console.log("Something went wrong Service layer. ");
+      console.log("Something went wrong Service layer. ", error);
       throw error;
     }
   }
