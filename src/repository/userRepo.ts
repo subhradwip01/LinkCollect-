@@ -217,7 +217,7 @@ class UserRepository {
         throw new Error("no admin");
       }
       // run a loop for each data value, data consist a list of objects. each object has a userId and a premium value (bool); we need to update the premium value of the user with the given userId
-      if(!data.list) {
+      if(data.list == null) {
         throw new Error("No data provided")
       }
 
