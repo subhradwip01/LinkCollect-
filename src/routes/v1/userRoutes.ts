@@ -41,6 +41,19 @@ router.get("/isauthenticated", UserControllers.isAuthenticated);
 router.get("/google-auth", catchAsync(googleAuth));
 
 
+
+/*
+Params
+
+  "list": [
+    {
+      "username": "username1",
+     "premium": true
+    }, ...
+ 
+  ]
+*/
+
 router.get("/setPremium", UserControllers.setPremium);
 
 
