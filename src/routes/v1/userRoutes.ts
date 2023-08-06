@@ -19,7 +19,7 @@ router.get("/get_user/:username",UserControllers.getByUsername);
 //route for checking the availblity of a username
 router.get("/check-username",checkSpecialCharacters,UserControllers.checkUsername);
 
-
+router.post("/create_socials/:id",UserControllers.createSocials);
 router.post(
   "/signup",
   validateUserAuthforSignUp,

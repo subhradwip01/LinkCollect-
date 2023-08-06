@@ -84,7 +84,41 @@ class UserRepository {
       throw error;
     }
   }
+  async createSocials(userId,data:[]){
+    try {
+       const user = await User.findById(userId);
+       const userSocialData = user?.socials;
+       console.log(userSocialData);
 
+       if (userSocialData && userSocialData?.length > 0) {
+        console.log(userSocialData.length);
+        data.forEach((socialEntry) => {
+          const companyName = Object.keys(socialEntry)[0];
+          const existingIndex = userSocialData.findIndex((userEntry) => Object.keys(userEntry)[0] === companyName);
+      
+          if (existingIndex !== -1) {
+            // Update existing entry
+            userSocialData[existingIndex][companyName] = socialEntry[companyName];
+          } else {
+            // Push new entry
+            userSocialData.push(socialEntry);
+          }
+        });
+      } else {
+        console.log("No social data found.");
+        throw new Error("No data was found");
+      }
+
+      console.log(userSocialData);
+
+      return "ok";
+      
+    } catch (error) {
+      console.log("Something went wrong at repository layer");
+      console.log(error);
+      throw error;
+    }
+  }
   async destroy(userId) {
     try {
       await User.findByIdAndRemove(userId);
