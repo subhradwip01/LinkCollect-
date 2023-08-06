@@ -7,6 +7,7 @@ const PRODUCTION: string = process.env.PRODUCTION!; // Make sure production has 
 const create = async (req, res) => {
   try {
     const response = await userService.create(req.body);
+    console.log("1", 1);
     return res.status(201).json({
       success: true,
       message: "Successfully created a new user",
@@ -14,7 +15,7 @@ const create = async (req, res) => {
       err: {},
     });
   } catch (error: any) {
-    return res.status(error.statusCode).json({
+    return res.status(500).json({
       message: error.message,
       data: {},
       success: false,
@@ -256,8 +257,37 @@ const setPremium = async (req, res) => {
     });
   }
 };
+const createSocials = async (req,res) =>{
+  console.log("hererere");
+  try {
+    const data = req.body;
+    console.log(req);
+    //change this to req.userId here in production, for testing im checking from req.params
+    const userID = req.params.id;
+    console.log(userID);
+    const data2 = await userService.setSocials(
+     data, 
+     userID
+    );
+
+    return res.status(201).json({
+      data: data2,
+      success: true,
+      message: "Successfully Updated Socials",
+      err: {},
+    });
+  } catch (error) {
+    return res.status(500).json({
+      data: {},
+      success: false,
+      message: "Not able to Update Socials",
+      err: error,
+    });
+  }
+}
 
 const userController = {
+  createSocials,
   create,
   signIn,
   getByUserId,

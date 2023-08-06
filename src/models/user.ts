@@ -14,6 +14,7 @@ export interface IUser extends Document {
   savedCollections: string[];
   emailToken?: string;
   verified?: number;
+  socials: [{ [key: string]: string }];
 }
 
 const userSchema: Schema = new Schema(
@@ -47,6 +48,9 @@ const userSchema: Schema = new Schema(
       type: Boolean,
       default: true,
     },
+    socials : [
+      String
+    ],
     collections: [
       {
         type: Schema.Types.ObjectId,
@@ -54,7 +58,7 @@ const userSchema: Schema = new Schema(
       },
     ],
     savedCollections: [String],
-    socials: [String],
+    
     emailToken: {
       type: String,
     },

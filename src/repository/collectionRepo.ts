@@ -4,13 +4,12 @@ import Emit from "../events/events";
 
 let emit = new Emit();
 class CollectionRepo {
-
   create = async (data) => {
     try {
       if (
-        data.tags.length <= 2 ||
-        data.title.length <= 59 ||
-        data.description.length <= 1000
+        data.tags?.length <= 2 ||
+        data.title?.length <= 59 ||
+        data.description?.length <= 1000
       ) {
         const collection: any = await Collection.create({ ...data });
         const user = await User.findById(data.userId);
@@ -23,9 +22,9 @@ class CollectionRepo {
 
         const payload = {
           userId: user._id,
-          collection: collection
-        } 
-       
+          collection: collection,
+        };
+
         emit.collectionCreated(payload);
         return collection;
       } else {
@@ -130,7 +129,9 @@ class CollectionRepo {
       };
 
       const collections = await Collection.find(query)
-        .select("title image description tags timelines upvotes views")
+        .select(
+          "title username timestamps update image description tags timelines upvotes views"
+        )
         .sort({ upvotes: -1 }) // Sort by upvotes in descending order
         .skip((parseInt(page) - 1) * parseInt(pageSize)) // skip the first n items, where n = (page - 1) * pageSize
         .limit(parseInt(pageSize)); // limit the number of items to pageSize
@@ -147,42 +148,50 @@ class CollectionRepo {
 
   searchInExplorePage = async (queryFor) => {
     try {
-
-      if(queryFor.length < 3){
+      if (queryFor.length < 3) {
         throw "search term should be atleast 3 characters long";
       }
-// Create a regex pattern for the search term
-const regexPattern = new RegExp(queryFor, "i");
+      // Create a regex pattern for the search term
+      const regexPattern = new RegExp(queryFor, "i");
 
-const collections = await Collection.aggregate([
-  {
-    $match: {
-      isPublic: true, // Filter by public collections only
-      $or: [
-        { title: { $regex: regexPattern } }, // Case-insensitive search in title
-        { tags: { $elemMatch: { $regex: regexPattern } } }, // Case-insensitive search in tags array
-        { username: { $regex: regexPattern } }, // Case-insensitive search in username
-      ],
-    },
-  },
-  {
-    $addFields: {
-      sortOrder: {
-        $switch: {
-          branches: [
-            { case: { $regexMatch: { input: "$title", regex: regexPattern } }, then: 1 }, // If title matches, sortOrder = 1
-            { case: { $regexMatch: { input: "$username", regex: regexPattern } }, then: 2 }, // If username matches, sortOrder = 2
-          ],
-          default: 4, // If no match, sortOrder = 4 (higher value to be at the bottom)
+      const collections = await Collection.aggregate([
+        {
+          $match: {
+            isPublic: true, // Filter by public collections only
+            $or: [
+              { title: { $regex: regexPattern } }, // Case-insensitive search in title
+              { tags: { $elemMatch: { $regex: regexPattern } } }, // Case-insensitive search in tags array
+              { username: { $regex: regexPattern } }, // Case-insensitive search in username
+            ],
+          },
         },
-      },
-    },
-  },
-  {
-    $sort: { sortOrder: 1, upvotes: -1 }, // Sort by sortOrder (ascending) and upvotes (descending)
-  },
-]).exec();
-
+        {
+          $addFields: {
+            sortOrder: {
+              $switch: {
+                branches: [
+                  {
+                    case: {
+                      $regexMatch: { input: "$title", regex: regexPattern },
+                    },
+                    then: 1,
+                  }, // If title matches, sortOrder = 1
+                  {
+                    case: {
+                      $regexMatch: { input: "$username", regex: regexPattern },
+                    },
+                    then: 2,
+                  }, // If username matches, sortOrder = 2
+                ],
+                default: 4, // If no match, sortOrder = 4 (higher value to be at the bottom)
+              },
+            },
+          },
+        },
+        {
+          $sort: { sortOrder: 1, upvotes: -1 }, // Sort by sortOrder (ascending) and upvotes (descending)
+        },
+      ]).exec();
 
       // Search in the 'collections' collection based on the 'searchTerm' in title and tags
 
@@ -190,12 +199,11 @@ const collections = await Collection.aggregate([
       //   $or: [
       //     { title: { $regex: queryFor, $options: "i" } }, // Case-insensitive search in title
       //     { tags: { $elemMatch: { $regex: queryFor, $options: "i" } } }, // Case-insensitive search in tags array
-      //     { username: { $regex: queryFor, $options: "i" } }, // Case-insensitive search in username 
+      //     { username: { $regex: queryFor, $options: "i" } }, // Case-insensitive search in username
       //   ],
       //   isPublic: true, // Filter by public collections only
       // }).sort({ upvotes: -1 }).exec();
 
- 
       return collections;
     } catch (error) {
       console.log(
@@ -254,9 +262,9 @@ const collections = await Collection.aggregate([
 
       const payload = {
         userId: user._id,
-        collection: collection
-      } 
-     
+        collection: collection,
+      };
+
       emit.collectionDeleted(payload);
       return collection;
     } catch (error) {
@@ -357,8 +365,8 @@ const collections = await Collection.aggregate([
       //emit event
       const payload = {
         userId: collection.userId,
-        collection: collection
-      } 
+        collection: collection,
+      };
       emit.collectionUpvoted(payload);
       return collection;
     } catch (error) {
@@ -375,11 +383,11 @@ const collections = await Collection.aggregate([
       }
       collection.upvotes.pull(userId);
       await collection.save();
-       //emit event
+      //emit event
       const payload = {
         userId: collection.userId,
-        collection: collection
-      } 
+        collection: collection,
+      };
       emit.collectionDownvoted(payload);
       return collection;
     } catch (error) {

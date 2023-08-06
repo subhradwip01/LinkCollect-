@@ -7,15 +7,35 @@ import mongoose, { isValidObjectId } from "mongoose";
 
 class UserService {
   userRepository: any;
-;
   constructor() {
     this.userRepository = new UserRepository();
   }
   async create(data) {
     try {
-      data.username = data.email.split('@')[0];
+      data.username = data.email.split("@")[0];
       data.emailToken = randomBytes(32).toString("hex");
       data.verified = 0;
+
+      if (data.username.length < 3) {
+        data.username = data.username + randomBytes(3).toString("hex"); // to make username unique and not too long add 2 randome numbers and two chars
+      }
+
+      const check = await this.userRepository.checkUsername({
+        username: data.username,
+      });
+      if ("Username available" !== check) {
+        data.username = data.username + randomBytes(3).toString("hex"); // to make username unique and not too long add 2 randome numbers and two chars
+      }
+
+      if (data.social.length != 0) {
+        let socialData = data.social;
+        let social: Array<{ [key: string]: string }> = [];
+        socialData.forEach((url) => {
+          let companyName = this.extractCompanyName(url);
+          social.push({ [companyName]: url });
+        });
+        data.social = social;
+      }
       const user = await this.userRepository.create(data);
       return user;
     } catch (error) {
@@ -36,6 +56,31 @@ class UserService {
     try {
       const user = await this.userRepository.destroy(data);
       return true;
+    } catch (error) {
+      console.log("Something went wrong Service layer.");
+      throw error;
+    }
+  }
+  extractCompanyName(url): string {
+    let regex = /\/\/(?:www\.)?([^\/]+)\./; // Matches the domain part of the URL
+    let match = url.match(regex);
+    if (match && match[1]) {
+      let domain = match[1].replace("_", ""); // Remove underscore from the domain name
+      return domain.charAt(0).toUpperCase() + domain.slice(1);
+    } else {
+      return "Unknown";
+    }
+  }
+  async setSocials(userId, data: []) {
+    try {
+      let socialsData: Array<{ [key: string]: string }> = [];
+      data.forEach((url) => {
+        let companyName = this.extractCompanyName(url);
+        socialsData.push({ [companyName]: url });
+      });
+      console.log(socialsData);
+      const user = await this.userRepository.createSocials(userId, socialsData);
+      return user;
     } catch (error) {
       console.log("Something went wrong Service layer.");
       throw error;
@@ -102,17 +147,23 @@ class UserService {
     try {
       const user = await this.userRepository.getByEmail(userEmail);
       const encryptedPassword = user.password;
-      const passwordMatch = this.checkPassword(plainPassword, encryptedPassword);
+      const passwordMatch = this.checkPassword(
+        plainPassword,
+        encryptedPassword
+      );
 
       if (!passwordMatch) {
         console.log("Password doesn't match");
         throw { error: "Incorrect password" };
       }
-      const newJWTtoken = this.createToken({ userId: user._id, username: user.username });
-      console.log("->", user, user._doc)
+      const newJWTtoken = this.createToken({
+        userId: user._id,
+        username: user.username,
+      });
+      // console.log("->", user, user._doc)
       const { password, ...userData } = user._doc;
 
-      return { userId: user._id, token: newJWTtoken, userData: userData};
+      return { userId: user._id, token: newJWTtoken, userData: userData };
     } catch (error) {
       console.log("Something went wrong in signIn process");
       throw error;
@@ -174,7 +225,7 @@ class UserService {
       throw error;
     }
   }
-  async checkUsername(username){
+  async checkUsername(username) {
     try {
       console.log(username);
       const response = await this.userRepository.checkUsername(username);
@@ -184,7 +235,7 @@ class UserService {
       throw error;
     }
   }
-  async setPremium(data, userId){
+  async setPremium(data, userId) {
     try {
       const response = await this.userRepository.setPremium(data, userId);
       return response;
@@ -193,29 +244,29 @@ class UserService {
       throw error;
     }
   }
-  async getByUsername(username,userId){
+  async getByUsername(username, userId) {
     try {
-      console.log(username,userId);
+      console.log(username, userId);
       const validUserId = mongoose.isValidObjectId(userId);
-      if(!validUserId){
+      if (!validUserId) {
         console.log("userService.getByUsername says userid its null");
       }
-      if(validUserId){
+      if (validUserId) {
         const user = await this.userRepository.getByUserId(userId);
-        var isSameUser =  (user.username === username);
+        var isSameUser = user.username === username;
       } else {
         isSameUser = false;
       }
       const response = await this.userRepository.getByUsername(username);
       delete response.password;
       delete response.emailToken;
-      console.log("isSameUser" ,isSameUser);
-      if(isSameUser){
+      console.log("isSameUser", isSameUser);
+      if (isSameUser) {
         return response;
       } else {
         const collection: any = [];
-        for(let i =0;i<response.collections.length;i++){
-          if(response.collections[i].isPublic){
+        for (let i = 0; i < response.collections.length; i++) {
+          if (response.collections[i].isPublic) {
             collection.push(response.collections[i]);
           }
         }
@@ -227,7 +278,6 @@ class UserService {
       throw error;
     }
   }
-
 }
 
 export default UserService;
