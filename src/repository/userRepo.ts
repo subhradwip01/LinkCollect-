@@ -60,6 +60,7 @@ class UserRepository {
   async verifyEmailToken(token) {
     try {
       const user: any = await User.findOne({ emailToken: token });
+      console.log("user verifing token", user);
       if (!user) {
         console.log("User doesn't exist");
         throw "User doesn't exist";
@@ -79,7 +80,7 @@ class UserRepository {
 
       return user;
     } catch (error) {
-      console.log("Something went wrong in the verification of mail");
+      console.log("Something went wrong in the verification of mail", error);
       console.log(error);
       throw error;
     }
@@ -114,7 +115,7 @@ class UserRepository {
       return "ok";
       
     } catch (error) {
-      console.log("Something went wrong at repository layer");
+      console.log("Something went wrong at repository layer", error);
       console.log(error);
       throw error;
     }
@@ -135,7 +136,7 @@ class UserRepository {
       const user: any = await User.findByIdAndUpdate(userId, { profilePic });
       return user.profilePic;
     } catch (error) {
-      console.log("Something went wrong at repository layer");
+      console.log("Something went wrong at repository layer", error);
       console.log(error);
       throw error;
     }
@@ -160,7 +161,7 @@ class UserRepository {
         .lean();
       return user;
     } catch (error) {
-      console.log("Something went wrong in fetching the user");
+      console.log("Something went wrong in fetching the user", error);
       throw error;
     }
   }
@@ -170,7 +171,7 @@ class UserRepository {
       const user = await User.findOne({ email: userEmail });
       return user;
     } catch (error) {
-      console.log("Something went wrong in fetching the user");
+      console.log("Something went wrong in fetching the user", error);
       console.log(error);
       throw error;
     }
@@ -185,7 +186,7 @@ class UserRepository {
         return "Username available";
       }
     } catch (error) {
-      console.log("Something went wrong in fetching the user");
+      console.log("Something went wrong in fetching the user", error);
       console.log(error);
       throw error;
     }
@@ -198,7 +199,7 @@ class UserRepository {
         .lean();
       return user;
     } catch (error) {
-      console.log("Something went wrong in fetching the user");
+      console.log("Something went wrong in fetching the user", error);
       console.log(error);
       throw error;
     }
@@ -236,7 +237,7 @@ class UserRepository {
    
       return data;
     } catch (error) {
-      console.log("Something went wrong in fetching the user");
+      console.log("Something went wrong in fetching the user", error);
       console.log(error);
       throw error;
     }

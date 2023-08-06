@@ -31,7 +31,7 @@ class CollectionRepo {
         throw "some issue in your data";
       }
     } catch (error) {
-      console.log(error);
+      console.log("Something went wrong at collection repository layer", error);
       throw error;
     }
   };
@@ -223,8 +223,7 @@ class CollectionRepo {
       await collection.save();
       return collection;
     } catch (error) {
-      console.log("Something went wrong at repository layer", error);
-      console.log(error);
+      console.log("Something went wrong at collection repository layer", error);
       throw error;
     }
   }
@@ -237,7 +236,7 @@ class CollectionRepo {
       await collection.save();
       return collection;
     } catch (error) {
-      console.log("Something went wrong at repository layer", error);
+      console.log("Something went wrong at collection repository layer", error);
       console.log(error);
       throw error;
     }
@@ -268,7 +267,7 @@ class CollectionRepo {
       emit.collectionDeleted(payload);
       return collection;
     } catch (error) {
-      console.log(error);
+      console.log("Something went wrong at collection repository layer", error);
       throw error;
     }
   };
@@ -280,7 +279,7 @@ class CollectionRepo {
       });
       return collection;
     } catch (error) {
-      console.log(error);
+      console.log("Something went wrong at collection repository layer", error);
       throw error;
     }
   };
@@ -290,7 +289,7 @@ class CollectionRepo {
       const collection = await Collection.find({ userId });
       return collection;
     } catch (error) {
-      console.log(error);
+      console.log("Something went wrong at collection repository layer", error);
       throw error;
     }
   };
@@ -302,7 +301,7 @@ class CollectionRepo {
         .lean();
       return collection;
     } catch (error) {
-      console.log(error);
+      console.log("Something went wrong at collection repository layer", error);
       throw error;
     }
   };
@@ -320,7 +319,7 @@ class CollectionRepo {
         return collection;
       }
     } catch (error) {
-      console.log(error);
+      console.log("Something went wrong at collection repository layer", error);
       throw error;
     }
   };
@@ -337,7 +336,7 @@ class CollectionRepo {
       if (existingLink) return true;
       return false;
     } catch (error) {
-      console.log(error);
+      console.log("Something went wrong at collection repository layer", error);
       throw error;
     }
   };
@@ -349,7 +348,7 @@ class CollectionRepo {
       });
       return collection;
     } catch (error) {
-      console.log(error);
+      console.log("Something went wrong at collection repository layer", error);
       throw error;
     }
   };
@@ -370,7 +369,7 @@ class CollectionRepo {
       emit.collectionUpvoted(payload);
       return collection;
     } catch (error) {
-      console.log(error);
+      console.log("Something went wrong at collection repository layer", error);
       throw error;
     }
   };
@@ -391,7 +390,7 @@ class CollectionRepo {
       emit.collectionDownvoted(payload);
       return collection;
     } catch (error) {
-      console.log(error);
+      console.log("Something went wrong at collection repository layer", error);
       throw error;
     }
   };
@@ -403,7 +402,7 @@ class CollectionRepo {
       }
       return tags;
     } catch (error) {
-      console.log(error);
+      console.log("Something went wrong at collection repository layer", error);
       throw error;
     }
   };

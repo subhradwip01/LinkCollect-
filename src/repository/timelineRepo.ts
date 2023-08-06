@@ -41,7 +41,7 @@ class TimelineRepo {
       await collection.save();
       return timelines;
     } catch (error) {
-      console.log(error);
+      console.log("Something went wrong at timelines repository layer", error);
       throw error;
     }
   };
@@ -64,7 +64,7 @@ class TimelineRepo {
       emit.bookmarkDeleted(payload);
       return timeline;
     } catch (error) {
-      console.log(error);
+      console.log("Something went wrong at timelines repository layer", error);
       throw error;
     }
   };
@@ -74,7 +74,7 @@ class TimelineRepo {
       const timeline = await Timeline.findById(id);
       return timeline;
     } catch (error) {
-      console.log(error);
+      console.log("Something went wrong at timelines repository layer", error);
       throw error;
     }
   };
@@ -84,7 +84,7 @@ class TimelineRepo {
       const timeline = await Timeline.find({ collectionId: id });
       return timeline;
     } catch (error) {
-      console.log(error);
+      console.log("Something went wrong at timelines repository layer", error);
       throw error;
     }
   };
@@ -96,7 +96,7 @@ class TimelineRepo {
       });
       return timeline;
     } catch (error) {
-      console.log(error);
+      console.log("Something went wrong at timelines repository layer", error);
       throw error;
     }
   };
