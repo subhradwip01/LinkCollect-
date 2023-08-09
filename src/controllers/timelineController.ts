@@ -1,5 +1,4 @@
 import TimelineService from "../services/timelineService";
-
 const timelineService = new TimelineService();
 
 const create = async (req, res) => {
@@ -128,14 +127,18 @@ const getThatTimeline = async (req, res) => {
 };
 const togglePin = async (req, res) => {
   try {
-    const timeline = await timelineService.getAll(req.params.timelineId);
+    console.log("in togglePin", req.params.timelineId )
+    const timeline: any = await timelineService.togglePin(req.params.timelineId);
+    console.log(timeline)
+    // const isPinnedV: any = timeline.isPinned.val? 'pinned' : 'unpinned';
     return res.status(201).json({
       data: timeline,
       success: true,
-      message: "Successfully toggled timeline pin",
+      message: `Successfully toggled timeline pin to `,
       err: {},
     });
   } catch (error) {
+    console.log("Error in togglePin",error)
     return res.status(500).json({
       data: {},
       success: false,

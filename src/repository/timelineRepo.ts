@@ -109,11 +109,15 @@ class TimelineRepo {
 
   async togglePin(timelineId: String | Number | bigint) {
     try {
+      
       const timeline: any = await Timeline.findById(timelineId);
+      console.log("timeline", timeline)
       if(!timeline) {
         throw "invalid id"
       }
-      timeline.isPinned = !timeline.isPinned;
+      timeline.isPinned.val = !timeline.isPinned.val;
+      timeline.isPinned.pinnedTime = Date.now()
+
       await timeline.save();
       return timeline;
     } catch (error) {

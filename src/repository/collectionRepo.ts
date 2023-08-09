@@ -227,12 +227,16 @@ class CollectionRepo {
       throw error;
     }
   }
-  async togglePin(userId: String | Number | bigint) {
+  async togglePin(collectionId: String | Number | bigint) {
     try {
-      const user: any = await User.findById(userId);
-      const collection: any = await Collection.findById(userId);
-      this.validUserAndCollection(user, collection);
-      collection.isPinned = !collection.isPinned;
+      const collection: any = await Collection.findById(collectionId);
+      const user: any = await User.findById(collection.userId);
+
+      this.validUserAndCollection(user,collection);
+      collection.isPinned.val = !collection.isPinned.val
+      // unix time 
+      // let unixCurrentTime = Date.now()
+      collection.isPinned.pinnedTime = Date.now()
       await collection.save();
       return collection;
     } catch (error) {
