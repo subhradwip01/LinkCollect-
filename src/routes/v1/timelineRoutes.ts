@@ -17,7 +17,9 @@ router.post(
   timelineController.create
 );
 
-router.post("/togglePin/:timelineId", isCollectionOwner, timelineController.togglePin);
+router.get("/:id", timelineController.getThatTimeline);
+
+router.patch("/togglePin/:timelineId", isCollectionOwner, timelineController.togglePin);
 
 router.patch(
   "/:timelineId",

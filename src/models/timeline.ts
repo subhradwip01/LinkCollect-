@@ -4,9 +4,13 @@ export interface ITimeline extends Document {
   collectionId: Schema.Types.ObjectId;
   title?: string;
   link: string;
-  isPinned?: boolean;
+  isPinned?: {
+    pinnedTime: Date;
+    val: boolean;
+  };
   note?: string;
   favicon?: string;
+  
 }
 
 const timelineSchema: Schema = new Schema(
@@ -20,8 +24,14 @@ const timelineSchema: Schema = new Schema(
       type: String,
     },
     isPinned: {
-      type: Boolean,
-      default: true,
+      pinnedTime: {
+        type: Date,
+        default: null
+      },
+      val: {
+        type: Boolean,
+        default: false
+      }
     },
     link: {
       type: String,

@@ -67,8 +67,10 @@ class TimelineService {
 
   togglePin = async (timelineId: any) => {
     try {
-      const tag = await this.timelineRepo.togglePin(timelineId);
-      return tag;
+      console.log("timeline", timelineId)
+
+      const timeline = await this.timelineRepo.togglePin(timelineId);
+      return timeline;
     } catch (error) {
       throw error;
     }
