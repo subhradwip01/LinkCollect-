@@ -116,26 +116,83 @@ class CollectionRepo {
   };
 
   getExplorePage = async (pageSize: any, page: any, tags: String[]) => {
+
     try {
+      // console.log(pageSize, page)
       let tagQuery = {};
+      let tagsArray;
       if (tags) {
-        const tagsArray = Array.isArray(tags) ? tags : [tags];
+         tagsArray = Array.isArray(tags) ? tags : [tags];
         tagQuery = { tags: { $in: tagsArray } };
       }
-
+  
       const query = {
         isPublic: true,
         ...tagQuery,
       };
 
-      const collections = await Collection.find(query)
-        .select(
-          "title username timestamps update image description tags timelines upvotes views"
-        )
-        .sort({ upvotes: -1 }) // Sort by upvotes in descending order
-        .skip((parseInt(page) - 1) * parseInt(pageSize)) // skip the first n items, where n = (page - 1) * pageSize
-        .limit(parseInt(pageSize)); // limit the number of items to pageSize
-
+      if(tagsArray?.length === 0 || !tagsArray) {
+        const query = {
+          isPublic: true
+        };
+        // console.log("hhh")
+        const collections = await Collection.aggregate([
+          { $match: query },
+          {
+            $addFields: {
+              amountOFLinks: { $size: "$timelines" } // Calculate the length of the timelines array
+            }
+          },
+          {
+            $project: {
+              id: 1,
+              title: 1,
+              username: 1,
+              image: 1,
+              description: 1,
+              tags: 1,
+              upvotes: 1,
+              views: 1,
+              amountOFLinks: 1 // Include the calculated field in the projection
+            }
+          },
+          { $sort: { upvotes: -1 } },
+          { $skip: (parseInt(page) - 1) * parseInt(pageSize) },
+          { $limit: parseInt(pageSize) }
+        ]);
+        
+        return collections
+        // Now, the `collections` array will contain documents with the added `amountOFLinks` field.
+        
+      }
+  
+      const collections = await Collection.aggregate([
+        { $match: query },
+        {
+          $addFields: {
+            amountOFLinks: { $size: "$timelines" },
+            tagSimilarity: { $size: { $setIntersection: ["$tags", tagsArray] } }
+          }
+        },
+        {
+          $project: {
+            title: 1,
+            username: 1,
+            image: 1,
+            description: 1,
+            tags: 1,
+            // timelines: 1,
+            upvotes: 1,
+            views: 1,
+            amountOFLinks: 1,
+            tagSimilarity: 1
+          }
+        },
+        { $sort: { tagSimilarity: -1, upvotes: -1 } }, // Sort by tag similarity descending, then upvotes descending
+        { $skip: (parseInt(page) - 1) * parseInt(pageSize) },
+        { $limit: parseInt(pageSize) }
+      ]);
+  
       return collections;
     } catch (error) {
       console.log(
@@ -145,6 +202,8 @@ class CollectionRepo {
       throw error;
     }
   };
+  
+  
 
   searchInExplorePage = async (queryFor) => {
     try {
