@@ -210,17 +210,17 @@ class CollectionRepo {
       if (queryFor.length < 3) {
         throw "search term should be at least 3 characters long";
       }
-      
+       // Create a regex pattern for the search term
       const regexPattern = new RegExp(queryFor, "i");
   
       const collections = await Collection.aggregate([
         {
           $match: {
-            isPublic: true,
+            isPublic: true,  // Filter by public collections only
             $or: [
-              { title: { $regex: regexPattern } },
-              { tags: { $elemMatch: { $regex: regexPattern } } },
-              { username: { $regex: regexPattern } },
+              { title: { $regex: regexPattern } }, // Case-insensitive search in title
+              { tags: { $elemMatch: { $regex: regexPattern } } }, // Case-insensitive search in tags array
+              { username: { $regex: regexPattern } }, // Case-insensitive search in username
             ],
           },
         },
@@ -230,10 +230,11 @@ class CollectionRepo {
             sortOrder: {
               $switch: {
                 branches: [
-                  { case: { $regexMatch: { input: "$title", regex: regexPattern } }, then: 1 },
-                  { case: { $regexMatch: { input: "$username", regex: regexPattern } }, then: 2 },
+                  { case: { $regexMatch: { input: "$title", regex: regexPattern } }, then: 1 }, // If title matches, sortOrder = 1
+                  { case: { $regexMatch: { input: "$username", regex: regexPattern } }, then: 2 },  // If username matches,sortOrder = 2
+                  // { case: { $regexMatch: { input: "$tags", regex: regexPattern } }, then: 3 },  // If tags match, sortOrder = 3
                 ],
-                default: 4,
+                default: 4,  // If no match, sortOrder = 4 (higher value to be at the bottom)
               },
             },
           },
