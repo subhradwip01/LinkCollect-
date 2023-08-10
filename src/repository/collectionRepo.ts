@@ -153,7 +153,7 @@ class CollectionRepo {
               tags: 1,
               upvotes: 1,
               views: 1,
-              amountOFLinks: 1 // Include the calculated field in the projection
+              countOfLinks: 1 // Include the calculated field in the projection
             }
           },
           { $sort: { upvotes: -1 } },
@@ -184,7 +184,7 @@ class CollectionRepo {
             // timelines: 1,
             upvotes: 1,
             views: 1,
-            amountOFLinks: 1,
+            countOfLinks: 1,
             tagSimilarity: 1
           }
         },
