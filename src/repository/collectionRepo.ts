@@ -140,7 +140,7 @@ class CollectionRepo {
           { $match: query },
           {
             $addFields: {
-              amountOFLinks: { $size: "$timelines" } // Calculate the length of the timelines array
+              countOfLinks: { $size: "$timelines" } // Calculate the length of the timelines array
             }
           },
           {
@@ -170,7 +170,7 @@ class CollectionRepo {
         { $match: query },
         {
           $addFields: {
-            amountOFLinks: { $size: "$timelines" },
+            countOfLinks: { $size: "$timelines" },
             tagSimilarity: { $size: { $setIntersection: ["$tags", tagsArray] } }
           }
         },
