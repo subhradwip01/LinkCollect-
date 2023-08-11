@@ -46,12 +46,12 @@ export const LinkLimit = async (
   try {
     const collection: any = await collectionRepo.get(req.params.id);
     const user : any  = await userRepo.getByUserId(collection.userId);
-    if(!user.isPremium){ 
+    // if(!user.isPremium){ 
 
-    }
+    // }
     console.log(user.isPremium);
-    if (!user.isPremium == null|| (collection.timelines.length > 100 && !user.isPremium)) {
-      console.log("50 limit exceeded");
+    if (collection.timelines.length > 100 && !user.isPremium) {
+      console.log("100 limit exceeded");
       return res.status(404).json({
         success: false,
         data: {},
