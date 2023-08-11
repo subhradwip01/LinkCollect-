@@ -31,7 +31,7 @@ model Collection {
   userId            String
   user              User               @relation("CreatedCollections", fields: [userId], references: [id], onDelete: Cascade)
   savedCollectionId String?
-  SavedBy           User?              @relation("SavedCollections", fields: [savedCollectionId], references: [id])
+  SavedBy           User?              @relation("SavedCollections", fields: [savedCollectionId], references: [id], onDelete: Cascade)
   title             String             @unique
   image             String?
   description       String?
@@ -53,7 +53,7 @@ model CollectionMapping {
 
 model Bookmarks {
   id           String      @id @default(cuid()) @map("_id")
-  collection   Collection  @relation(fields: [collectionId], references: [id])
+  collection   Collection  @relation(fields: [collectionId], references: [id], onDelete: Cascade)
   collectionId String
   title        String?
   isPinned     Boolean     @default(true)
@@ -67,9 +67,9 @@ model Bookmarks {
 
 model CollectionUpvote {
   id           String     @id @default(cuid()) @map("_id")
-  user         User       @relation(fields: [userId], references: [id])
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId       String
-  collection   Collection @relation(fields: [collectionId], references: [id])
+  collection   Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
   collectionId String
   createdAt    DateTime   @default(now())
 }
@@ -79,7 +79,7 @@ model PinDetails {
   isPinned     Boolean     @default(false)
   updatedAt    DateTime    @default(now()) @updatedAt
   collectionId String?     @unique
-  collection   Collection? @relation(fields: [collectionId], references: [id])
+  collection   Collection? @relation(fields: [collectionId], references: [id], onDelete: Cascade)
   bookmarkId   String?     @unique
-  bookmark     Bookmarks?  @relation(fields: [bookmarkId], references: [id])
+  bookmark     Bookmarks?  @relation(fields: [bookmarkId], references: [id], onDelete: Cascade)
 }
