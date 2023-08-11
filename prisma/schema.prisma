@@ -24,6 +24,8 @@ model User {
   collections      Collection[]       @relation("CreatedCollections")
   savedCollections Collection[]       @relation("SavedCollections")
   CollectionUpvote CollectionUpvote[]
+
+  // @@unique([email, username]) -> two people can't have both email and username same...
 }
 
 model Collection {
@@ -82,3 +84,12 @@ model PinDetails {
   bookmarkId   String?     @unique
   bookmark     Bookmarks?  @relation(fields: [bookmarkId], references: [id], onDelete: Cascade)
 }
+
+
+
+// enum Role {
+//   FreemiumUser
+//   PremiumUser
+//   SuperUser
+//   Admin
+// } 
