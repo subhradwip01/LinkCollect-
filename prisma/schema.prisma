@@ -56,7 +56,6 @@ model Bookmarks {
   collection   Collection  @relation(fields: [collectionId], references: [id], onDelete: Cascade)
   collectionId String
   title        String?
-  isPinned     Boolean     @default(true)
   link         String
   note         String?
   favicon      String?
