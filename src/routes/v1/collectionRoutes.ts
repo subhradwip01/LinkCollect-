@@ -42,11 +42,11 @@ router.delete("/:id", isCollectionOwner, collectionController.deleteCollection);
 // save collection routes
 
 // get all saved collection of a user by userid
-router.get("/:id/getsaved", collectionController.getSavedCollections); // userId
+router.get("/:id/getsaved", isCollectionOwner, collectionController.getSavedCollections); // userId
 // save a collection by collection id
-router.post("/:id/save", collectionController.saveCollection);
+router.post("/:id/save",isCollectionOwner, collectionController.saveCollection);
 //unsave a collection by collection id
-router.post("/:id/unsave", collectionController.unsaveCollection);
+router.post("/:id/unsave", isCollectionOwner,collectionController.unsaveCollection);
 
 
 
@@ -57,10 +57,10 @@ router.post('/:id/downvote', collectionController.downvote);
 
 
 // Pin Unpin Routes
-router.post("/togglePin/:id", collectionController.togglePin);
+router.post("/togglePin/:id", isCollectionOwner, collectionController.togglePin);
 
 // PRIVACY ROUTES
-router.post('/togglePrivacy/:id', collectionController.togglePrivacy);
+router.post('/togglePrivacy/:id', isCollectionOwner, collectionController.togglePrivacy);
 
 
 // GET VALID TAGS

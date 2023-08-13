@@ -115,8 +115,8 @@ class TimelineRepo {
       if(!timeline) {
         throw "invalid id"
       }
-      timeline.isPinned.val = !timeline.isPinned.val;
-      timeline.isPinned.pinnedTime = Date.now()
+      timeline.isPinned = !timeline.isPinned;
+      timeline.pinnedTime = Date.now()
 
       await timeline.save();
       return timeline;
