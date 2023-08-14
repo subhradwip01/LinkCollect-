@@ -4,6 +4,8 @@ dist/
 build/
 coverage/
 demo-client/
+mongo/
+
 
 # Ignore specific files
 *.log

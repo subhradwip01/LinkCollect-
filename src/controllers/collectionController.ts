@@ -135,6 +135,9 @@ const searchInExplorePage = async (req: AuthenticatedRequest, res: Response) => 
   try {
     const queryFor  = req.query.queryFor as string;
     const { page = 1, pageSize = 20 } = req.query;
+    // add check to verify that page and pageSize are integers and not strings
+    // page = parseInt(page);
+    // pageSize = parseInt(pageSize);
 
     if (!queryFor || queryFor.trim() === '') {
      // If 'for' parameter is empty or undefined, return an empty result

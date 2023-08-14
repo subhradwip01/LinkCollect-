@@ -254,8 +254,8 @@ class CollectionRepo {
           },
         },
         { $sort: { sortOrder: 1, upvotes: -1 } },
-        { $skip: (page - 1) * pageSize }, // Skip documents based on page number
-        { $limit: pageSize }, // Limit the number of documents per page
+        { $skip: (page - 1) * parseInt(pageSize) }, // Skip documents based on page number
+        { $limit: parseInt(pageSize) }, // Limit the number of documents per page
       ]).exec();
   
       return collections;
