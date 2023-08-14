@@ -55,10 +55,12 @@ class CollectionService {
       throw error;
     }
   };
-  searchInExplorePage = async (queryFor: any) => {
+  searchInExplorePage = async (queryFor: any, page: any, pageSize: any) => {
     try {
       const collection = await this.collectionRepo.searchInExplorePage(
-        queryFor
+        queryFor, 
+        page, 
+        pageSize
       );
       return collection;
     } catch (error) {

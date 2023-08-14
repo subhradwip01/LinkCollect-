@@ -4,10 +4,8 @@ export interface ITimeline extends Document {
   collectionId: Schema.Types.ObjectId;
   title?: string;
   link: string;
-  isPinned?: {
-    pinnedTime: Date;
-    val: boolean;
-  };
+  isPinned?: boolean;
+  pinnedTime: Date;
   note?: string;
   favicon?: string;
   
@@ -24,14 +22,8 @@ const timelineSchema: Schema = new Schema(
       type: String,
     },
     isPinned: {
-      pinnedTime: {
-        type: Date,
-        default: null
-      },
-      val: {
         type: Boolean,
         default: false
-      }
     },
     link: {
       type: String,
@@ -43,6 +35,10 @@ const timelineSchema: Schema = new Schema(
     favicon: {
       type: String,
     },
+    pinnedTime: {
+      type: Date,
+      default: null
+    }
   },
   { timestamps: true }
 );

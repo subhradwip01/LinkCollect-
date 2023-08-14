@@ -134,13 +134,19 @@ const getExplorePage = async (req: AuthenticatedRequest, res: Response) => {
 const searchInExplorePage = async (req: AuthenticatedRequest, res: Response) => {
   try {
     const queryFor  = req.query.queryFor as string;
+    const { page = 1, pageSize = 20 } = req.query;
+    // add check to verify that page and pageSize are integers and not strings
+    // page = parseInt(page);
+    // pageSize = parseInt(pageSize);
 
     if (!queryFor || queryFor.trim() === '') {
      // If 'for' parameter is empty or undefined, return an empty result
      return res.json({ collections: [], links: [] });
     }
     const collection = await collectionService.searchInExplorePage(
-      queryFor
+      queryFor,
+      page, 
+      pageSize
     );
 
     return res.status(201).json({

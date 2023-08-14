@@ -68,7 +68,7 @@ class UserRepository {
 
 
 
-      var data = {
+      let data = {
         emailToken: null,
         verified: 1,
       };

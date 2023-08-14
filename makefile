@@ -19,7 +19,7 @@ down:
 	docker-compose down
 
 run: 
-	ts-node src/app.ts
+	npm run dev
 
 createnetwork:
 	docker network create example-net

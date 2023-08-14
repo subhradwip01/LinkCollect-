@@ -205,8 +205,9 @@ class CollectionRepo {
   
   
 
-  searchInExplorePage = async (queryFor) => {
+  searchInExplorePage = async (queryFor, page, pageSize) => {
     try {
+      
       if (queryFor.length < 3) {
         throw "search term should be at least 3 characters long";
       }
@@ -253,6 +254,8 @@ class CollectionRepo {
           },
         },
         { $sort: { sortOrder: 1, upvotes: -1 } },
+        { $skip: (page - 1) * parseInt(pageSize) }, // Skip documents based on page number
+        { $limit: parseInt(pageSize) }, // Limit the number of documents per page
       ]).exec();
   
       return collections;
@@ -282,10 +285,10 @@ class CollectionRepo {
       const user: any = await User.findById(collection.userId);
 
       this.validUserAndCollection(user,collection);
-      collection.isPinned.val = !collection.isPinned.val
+      collection.isPinned = !collection.isPinned
       // unix time 
       // let unixCurrentTime = Date.now()
-      collection.isPinned.pinnedTime = Date.now()
+      collection.pinnedTime = Date.now()
       await collection.save();
       return collection;
     } catch (error) {
@@ -409,10 +412,10 @@ class CollectionRepo {
   upvote = async (collectionId: any, userId: any) => {
     try {
       const collection: any = await Collection.findById(collectionId);
-      if (!collection) {
-        throw new Error("Collection not found");
-      }
-      collection.upvotes.addToSet(userId);
+      const user: any = await User.findById(userId);
+      this.validUserAndCollection(user, collection);
+
+      collection.upvotes.addToSet(userId); // add to set to avoid duplicates
       await collection.save();
       //emit event
       const payload = {
@@ -430,10 +433,9 @@ class CollectionRepo {
   downvote = async (collectionId: any, userId: any) => {
     try {
       const collection: any = await Collection.findById(collectionId);
-      if (!collection) {
-        throw new Error("Collection not found");
-      }
-      collection.upvotes.pull(userId);
+      const user: any = await User.findById(userId);
+      this.validUserAndCollection(user, collection);
+      collection.upvotes.pull(userId); // remove from set
       await collection.save();
       //emit event
       const payload = {

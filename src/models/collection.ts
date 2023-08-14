@@ -5,10 +5,9 @@ interface ICollection extends Document {
   image?: string;
   description?: string;
   isPublic: boolean;
-  isPinned: {
-    pinnedTime: Date;
-    val: boolean;
-  };
+  isPinned: boolean;
+  pinnedTime?: Date;
+
   upvotes: mongoose.Schema.Types.ObjectId[];
   userId: mongoose.Schema.Types.ObjectId;
   username: string;
@@ -35,14 +34,12 @@ const CollectionSchema: Schema<ICollection> = new Schema(
       default: false,
     },
     isPinned: {
-      pinnedTime: {
-        type: Date,
-        default: null
-      },
-      val: {
-        type: Boolean,
-        default: false
-      }
+      type: Boolean,
+      default: false
+    },
+    pinnedTime: {
+      type: Date,
+      default: null
     },
     upvotes: [
       {
