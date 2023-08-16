@@ -168,7 +168,9 @@ class UserRepository {
 
   async getByEmail(userEmail) {
     try {
-      const user = await User.findOne({ email: userEmail });
+      const user = await User.findOne({ email: userEmail })
+      .populate({ path: "collections" })
+      .lean();
       return user;
     } catch (error) {
       console.log("Something went wrong in fetching the user", error);
