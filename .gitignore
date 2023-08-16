@@ -6,3 +6,4 @@ pending-backend.txt
 /mongo
 /build
 /demo-client
+/postgres

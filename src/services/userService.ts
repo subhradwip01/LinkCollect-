@@ -150,7 +150,7 @@ class UserService {
 
   async signIn(userEmail, plainPassword) {
     try {
-      const user = await this.userRepository.getByEmail(userEmail);
+      const user = await this.userRepository.getByEmail(userEmail, true);
       const encryptedPassword = user.password;
       const passwordMatch = this.checkPassword(
         plainPassword,

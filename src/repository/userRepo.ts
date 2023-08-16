@@ -166,12 +166,21 @@ class UserRepository {
     }
   }
 
-  async getByEmail(userEmail) {
+  async getByEmail(userEmail, populateCollections = false) {
     try {
-      const user = await User.findOne({ email: userEmail })
-      .populate({ path: "collections" })
-      .lean();
-      return user;
+
+      if(!populateCollections) {
+        const user = await User.findOne({ email: userEmail });
+        return user;
+
+      } else {
+        const user = await User.findOne({ email: userEmail })
+        .populate({ path: "collections" })
+        .lean();
+        
+        return user;
+      }
+
     } catch (error) {
       console.log("Something went wrong in fetching the user", error);
       console.log(error);
