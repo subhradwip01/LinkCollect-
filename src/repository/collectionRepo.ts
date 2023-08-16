@@ -137,14 +137,14 @@ class CollectionRepo {
 
         const collections = await Collection.aggregate([
           { $match: query },
-          {
-            $lookup: {
-              from: "timelines",
-              localField: "_id",
-              foreignField: "collectionId",
-              as: "timelines",
-            },
-          },
+          // {
+          //   $lookup: {
+          //     from: "timelines",
+          //     localField: "_id",
+          //     foreignField: "collectionId",
+          //     as: "timelines",
+          //   },
+          // },
           {
             $addFields: {
               countOfLinks: { $size: "$timelines" },
@@ -295,11 +295,12 @@ class CollectionRepo {
             description: 1,
             tags: 1,
             countOfLinks: 1,
+            countOfUpvotes: 1,
             username: 1,
             sortOrder: 1,
           },
         },
-        { $sort: { sortOrder: 1, countOfUpvotes: -1 } },
+        { $sort: { sortOrder: 1, countOfUpvotes: -1, views: -1 } },
         { $skip: (page - 1) * parseInt(pageSize) }, // Skip documents based on page number
         { $limit: parseInt(pageSize) }, // Limit the number of documents per page
       ]).exec();
