@@ -115,37 +115,51 @@ class CollectionRepo {
     }
   };
 
-  getExplorePage = async (pageSize: any, page: any, tags: String[]) => {
-
+  getExplorePage = async (pageSize: any, page: any, tags: any) => {
     try {
-      // console.log(pageSize, page)
       let tagQuery = {};
       let tagsArray;
+      let isTagFilter = false;
       if (tags) {
-         tagsArray = Array.isArray(tags) ? tags : [tags];
+        // console.log(typeof tags)
+        tagsArray = Array.isArray(tags) ? tags : [tags];
         tagQuery = { tags: { $in: tagsArray } };
+        isTagFilter = true;
       }
-  
-      const query = {
-        isPublic: true,
-        ...tagQuery,
-      };
 
-      if(tagsArray?.length === 0 || !tagsArray) {
+      // console.log("tagsArray", tagsArray);
+
+      if (isTagFilter) {
         const query = {
-          isPublic: true
+          isPublic: true,
+          ...tagQuery,
         };
-        // console.log("hhh")
+
         const collections = await Collection.aggregate([
           { $match: query },
           {
+            $lookup: {
+              from: "timelines",
+              localField: "_id",
+              foreignField: "collectionId",
+              as: "timelines",
+            },
+          },
+          {
             $addFields: {
-              countOfLinks: { $size: "$timelines" } // Calculate the length of the timelines array
-            }
+              countOfLinks: { $size: "$timelines" },
+              tagSimilarity: {
+                $size: { $setIntersection: ["$tags", tagsArray] },
+              },
+            },
+          },
+          {
+            $match: {
+              countOfLinks: { $gt: 0 }, // Exclude collections with no timelines
+            },
           },
           {
             $project: {
-              id: 1,
               title: 1,
               username: 1,
               image: 1,
@@ -153,71 +167,88 @@ class CollectionRepo {
               tags: 1,
               upvotes: 1,
               views: 1,
-              countOfLinks: 1 // Include the calculated field in the projection
-            }
+              countOfLinks: 1,
+              tagSimilarity: 1,
+            },
           },
-          { $sort: { upvotes: -1 } },
+          {
+            $sort: {
+              tagSimilarity: -1,
+              upvotes: -1,
+              views: -1,
+              countOfLinks: -1,
+            },
+          },
           { $skip: (parseInt(page) - 1) * parseInt(pageSize) },
-          { $limit: parseInt(pageSize) }
+          { $limit: parseInt(pageSize) },
         ]);
-        
-        return collections
-        // Now, the `collections` array will contain documents with the added `amountOFLinks` field.
-        
+
+        return collections;
+      } else {
+        // query for timelines array not null and and isPublic true
+        let query = {
+          isPublic: true,
+        };
+
+        const collections = await Collection.aggregate([
+          { $match: query },
+          {
+            $lookup: {
+              from: "timelines",
+              localField: "_id",
+              foreignField: "collectionId",
+              as: "timelines",
+            },
+          },
+          {
+            $addFields: {
+              countOfLinks: { $size: "$timelines" },
+              // tagSimilarity: { $size: { $setIntersection: ["$tags", tagsArray] } },
+            },
+          },
+          {
+            $match: {
+              countOfLinks: { $gt: 0 }, // Exclude collections with no timelines
+            },
+          },
+          {
+            $project: {
+              title: 1,
+              username: 1,
+              image: 1,
+              description: 1,
+              tags: 1,
+              upvotes: 1,
+              views: 1,
+              countOfLinks: 1,
+              tagSimilarity: 1,
+            },
+          },
+          { $sort: { upvotes: -1, views: -1, countOfLinks: -1 } },
+          { $skip: (parseInt(page) - 1) * parseInt(pageSize) },
+          { $limit: parseInt(pageSize) },
+        ]);
+
+        return collections;
       }
-  
-      const collections = await Collection.aggregate([
-        { $match: query },
-        {
-          $addFields: {
-            countOfLinks: { $size: "$timelines" },
-            tagSimilarity: { $size: { $setIntersection: ["$tags", tagsArray] } }
-          }
-        },
-        {
-          $project: {
-            title: 1,
-            username: 1,
-            image: 1,
-            description: 1,
-            tags: 1,
-            // timelines: 1,
-            upvotes: 1,
-            views: 1,
-            countOfLinks: 1,
-            tagSimilarity: 1
-          }
-        },
-        { $sort: { tagSimilarity: -1, upvotes: -1 } }, // Sort by tag similarity descending, then upvotes descending
-        { $skip: (parseInt(page) - 1) * parseInt(pageSize) },
-        { $limit: parseInt(pageSize) }
-      ]);
-  
-      return collections;
     } catch (error) {
-      console.log(
-        "Err in repository layer getting saved collection failed",
-        error
-      );
+      console.log("Error in repository layer getting explore page data", error);
       throw error;
     }
   };
-  
-  
 
   searchInExplorePage = async (queryFor, page, pageSize) => {
     try {
-      
       if (queryFor.length < 3) {
         throw "search term should be at least 3 characters long";
       }
-       // Create a regex pattern for the search term
+      // Create a regex pattern for the search term
       const regexPattern = new RegExp(queryFor, "i");
-  
+
       const collections = await Collection.aggregate([
         {
           $match: {
-            isPublic: true,  // Filter by public collections only
+            isPublic: true, // Filter by public collections only
             $or: [
               { title: { $regex: regexPattern } }, // Case-insensitive search in title
               { tags: { $elemMatch: { $regex: regexPattern } } }, // Case-insensitive search in tags array
@@ -231,11 +262,21 @@ class CollectionRepo {
             sortOrder: {
               $switch: {
                 branches: [
-                  { case: { $regexMatch: { input: "$title", regex: regexPattern } }, then: 1 }, // If title matches, sortOrder = 1
-                  { case: { $regexMatch: { input: "$username", regex: regexPattern } }, then: 2 },  // If username matches,sortOrder = 2
+                  {
+                    case: {
+                      $regexMatch: { input: "$title", regex: regexPattern },
+                    },
+                    then: 1,
+                  }, // If title matches, sortOrder = 1
+                  {
+                    case: {
+                      $regexMatch: { input: "$username", regex: regexPattern },
+                    },
+                    then: 2,
+                  }, // If username matches,sortOrder = 2
                   // { case: { $regexMatch: { input: "$tags", regex: regexPattern } }, then: 3 },  // If tags match, sortOrder = 3
                 ],
-                default: 4,  // If no match, sortOrder = 4 (higher value to be at the bottom)
+                default: 4, // If no match, sortOrder = 4 (higher value to be at the bottom)
               },
             },
           },
@@ -257,14 +298,16 @@ class CollectionRepo {
         { $skip: (page - 1) * parseInt(pageSize) }, // Skip documents based on page number
         { $limit: parseInt(pageSize) }, // Limit the number of documents per page
       ]).exec();
-  
+
       return collections;
     } catch (error) {
-      console.log("Err in repository layer getting saved collection failed", error);
+      console.log(
+        "Err in repository layer getting saved collection failed",
+        error
+      );
       throw error;
     }
   };
-  
 
   async togglePrivacy(userId) {
     try {
@@ -284,11 +327,11 @@ class CollectionRepo {
       const collection: any = await Collection.findById(collectionId);
       const user: any = await User.findById(collection.userId);
 
-      this.validUserAndCollection(user,collection);
-      collection.isPinned = !collection.isPinned
-      // unix time 
+      this.validUserAndCollection(user, collection);
+      collection.isPinned = !collection.isPinned;
+      // unix time
       // let unixCurrentTime = Date.now()
-      collection.pinnedTime = Date.now()
+      collection.pinnedTime = Date.now();
       await collection.save();
       return collection;
     } catch (error) {
