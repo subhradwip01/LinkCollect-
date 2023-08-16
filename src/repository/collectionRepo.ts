@@ -203,6 +203,7 @@ class CollectionRepo {
           {
             $addFields: {
               countOfLinks: { $size: "$timelines" },
+              countOfUpvotes: { $size: "$upvotes" },
               // tagSimilarity: { $size: { $setIntersection: ["$tags", tagsArray] } },
             },
           },
@@ -224,7 +225,7 @@ class CollectionRepo {
               tagSimilarity: 1,
             },
           },
-          { $sort: { upvotes: -1, views: -1, countOfLinks: -1 } },
+          { $sort: { countOfUpvotes: -1, views: -1, countOfLinks: -1 } },
           { $skip: (parseInt(page) - 1) * parseInt(pageSize) },
           { $limit: parseInt(pageSize) },
         ]);
