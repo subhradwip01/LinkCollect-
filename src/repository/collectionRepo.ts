@@ -175,8 +175,8 @@ class CollectionRepo {
             $sort: {
               tagSimilarity: -1,
               upvotes: -1,
-              views: -1,
               countOfLinks: -1,
+              views: -1,
             },
           },
           { $skip: (parseInt(page) - 1) * parseInt(pageSize) },
@@ -222,6 +222,7 @@ class CollectionRepo {
               upvotes: 1,
               views: 1,
               countOfLinks: 1,
+              countOfUpvotes: 1,
               tagSimilarity: 1,
             },
           },
@@ -229,6 +230,8 @@ class CollectionRepo {
           { $skip: (parseInt(page) - 1) * parseInt(pageSize) },
           { $limit: parseInt(pageSize) },
         ]);
+
+        console.log("in explore page, without tag")
 
         return collections;
       }
@@ -260,6 +263,7 @@ class CollectionRepo {
         {
           $addFields: {
             countOfLinks: { $size: "$timelines" },
+            countOfUpvotes: { $size: "$upvotes" },
             sortOrder: {
               $switch: {
                 branches: [
@@ -295,7 +299,7 @@ class CollectionRepo {
             sortOrder: 1,
           },
         },
-        { $sort: { sortOrder: 1, upvotes: -1 } },
+        { $sort: { sortOrder: 1, countOfUpvotes: -1 } },
         { $skip: (page - 1) * parseInt(pageSize) }, // Skip documents based on page number
         { $limit: parseInt(pageSize) }, // Limit the number of documents per page
       ]).exec();
