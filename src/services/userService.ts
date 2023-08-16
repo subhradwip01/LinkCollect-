@@ -150,7 +150,7 @@ class UserService {
 
   async signIn(userEmail, plainPassword) {
     try {
-      const user = await this.userRepository.getByEmail(userEmail);
+      const user = await this.userRepository.getByEmail(userEmail, true);
       const encryptedPassword = user.password;
       const passwordMatch = this.checkPassword(
         plainPassword,
@@ -166,11 +166,14 @@ class UserService {
         username: user.username,
       });
       // console.log("->", user, user._doc)
-      const { password, ...userData } = user._doc;
+      
+      // const { password, ...userData } = user._doc;
+      delete user.password;
+      delete user.emailToken;
 
-      return { userId: user._id, token: newJWTtoken, userData: userData };
+      return { userId: user._id, token: newJWTtoken, userData: user };
     } catch (error) {
-      console.log("Something went wrong in signIn process");
+      console.log("Something went wrong in signIn process", error);
       throw error;
     }
   }
