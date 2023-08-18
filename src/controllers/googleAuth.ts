@@ -15,18 +15,25 @@ export const googleAuth = async (req: Request, res: Response) => {
 
   let user = await User.findOne({ email: userData.email });
 
-  if (!user) {
+if (!user) {
     user = await User.create({
       name: userData.name,
       email: userData.email,
       username: userData.email.split("@")[0],
+      profilePic: userData.picture,
     });
   }
+
 
   const token = userService.createToken({
     userId: user._id,
     username: user.username,
   });
+
+  if (user.profilePic === undefined || user.profilePic !== userData.picture) {
+    user.profilePic = userData.picture;
+    await user.save();
+  }
 
   if (config.PRODUCTION !== "production") {
     return res.redirect(`http://localhost:3001/login?token=${token}`);
