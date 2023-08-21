@@ -1,4 +1,4 @@
-import { Collection, User, CollectionMapping, Timeline } from "../models/index";
+import { Collection, User, Timeline } from "../models/index";
 import tags from "../constants/alltags";
 import Emit from "../events/events";
 
@@ -66,7 +66,10 @@ class CollectionRepo {
     try {
       const collection: any = await Collection.findById(collectionId);
       const user: any = await User.findById(userId);
-      this.validUserAndCollection(user, collection);
+
+      if (!user) {
+        throw new Error("User ID is not a Valid ID");
+      }
       user.savedCollections = this.deleteFromArray(
         user.savedCollections,
         collectionId
@@ -91,17 +94,13 @@ class CollectionRepo {
       let allCollections: any = [];
       for (let i = 0; i < user.savedCollections.length; i++) {
         const collectId = user.savedCollections[i];
-        const Map: any = await CollectionMapping.find({
-          collectionId: collectId,
-        });
-        if (Map.isDeleted) {
-          user.savedCollections = this.deleteFromArray(
-            user.savedCollections,
-            collectId
-          );
-          await user.save();
+
+        const collection: any = await Collection.findById(collectId);
+
+        if (!collection) {
+          this.unsave(collectId, userId)
+       
         } else {
-          const collection: any = await Collection.findById(collectId);
           allCollections.push(collection);
         }
       }
@@ -358,10 +357,7 @@ class CollectionRepo {
       const userId: any = collection.userId;
       const user: any = await User.findById(userId);
       user.collections = this.deleteFromArray(user.collections, id);
-      const map = await CollectionMapping.create({
-        collectionId: id,
-        isDeleted: true,
-      });
+     
       await user.save();
 
       const payload = {
