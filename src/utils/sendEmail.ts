@@ -28,7 +28,7 @@ let transporter = nodemailer.createTransport({
         to: userEmail,
         subject: "LinkCollect Verification Link",
         text: "LinkCollect Verification Link for " + name,
-        html: verifyEmail(name, env.BACKEND_BASE_URL, token),
+        html: sendOTPMail(name, env.BACKEND_BASE_URL, token),
       },function(error,result){
         if(error){
          console.log("err",error);
