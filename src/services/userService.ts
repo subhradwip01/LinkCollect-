@@ -13,39 +13,47 @@ class UserService {
   constructor() {
     this.userRepository = new UserRepository();
   }
-  async create(data) {
-    try {
-      data.username = data.email.split("@")[0];
-      data.email = data.email.trim();
-      data.emailToken = randomBytes(32).toString("hex");
-      data.verified = 0;
 
-      if (data.username && data.username.length < 3) {
+  async validateNewUser(data) {
+
+    console.log("data", data)
+    data.username = data.email.split("@")[0];
+    data.email = data.email.trim();
+    data.emailToken = randomBytes(32).toString("hex");
+    data.verified = 0;
+    if(data.isPremium) {
+      data.isPremium = false
+    }
+
+    if (data.username && data.username.length < 3) {
+      data.username = data.username + randomBytes(3).toString("hex"); // to make username unique and not too long add 2 randome numbers and two chars
+    }
+
+    if (data.username) {
+      const check = await this.userRepository.checkUsername({
+        username: data.username,
+      });
+      if ("Username available" !== check) {
         data.username = data.username + randomBytes(3).toString("hex"); // to make username unique and not too long add 2 randome numbers and two chars
       }
+    }
 
-      if (data.username) {
-        const check = await this.userRepository.checkUsername({
-          username: data.username,
-        });
-        if ("Username available" !== check) {
-          data.username = data.username + randomBytes(3).toString("hex"); // to make username unique and not too long add 2 randome numbers and two chars
-        }
-      }
+    if (data.social && data.social.length != 0) {
+      let socialData = data.social;
+      let social: Array<{ [key: string]: string }> = [];
+      socialData.forEach((url) => {
+        let companyName = this.extractCompanyName(url);
+        social.push({ [companyName]: url });
+      });
+      data.social = social;
+    }
 
-     
-
-      if (data.social && data.social.length != 0) {
-        let socialData = data.social;
-        let social: Array<{ [key: string]: string }> = [];
-        socialData.forEach((url) => {
-          let companyName = this.extractCompanyName(url);
-          social.push({ [companyName]: url });
-        });
-        data.social = social;
-      }
-
-      
+    
+    return data
+  }
+  async create(data) {
+    try {
+      data = await this.validateNewUser(data)
       const user = await this.userRepository.create(data);
 
       // create a random collection 
@@ -187,7 +195,7 @@ class UserService {
         console.log("Email not verifed");
         throw { error: "Email not verifed" };
       }
-      
+
       const newJWTtoken = this.createToken({
         userId: user._id,
         username: user.username,
