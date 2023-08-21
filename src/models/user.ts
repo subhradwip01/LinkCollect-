@@ -10,8 +10,10 @@ export interface IUser extends Document {
   password?: string;
   isPremium: boolean;
   isPublic: boolean;
+  isPinned: boolean;
+  pinnedTime: boolean;
   collections: Schema.Types.ObjectId[];
-  savedCollections: string[];
+  savedCollections: Schema.Types.ObjectId[];
   emailToken?: string;
   verified?: number;
   socials: [{ [key: string]: string }];
