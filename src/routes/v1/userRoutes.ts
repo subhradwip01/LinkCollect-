@@ -9,6 +9,7 @@ import checkSpecialCharacters from "../../middlewares/checkSpecialCharacters";
 import { validateUserAuthforSignIn, validateUserAuthforSignUp, userExist } from "../../middlewares/validateRequests";
 import isOwner from '../../middlewares/isOwner';
 import multer from "multer";
+import userController from "../../controllers/userController";
 const upload = multer();
 
 // This api is called by the user himself after login to set the user on client
@@ -40,21 +41,13 @@ router.get("/isauthenticated", UserControllers.isAuthenticated);
 // Google auth route for both signup and signin
 router.get("/google-auth", catchAsync(googleAuth));
 
-
-
-/*
-Params
-
-  "list": [
-    {
-      "username": "username1",
-     "premium": true
-    }, ...
- 
-  ]
-*/
-
+// only admin
 router.get("/setPremium", UserControllers.setPremium);
+
+
+// delete user route 
+
+// router.delete("/delete/:id", validateUserAuthforSignIn, userController.delete())
 
 
 //giving error on local @TODO

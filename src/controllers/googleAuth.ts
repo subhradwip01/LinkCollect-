@@ -6,7 +6,8 @@ import config from "../config/index";
 
 import UserService from "../services/userService";
 import { Collection } from "mongoose";
-
+import CollectionService from "../services/collectionService";
+const collectionService = new CollectionService()
 
 const userService = new UserService();
 // const User: IUser = require("../models/user");
@@ -26,6 +27,19 @@ export const googleAuth = async (req: Request, res: Response) => {
       profilePic: userData.picture,
       verified: 1
     });
+
+     // create a random collection 
+     const collectionData = {
+      title: "Random Collection", 
+      userId: user.id,
+      description: "this is a private collection, save all random links here ",
+      username: user.username,
+      isPublic: false,
+      isPinned: true, 
+      pinnedTime: Date.now()
+    } 
+
+     await collectionService.create(collectionData)
 
   }
 
