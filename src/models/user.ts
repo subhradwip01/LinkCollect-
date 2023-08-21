@@ -10,8 +10,10 @@ export interface IUser extends Document {
   password?: string;
   isPremium: boolean;
   isPublic: boolean;
+  isPinned: boolean;
+  pinnedTime: boolean;
   collections: Schema.Types.ObjectId[];
-  savedCollections: string[];
+  savedCollections: Schema.Types.ObjectId[];
   emailToken?: string;
   verified?: number;
   socials: [{ [key: string]: string }];
@@ -43,7 +45,6 @@ const userSchema: Schema = new Schema(
       type: Boolean,
       default: false,
     },
-
     isPublic: {
       type: Boolean,
       default: true,
@@ -57,7 +58,11 @@ const userSchema: Schema = new Schema(
         ref: 'Collection',
       },
     ],
-    savedCollections: [String],
+    savedCollections: [  {
+      type: Schema.Types.ObjectId,
+      ref: 'Collection',
+    },
+    ],
     
     emailToken: {
       type: String,
@@ -66,7 +71,8 @@ const userSchema: Schema = new Schema(
       type: Number,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
+  // {  timestamps: true , collection: 'User' }
 );
 
 userSchema.pre('save', function (next) {

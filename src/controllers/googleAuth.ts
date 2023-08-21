@@ -3,7 +3,10 @@ import { Request, Response } from "express";
 import User, { IUser } from "../models/user";
 import config from "../config/index";
 
+
 import UserService from "../services/userService";
+import { Collection } from "mongoose";
+
 
 const userService = new UserService();
 // const User: IUser = require("../models/user");
@@ -15,13 +18,17 @@ export const googleAuth = async (req: Request, res: Response) => {
 
   let user = await User.findOne({ email: userData.email });
 
-if (!user) {
+   if (!user) {
     user = await User.create({
       name: userData.name,
       email: userData.email,
       username: userData.email.split("@")[0],
       profilePic: userData.picture,
+      verified: 1
     });
+
+
+
   }
 
 

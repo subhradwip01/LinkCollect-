@@ -5,6 +5,9 @@ import bcrypt from "bcrypt";
 import randomBytes from "randombytes";
 import mongoose, { isValidObjectId } from "mongoose";
 
+import CollectionService from "../services/collectionService";
+let collectionService = new CollectionService()
+
 class UserService {
   userRepository: any;
   constructor() {
@@ -13,6 +16,7 @@ class UserService {
   async create(data) {
     try {
       data.username = data.email.split("@")[0];
+      data.email = data.email.trim();
       data.emailToken = randomBytes(32).toString("hex");
       data.verified = 0;
 
@@ -40,7 +44,24 @@ class UserService {
         });
         data.social = social;
       }
+
+      
       const user = await this.userRepository.create(data);
+
+      // create a random collection 
+      const collectionData = {
+          title: "Random Collection", 
+          userId: user.id,
+          description: "this is a private collection, save all random links here ",
+          username: user.username,
+          isPublic: false,
+          isPinned: true, 
+          pinnedTime: Date.now()
+        } 
+
+      await collectionService.create(collectionData)
+
+      await user.save();
       return user;
     } catch (error) {
       console.log("Something went wrong Service layer. ", error);
@@ -150,6 +171,7 @@ class UserService {
 
   async signIn(userEmail, plainPassword) {
     try {
+      
       const user = await this.userRepository.getByEmail(userEmail, true);
       const encryptedPassword = user.password;
       const passwordMatch = this.checkPassword(
@@ -161,6 +183,11 @@ class UserService {
         console.log("Password doesn't match");
         throw { error: "Incorrect password" };
       }
+      if (user.verified == 0) {
+        console.log("Email not verifed");
+        throw { error: "Email not verifed" };
+      }
+      
       const newJWTtoken = this.createToken({
         userId: user._id,
         username: user.username,

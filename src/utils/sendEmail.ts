@@ -1,4 +1,5 @@
 const nodemailer = require("nodemailer");
+import { verifyEmail } from "../constants/emailTemps/verifyEmail";
 // const { USER, PASS, BACKEND_BASE_URL,CLIENT_ID_NodeMailer,CLIENT_SECRET_NodeMailer,REFRESH_TOKEN } = require("../config/index");
 import env from "../config/index";
 import { sendOTPMail } from "../constants/emailTemps/sendOTPMail";
