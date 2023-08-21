@@ -6,7 +6,7 @@ import randomBytes from "randombytes";
 import mongoose, { isValidObjectId } from "mongoose";
 
 import CollectionService from "../services/collectionService";
-let collectionService = new CollectionService()
+const collectionService = new CollectionService()
 
 class UserService {
   userRepository: any;
@@ -48,7 +48,7 @@ class UserService {
       data.social = social;
     }
 
-    
+
     return data
   }
   async create(data) {
