@@ -137,7 +137,7 @@ class UserService {
         let companyName = this.extractCompanyName(url);
         socialsData.push({ [companyName]: url });
       });
-      console.log(socialsData);
+      // console.log(socialsData);
       const user = await this.userRepository.createSocials(userId, socialsData);
       return user;
     } catch (error) {
@@ -147,7 +147,7 @@ class UserService {
   }
   async verifyEmailtoken(token) {
     try {
-      console.log("token", token);
+      // console.log("token", token);
       const user = await this.userRepository.verifyEmailToken(token);
       return user;
     } catch (error) {
