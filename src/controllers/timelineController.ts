@@ -129,7 +129,8 @@ const togglePin = async (req, res) => {
   try {
     console.log("in togglePin", req.params.timelineId )
     const timeline: any = await timelineService.togglePin(req.params.timelineId);
-    console.log(timeline)
+
+    // console.log(timeline)
     // const isPinnedV: any = timeline.isPinned.val? 'pinned' : 'unpinned';
     return res.status(201).json({
       data: timeline,
@@ -138,7 +139,7 @@ const togglePin = async (req, res) => {
       err: {},
     });
   } catch (error) {
-    console.log("Error in togglePin",error)
+    console.log("🚀 ~ file: timelineController.ts:143 ~ togglePin ~ error:", error)
     return res.status(500).json({
       data: {},
       success: false,
