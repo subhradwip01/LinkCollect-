@@ -1,39 +1,14 @@
 import User from "../models/user";
+import deletedUsers from "../models/deletedUsers";
 import Email from "../utils/sendEmail";
 import { Collection } from "../models/index";
 // import CollectionRepo from "./collectionRepo";
 class UserRepository {
   async create(data) {
     try {
-      // console.log("3", 3);
-
-      // const collection: any = await Collection.create({ title: "Untitled Private Collection 🔥", description: "you  can create many such collection using linkcollect, and share them across devices and friends. You can edit everything about this collections easily", isPublic: false});
-      // console.log("collection", collection, data.collections)
-
       const user = await User.create(data);
+      // verify email
       Email.verifyEmail(user.name, user.email, user.emailToken);
-      // await user.save();
-
-      /** 
-      const existingCollection = await Collection.findOne({
-        userId: user._id,
-        title: "Untitled Private Collection 🔥"
-      });
-      
-      let collection: any;
-      if (!existingCollection) {
-        collection = await Collection.create({
-          title: "Untitled Private Collection 🔥",
-          description: "you can create many such collections using linkcollect, and share them across devices and friends. You can edit everything about these collections easily",
-          isPublic: true,
-          userId: user._id,
-          tags: ["Science"],
-          username: user.username
-        }); */
-
-
-
-      // user.collections.push(collection); 
       await user.save();
       return user;
       
@@ -65,8 +40,6 @@ class UserRepository {
         console.log("User doesn't exist");
         throw "User doesn't exist";
       }
-
-
 
       let data = {
         emailToken: null,
@@ -122,8 +95,34 @@ class UserRepository {
   }
   async destroy(userId) {
     try {
+
       await User.findByIdAndRemove(userId);
       return true;
+    } catch (error) {
+      console.log("Something went wrong at repository layer");
+      console.log(error);
+      throw error;
+    }
+  }
+  async createDeletedUser(userData) {
+    try {
+      let userDataImportant = {
+        name: userData.name,
+        email: userData.email,
+        username: userData.username,
+        password: userData.password,
+        isPremium: userData.isPremium,
+        isPublic: userData.isPublic,
+        socials: userData.socials,
+        collections: userData.collections,
+        savedCollections: userData.savedCollections,
+        emailToken: userData.emailToken,
+        verified: userData.verified,
+      }
+
+      const userDeleted = await deletedUsers.create(userDataImportant);
+      // console.log("userDelted", userDelted);
+      return userDeleted;
     } catch (error) {
       console.log("Something went wrong at repository layer");
       console.log(error);
@@ -219,7 +218,7 @@ class UserRepository {
   async setPremium(data, userId) {
     try {
 
-  console.log("here", data, userId)
+  // console.log("here", data, userId)
       const user = await User.findOne({ _id: userId });
       if (!user) {
         throw new Error("Username is not available");

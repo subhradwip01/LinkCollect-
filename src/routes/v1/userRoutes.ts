@@ -46,8 +46,7 @@ router.get("/setPremium", UserControllers.setPremium);
 
 
 // delete user route 
-
-// router.delete("/delete/:id", validateUserAuthforSignIn, userController.delete())
+router.delete("/delete/:id", validateUserAuthforSignIn, userController.deleteUser)
 
 
 //giving error on local @TODO

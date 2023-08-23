@@ -87,10 +87,36 @@ class UserService {
   }
   async destroy(data) {
     try {
-      const user = await this.userRepository.destroy(data);
-      return true;
+      const user = await this.userRepository.getByEmail(data.email);
+      // move to deletedUser database
+      const deletedUser = await this.userRepository.createDeletedUser(user);
+      const userD = await this.userRepository.destroy(user._id);
+      return deletedUser;
     } catch (error) {
       console.log("Something went wrong Service layer.");
+      throw error;
+    }
+  }
+  async deleteUser(data) {
+    try {
+      // console.log("data", data);
+      const user = await this.userRepository.getByEmail(data.email);
+      if(!user) {
+        throw { message: "No user found with this email" };
+      }
+      const encryptedPassword = user.password;
+      const passwordMatch = this.checkPassword(
+        data.password,
+        encryptedPassword
+      );
+      if (!passwordMatch) {
+        console.log("Password doesn't match");
+        throw { error: "Incorrect password" };
+      }
+      const userD = await this.destroy(data);
+      return userD;
+    } catch (error) {
+      console.log("Something went wrong Service layer.", error);
       throw error;
     }
   }

@@ -1,4 +1,5 @@
-import { Collection, User, Timeline } from "../models/index";
+import { Collection, User, Timeline, deletedCollections } from "../models/index";
+// import { Collection, User, Timeline } from "../models/index";
 import tags from "../constants/alltags";
 import Emit from "../events/events";
 
@@ -353,11 +354,14 @@ class CollectionRepo {
 
   delete = async (id) => {
     try {
-      const collection: any = await Collection.findByIdAndRemove(id);
+      const collection: any = await Collection.findById(id);
       const userId: any = collection.userId;
       const user: any = await User.findById(userId);
+      // save collection to deletedCollectionsArray with userID
+      const deletedCollection = await this.createDeletedCollection(collection);
+      // delete collection from collection
+      await Collection.findByIdAndDelete(id);
       user.collections = this.deleteFromArray(user.collections, id);
-     
       await user.save();
 
       const payload = {
@@ -506,6 +510,31 @@ class CollectionRepo {
       throw error;
     }
   };
+
+  async createDeletedCollection(collection) {
+    try {
+      let importantCollectionData = {
+        title: collection.title,
+        image: collection.image,
+        description: collection.description,
+        isPublic: collection.isPublic,
+        isPinned: collection.isPinned,
+        pinnedTime: collection.pinnedTime,
+        upvotes: collection.upvotes,
+        userId: collection.userId,
+        username: collection.username,
+        tags: collection.tags,
+        views: collection.views,
+        timelines: collection.timelines,
+      }
+      const deletedCollection = await deletedCollections.create(importantCollectionData);
+      return deletedCollection;
+    } catch (error) {
+      console.log("Something went wrong at collection repository layer", error);
+      throw error;
+    }
+
+  }
 }
 
 export default CollectionRepo;

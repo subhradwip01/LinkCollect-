@@ -257,6 +257,26 @@ const setPremium = async (req, res) => {
     });
   }
 };
+const deleteUser = async (req, res) => {
+  try {
+    const response = await userService.deleteUser(req.body);
+    return res.status(201).json({
+      success: true,
+      message: "Successfully delted user",
+      data: response,
+      err: {},
+    });
+  } catch (error: any) {
+    console.log(error);
+    return res.status(500).json({
+      message: error.message,
+      data: {},
+      success: false,
+      err: error,
+    });
+  }
+};
+
 const createSocials = async (req,res) =>{
   // console.log("hererere");
   try {
@@ -284,6 +304,8 @@ const createSocials = async (req,res) =>{
       err: error,
     });
   }
+
+
 }
 
 const userController = {
@@ -299,7 +321,8 @@ const userController = {
   updateProfilePic,
   togglePrivacy,
   checkUsername,
-  setPremium
+  setPremium,
+  deleteUser
 };
 
 export default userController;
