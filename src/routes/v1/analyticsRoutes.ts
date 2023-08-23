@@ -5,4 +5,6 @@ const router = express.Router();
 
 router.get("/", analyticsController.getAll);
 
+router.get("/live-message", analyticsController.getLiveMessage);
+
 export default router;
