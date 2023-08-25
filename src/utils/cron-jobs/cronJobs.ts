@@ -8,6 +8,8 @@ export default async function cronSchedule(cron) {
 }
 
 async function explorePageCron(cron) {
+  console.log("job")
+
   cron.schedule("15 * * * *", getAndSaveExplorePageToDB);
 }
 
@@ -55,6 +57,7 @@ async function getAndSaveExplorePageToDB() {
     await ExplorePage.deleteMany({});
     // save to explore page db
     let explorePage = await ExplorePage.create({ collections1: collections });
+    console.log("ran cron job")
   } catch (error) {
     console.log("in cron job error: ", error);
   }
