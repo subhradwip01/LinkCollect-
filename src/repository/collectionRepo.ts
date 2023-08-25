@@ -562,8 +562,8 @@ class CollectionRepo {
                 in: {
                   $mergeObjects: [
                     "$$collection",
-                    { timelineCount: { $size: "$$collection.timelines" } },
-                    { upvoteCount: { $size: "$$collection.upvotes" } }
+                    { countOfLinks: { $size: "$$collection.timelines" } },
+                    { countOfUpvotes: { $size: "$$collection.upvotes" } }
                   ]
                 }
               }
