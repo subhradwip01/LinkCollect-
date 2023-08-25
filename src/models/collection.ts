@@ -21,7 +21,7 @@ const CollectionSchema: Schema<ICollection> = new Schema(
     title: {
       type: String,
       required: true,
-      unique: true,
+      // unique: true,
     },
     image: {
       type: String,
