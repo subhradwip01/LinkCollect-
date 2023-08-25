@@ -186,16 +186,16 @@ class CollectionRepo {
 
         return collections;
       } else {
-        // query for timelines array not null and and isPublic true
-        let checkForExplorePageData = await this.checkForExplorePageData();
-        if(checkForExplorePageData && checkForExplorePageData.length > 0 && page == 1){
-          console.log("found in explore db", checkForExplorePageData);
-          // reduce array as per pageSize, if < 200
-          if(checkForExplorePageData.length > pageSize){
-            checkForExplorePageData = checkForExplorePageData.slice(0, pageSize);
-          }
-          return checkForExplorePageData
-        }
+        // // query for timelines array not null and and isPublic true
+        // let checkForExplorePageData = await this.checkForExplorePageData();
+        // if(checkForExplorePageData && checkForExplorePageData.length > 0 && page == 1){
+        //   console.log("found in explore db", checkForExplorePageData);
+        //   // reduce array as per pageSize, if < 200
+        //   if(checkForExplorePageData.length > pageSize){
+        //     checkForExplorePageData = checkForExplorePageData.slice(0, pageSize);
+        //   }
+        //   return checkForExplorePageData
+        // }
 
         // else query again
         let query = {
@@ -562,8 +562,8 @@ class CollectionRepo {
                 in: {
                   $mergeObjects: [
                     "$$collection",
-                    { timelineCount: { $size: "$$collection.timelines" } },
-                    { upvoteCount: { $size: "$$collection.upvotes" } }
+                    { countOfLinks: { $size: "$$collection.timelines" } },
+                    { countOfUpvotes: { $size: "$$collection.upvotes" } }
                   ]
                 }
               }
