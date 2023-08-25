@@ -8,7 +8,7 @@ export default async function cronSchedule(cron) {
 }
 
 async function explorePageCron(cron) {
-  cron.schedule("2 * * * *", getAndSaveExplorePageToDB);
+  cron.schedule("15 * * * *", getAndSaveExplorePageToDB);
 }
 
 async function getAndSaveExplorePageToDB() {
@@ -50,7 +50,7 @@ async function getAndSaveExplorePageToDB() {
       { $limit: 200 },
     ]);
 
-    console.log(collections);
+    // console.log(collections);
     // delete all the previous data
     await ExplorePage.deleteMany({});
     // save to explore page db

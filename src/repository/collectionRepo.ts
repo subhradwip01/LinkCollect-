@@ -238,8 +238,6 @@ class CollectionRepo {
 
         // console.log(await Collection.find({ isPublic: true }))
 
-        console.log("in explore page, without tag", collections)
-
         return collections;
       }
     } catch (error) {
