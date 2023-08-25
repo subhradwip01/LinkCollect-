@@ -10,7 +10,7 @@ export default async function cronSchedule(cron) {
 async function explorePageCron(cron) {
   console.log("job")
 
-  cron.schedule("15 * * * *", getAndSaveExplorePageToDB);
+//   cron.schedule("15 * * * *", getAndSaveExplorePageToDB);
 }
 
 async function getAndSaveExplorePageToDB() {
