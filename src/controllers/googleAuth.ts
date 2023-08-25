@@ -2,8 +2,6 @@ import axios from "axios";
 import { Request, Response } from "express";
 import User, { IUser } from "../models/user";
 import config from "../config/index";
-
-
 import UserService from "../services/userService";
 import { Collection } from "mongoose";
 import CollectionService from "../services/collectionService";
@@ -20,10 +18,17 @@ export const googleAuth = async (req: Request, res: Response) => {
   let user = await User.findOne({ email: userData.email });
 
    if (!user) {
+    let userN = userData.email.split("@")[0];
+    const user2 = await User.findOne({username: userN});
+    if(user2){
+      userN = userN + Math.floor(Math.random() * 1000).toString(); // add random number to username
+    }
+    console.log("userName generated", userN);
+
     user = await User.create({
       name: userData.name,
       email: userData.email,
-      username: userData.email.split("@")[0],
+      username: userN,
       profilePic: userData.picture,
       verified: 1
     });

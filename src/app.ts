@@ -8,6 +8,9 @@ import { decryptUser } from "./middlewares/decryptUser";
 import rateLimit from "express-rate-limit";
 import paymentController from "./controllers/paymentController";
 import http from "http";
+
+import cron from 'node-cron';
+import cronSchedule from "./utils/cron-jobs/cronJobs";
 const app = express();
 
 // import {Socket, Server} from "socket.io";
@@ -65,6 +68,10 @@ const setUpAndStartServer = async () => {
   }
 
   io.on("connection", onConnection);
+
+  // schedule tasks to be run on the server
+   cronSchedule(cron);
+
 
 }; 
 
