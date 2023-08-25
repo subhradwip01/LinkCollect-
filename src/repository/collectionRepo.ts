@@ -1,4 +1,4 @@
-import { Collection, User, Timeline, deletedCollections } from "../models/index";
+import { Collection, User, Timeline, deletedCollections, ExplorePage } from "../models/index";
 // import { Collection, User, Timeline } from "../models/index";
 import tags from "../constants/alltags";
 import Emit from "../events/events";
@@ -121,7 +121,7 @@ class CollectionRepo {
       let tagsArray;
       let isTagFilter = false;
       if (tags) {
-        // console.log(typeof tags)
+        console.log(typeof tags)
         tagsArray = Array.isArray(tags) ? tags : [tags];
         tagQuery = { tags: { $in: tagsArray } };
         isTagFilter = true;
@@ -169,6 +169,7 @@ class CollectionRepo {
               views: 1,
               countOfLinks: 1,
               tagSimilarity: 1,
+              userId: 1,
             },
           },
           {
@@ -186,20 +187,23 @@ class CollectionRepo {
         return collections;
       } else {
         // query for timelines array not null and and isPublic true
+        let checkForExplorePageData = await this.checkForExplorePageData();
+        if(checkForExplorePageData && checkForExplorePageData.length > 0 && page == 1){
+          console.log("found in explore db", checkForExplorePageData);
+          // reduce array as per pageSize, if < 200
+          if(checkForExplorePageData.length > pageSize){
+            checkForExplorePageData = checkForExplorePageData.slice(0, pageSize);
+          }
+          return checkForExplorePageData
+        }
+
+        // else query again
         let query = {
           isPublic: true,
         };
 
         const collections = await Collection.aggregate([
           { $match: query },
-          {
-            $lookup: {
-              from: "timelines",
-              localField: "_id",
-              foreignField: "collectionId",
-              as: "timelines",
-            },
-          },
           {
             $addFields: {
               countOfLinks: { $size: "$timelines" },
@@ -224,6 +228,7 @@ class CollectionRepo {
               countOfLinks: 1,
               countOfUpvotes: 1,
               tagSimilarity: 1,
+              userId: 1,
             },
           },
           { $sort: { countOfUpvotes: -1, views: -1, countOfLinks: -1 } },
@@ -231,7 +236,9 @@ class CollectionRepo {
           { $limit: parseInt(pageSize) },
         ]);
 
-        console.log("in explore page, without tag")
+        // console.log(await Collection.find({ isPublic: true }))
+
+        console.log("in explore page, without tag", collections)
 
         return collections;
       }
@@ -534,6 +541,53 @@ class CollectionRepo {
       throw error;
     }
 
+  }
+
+  async checkForExplorePageData() {
+    try {
+      console.log("in check for explore page data");
+      const populatedExplorePage = await ExplorePage.aggregate([
+        {
+          $lookup: {
+            from: "collections", // Replace with the actual collection name
+            localField: "collections1",
+            foreignField: "_id",
+            as: "collections1",
+          },
+        },
+        {
+          $addFields: {
+            "collections1": {
+              $map: {
+                input: "$collections1",
+                as: "collection",
+                in: {
+                  $mergeObjects: [
+                    "$$collection",
+                    { timelineCount: { $size: "$$collection.timelines" } },
+                    { upvoteCount: { $size: "$$collection.upvotes" } }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        {
+          $project: {
+            "collections1.timelines": 0, // Exclude the timelines array
+          }
+        },
+        // Other pipeline stages
+      ]);
+    
+      
+        return populatedExplorePage[0].collections1;
+    } catch (error) {
+
+      console.log(error)
+      return null
+      
+    }
   }
 }
 

@@ -3,7 +3,7 @@ import Timeline from "./timeline";
 import User from "./user";
 import deletedUsers from "./deletedUsers";
 import deletedCollections from "./deletedCollections";
-
+import ExplorePage from "./explore";
 
 export {
   Collection,
@@ -11,4 +11,5 @@ export {
   User,
   deletedUsers, 
   deletedCollections,
+  ExplorePage
 };
