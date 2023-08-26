@@ -186,21 +186,13 @@ class CollectionRepo {
 
         return collections;
       } else {
-        // // query for timelines array not null and and isPublic true
-        // let checkForExplorePageData = await this.checkForExplorePageData();
-        // if(checkForExplorePageData && checkForExplorePageData.length > 0 && page == 1){
-        //   console.log("found in explore db", checkForExplorePageData);
-        //   // reduce array as per pageSize, if < 200
-        //   if(checkForExplorePageData.length > pageSize){
-        //     checkForExplorePageData = checkForExplorePageData.slice(0, pageSize);
-        //   }
-        //   return checkForExplorePageData
-        // }
-
-        // else query again
+  
         let query = {
           isPublic: true,
         };
+        const excludedTitles = ["Tabs Session", "Sex", "Porn", "sexy", "porn"]; // Add more titles here
+
+        const excludedTitleRegex = excludedTitles.map(title => new RegExp(title, 'i'));
 
         const collections = await Collection.aggregate([
           { $match: query },
@@ -214,6 +206,7 @@ class CollectionRepo {
           {
             $match: {
               countOfLinks: { $gt: 0 }, // Exclude collections with no timelines
+              title: { $not: { $in: excludedTitleRegex } } // Exclude specified titles
             },
           },
           {
