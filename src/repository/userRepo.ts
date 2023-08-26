@@ -1,5 +1,5 @@
 import User from "../models/user";
-import deletedUsers from "../models/deletedUsers";
+import deletedUsers from "../models/analytics/deletedUsers";
 import Email from "../utils/sendEmail";
 import { Collection } from "../models/index";
 // import CollectionRepo from "./collectionRepo";
@@ -11,7 +11,6 @@ class UserRepository {
       Email.verifyEmail(user.name, user.email, user.emailToken);
       await user.save();
       return user;
-      
     } catch (error) {
       console.log("Something went wrong at repository layer", error);
       console.log(error);
@@ -19,7 +18,7 @@ class UserRepository {
     }
   }
 
-  async togglePrivacy(userId) { 
+  async togglePrivacy(userId) {
     try {
       const user: any = await User.findById(userId);
       user.isPublic = !user.isPublic;
@@ -45,11 +44,10 @@ class UserRepository {
         emailToken: null,
         verified: 1,
       };
-      console.log("data",data);
+      console.log("data", data);
       await User.findOneAndUpdate({ emailToken: token }, data);
 
-
-      await user.save(); 
+      await user.save();
 
       return user;
     } catch (error) {
@@ -58,21 +56,24 @@ class UserRepository {
       throw error;
     }
   }
-  async createSocials(userId,data:[]){
+  async createSocials(userId, data: []) {
     try {
-       const user = await User.findById(userId);
-       const userSocialData = user?.socials;
-       console.log(userSocialData);
+      const user = await User.findById(userId);
+      const userSocialData = user?.socials;
+      console.log(userSocialData);
 
-       if (userSocialData && userSocialData?.length > 0) {
+      if (userSocialData && userSocialData?.length > 0) {
         console.log(userSocialData.length);
         data.forEach((socialEntry) => {
           const companyName = Object.keys(socialEntry)[0];
-          const existingIndex = userSocialData.findIndex((userEntry) => Object.keys(userEntry)[0] === companyName);
-      
+          const existingIndex = userSocialData.findIndex(
+            (userEntry) => Object.keys(userEntry)[0] === companyName
+          );
+
           if (existingIndex !== -1) {
             // Update existing entry
-            userSocialData[existingIndex][companyName] = socialEntry[companyName];
+            userSocialData[existingIndex][companyName] =
+              socialEntry[companyName];
           } else {
             // Push new entry
             userSocialData.push(socialEntry);
@@ -86,7 +87,6 @@ class UserRepository {
       console.log(userSocialData);
 
       return "ok";
-      
     } catch (error) {
       console.log("Something went wrong at repository layer", error);
       console.log(error);
@@ -95,7 +95,6 @@ class UserRepository {
   }
   async destroy(userId) {
     try {
-
       await User.findByIdAndRemove(userId);
       return true;
     } catch (error) {
@@ -118,7 +117,7 @@ class UserRepository {
         savedCollections: userData.savedCollections,
         emailToken: userData.emailToken,
         verified: userData.verified,
-      }
+      };
 
       const userDeleted = await deletedUsers.create(userDataImportant);
       // console.log("userDelted", userDelted);
@@ -167,19 +166,16 @@ class UserRepository {
 
   async getByEmail(userEmail, populateCollections = false) {
     try {
-
-      if(!populateCollections) {
+      if (!populateCollections) {
         const user = await User.findOne({ email: userEmail });
         return user;
-
       } else {
         const user = await User.findOne({ email: userEmail })
-        .populate({ path: "collections" })
-        .lean();
-        
+          .populate({ path: "collections" })
+          .lean();
+
         return user;
       }
-
     } catch (error) {
       console.log("Something went wrong in fetching the user", error);
       console.log(error);
@@ -217,45 +213,38 @@ class UserRepository {
 
   async setPremium(data, userId) {
     try {
-
-  // console.log("here", data, userId)
+      // console.log("here", data, userId)
       const user = await User.findOne({ _id: userId });
       if (!user) {
         throw new Error("Username is not available");
       }
-      console.log("user", user.username)
-      if(user.username !== "askwhyharsh" ) {
+      console.log("user", user.username);
+      if (user.username !== "askwhyharsh") {
         throw new Error("no admin");
       }
       // run a loop for each data value, data consist a list of objects. each object has a userId and a premium value (bool); we need to update the premium value of the user with the given userId
-      if(data.list == null) {
-        throw new Error("No data provided")
+      if (data.list == null) {
+        throw new Error("No data provided");
       }
 
-
-      console.log("here")
+      console.log("here");
       for (let i = 0; i < data.list.length; i++) {
-
-        let user = await User.findOne({username: data.list[i].username});
-        if(!user || !data.list[i].premium) {
-          continue
+        let user = await User.findOne({ username: data.list[i].username });
+        if (!user || !data.list[i].premium) {
+          continue;
         }
         user.isPremium = data.list[i].premium;
         await user.save();
         // console.log("user", user)
       }
-   
+
       return data;
     } catch (error) {
       console.log("Something went wrong in fetching the user", error);
       console.log(error);
       throw error;
     }
-
-
   }
-
-
 }
 
 export default UserRepository;

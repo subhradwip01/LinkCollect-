@@ -1,4 +1,4 @@
-import { Collection, User, Timeline, deletedCollections, ExplorePage } from "../models/index";
+import { Collection, User, Timeline, deletedCollections, ExplorePage, SearchHistory } from "../models/index";
 // import { Collection, User, Timeline } from "../models/index";
 import tags from "../constants/alltags";
 import Emit from "../events/events";
@@ -243,6 +243,15 @@ class CollectionRepo {
     try {
       if (queryFor.length < 3) {
         throw "search term should be at least 3 characters long";
+      }
+
+      // find search term in search history
+      const searchK = await SearchHistory.findOne({ keyword: queryFor });
+      if(searchK) {
+        searchK.count += 1;
+        await searchK.save();
+      } else {
+        await SearchHistory.create({ keyword: queryFor, count: 1 });
       }
       // Create a regex pattern for the search term
       const regexPattern = new RegExp(queryFor, "i");
