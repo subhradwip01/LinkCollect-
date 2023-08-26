@@ -1,5 +1,5 @@
 import { analytics } from "googleapis/build/src/apis/analytics";
-import { Collection, User, Timeline } from "../models";
+import { Collection, User, Timeline, SearchHistory } from "../models";
 import { liveMessage } from "../constants/liveMessage";
 const getAll = async (req, res) => {
   try {
@@ -47,7 +47,25 @@ const getLiveMessage = async (req, res) => {
     });
   }
 };
+const getSearchHistory = async (req, res) => {
+  try {
+    const searchHistory = await SearchHistory.find();
+    return res.status(201).json({
+      data: searchHistory,
+      success: true,
+      message: "Successfully fetched the search history",
+      err: {},
+    });
+  } catch (error) {
+    return res.status(500).json({
+      data: {},
+      success: false,
+      message: "Not able to get the analytics",
+      err: error,
+    });
+  }
+};
 
-const analyticsController = { getAll, getLiveMessage };
+const analyticsController = { getAll, getLiveMessage, getSearchHistory };
 
 export default analyticsController;

@@ -7,8 +7,8 @@ interface ICollection extends Document {
   isPublic: boolean;
   isPinned: boolean;
   pinnedTime?: Date;
-
   upvotes: mongoose.Schema.Types.ObjectId[];
+  saves: mongoose.Schema.Types.ObjectId[];
   userId: mongoose.Schema.Types.ObjectId;
   username: string;
   tags: string[];
@@ -59,6 +59,12 @@ const CollectionSchema: Schema<ICollection> = new Schema(
     views: {
       type: Number,
     },
+    saves: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Users",
+      },
+    ],
     timelines: [
       {
         type: mongoose.Schema.Types.ObjectId,

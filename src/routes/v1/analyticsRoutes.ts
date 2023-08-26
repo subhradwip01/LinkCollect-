@@ -7,4 +7,6 @@ router.get("/", analyticsController.getAll);
 
 router.get("/live-message", analyticsController.getLiveMessage);
 
+router.get("/search-history", analyticsController.getSearchHistory);
+
 export default router;

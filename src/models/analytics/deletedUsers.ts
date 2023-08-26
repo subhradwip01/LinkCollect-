@@ -1,6 +1,6 @@
-import mongoose, { Schema, Document } from 'mongoose';
-import bcrypt from 'bcrypt';
-import SALT  from '../config';
+import mongoose, { Schema, Document } from "mongoose";
+import bcrypt from "bcrypt";
+import SALT from "../../config";
 
 export interface IUser extends Document {
   name: string;
@@ -48,17 +48,15 @@ const userSchema: Schema = new Schema(
       type: Boolean,
       default: true,
     },
-    socials : [
-      String
-    ],
+    socials: [String],
     collections: [
       {
         type: Schema.Types.ObjectId,
-        ref: 'Collection',
+        ref: "Collection",
       },
     ],
     savedCollections: [String],
-    
+
     emailToken: {
       type: String,
     },
@@ -66,16 +64,21 @@ const userSchema: Schema = new Schema(
       type: Number,
     },
   },
-  {  timestamps: true , collection: 'deletedUsers' }
+  { timestamps: true, collection: "deletedUsers" }
 );
 
-userSchema.pre('save', function (next) {
-  if (!this.password || !this.isModified('password') || !this.isModified('username')) return next();
+userSchema.pre("save", function (next) {
+  if (
+    !this.password ||
+    !this.isModified("password") ||
+    !this.isModified("username")
+  )
+    return next();
 
   const encryptedPassword = bcrypt.hashSync(this.password, Number(SALT));
   this.password = encryptedPassword;
   next();
 });
 
-const deletedUsers = mongoose.model<IUser>('deletedUsers', userSchema);
+const deletedUsers = mongoose.model<IUser>("deletedUsers", userSchema);
 export default deletedUsers;

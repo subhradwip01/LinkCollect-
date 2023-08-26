@@ -1,4 +1,4 @@
-import { Collection, User, Timeline, deletedCollections, ExplorePage } from "../models/index";
+import { Collection, User, Timeline, deletedCollections, ExplorePage, SearchHistory } from "../models/index";
 // import { Collection, User, Timeline } from "../models/index";
 import tags from "../constants/alltags";
 import Emit from "../events/events";
@@ -37,22 +37,20 @@ class CollectionRepo {
     }
   };
 
-  validUserAndCollection = (user: any, collection: any) => {
-    if (!user) {
-      throw new Error("User ID is not a Valid ID");
-    }
-    if (!collection) {
-      throw new Error("Collection ID is not a Valid ID");
-    }
-  };
 
   save = async (collectionId: string, userId: string) => {
     try {
       const collection: any = await Collection.findById(collectionId);
       const user: any = await User.findById(userId);
       this.validUserAndCollection(user, collection);
+
+      // save logic
       user.savedCollections.push(collectionId.toString());
+      await collection.saves.addToSet(userId); // add to set to avoid duplicates
+
+
       await user.save();
+      await collection.save();
       return collection;
     } catch (error) {
       console.log(
@@ -71,10 +69,13 @@ class CollectionRepo {
       if (!user) {
         throw new Error("User ID is not a Valid ID");
       }
+
+      await collection.saves.pull(userId); // remove from set
       user.savedCollections = this.deleteFromArray(
         user.savedCollections,
         collectionId
       );
+      await collection.save();
       await user.save();
       return collection;
     } catch (error) {
@@ -186,21 +187,13 @@ class CollectionRepo {
 
         return collections;
       } else {
-        // // query for timelines array not null and and isPublic true
-        // let checkForExplorePageData = await this.checkForExplorePageData();
-        // if(checkForExplorePageData && checkForExplorePageData.length > 0 && page == 1){
-        //   console.log("found in explore db", checkForExplorePageData);
-        //   // reduce array as per pageSize, if < 200
-        //   if(checkForExplorePageData.length > pageSize){
-        //     checkForExplorePageData = checkForExplorePageData.slice(0, pageSize);
-        //   }
-        //   return checkForExplorePageData
-        // }
-
-        // else query again
+  
         let query = {
           isPublic: true,
         };
+        const excludedTitles = ["Tabs Session", "Sex", "Porn", "sexy", "porn"]; // Add more titles here
+
+        const excludedTitleRegex = excludedTitles.map(title => new RegExp(title, 'i'));
 
         const collections = await Collection.aggregate([
           { $match: query },
@@ -214,6 +207,7 @@ class CollectionRepo {
           {
             $match: {
               countOfLinks: { $gt: 0 }, // Exclude collections with no timelines
+              title: { $not: { $in: excludedTitleRegex } } // Exclude specified titles
             },
           },
           {
@@ -250,6 +244,15 @@ class CollectionRepo {
     try {
       if (queryFor.length < 3) {
         throw "search term should be at least 3 characters long";
+      }
+
+      // find search term in search history
+      const searchK = await SearchHistory.findOne({ keyword: queryFor });
+      if(searchK) {
+        searchK.count += 1;
+        await searchK.save();
+      } else {
+        await SearchHistory.create({ keyword: queryFor, count: 1 });
       }
       // Create a regex pattern for the search term
       const regexPattern = new RegExp(queryFor, "i");
@@ -470,7 +473,6 @@ class CollectionRepo {
       this.validUserAndCollection(user, collection);
 
       collection.upvotes.addToSet(userId); // add to set to avoid duplicates
-      await collection.save();
       //emit event
       const payload = {
         userId: collection.userId,
@@ -526,6 +528,7 @@ class CollectionRepo {
         isPinned: collection.isPinned,
         pinnedTime: collection.pinnedTime,
         upvotes: collection.upvotes,
+        saves: collection.saves,
         userId: collection.userId,
         username: collection.username,
         tags: collection.tags,
@@ -587,6 +590,15 @@ class CollectionRepo {
       
     }
   }
+
+  validUserAndCollection = (user: any, collection: any) => {
+    if (!user) {
+      throw new Error("User ID is not a Valid ID, user not found");
+    }
+    if (!collection) {
+      throw new Error("Collection ID is not a Valid ID, collection not found");
+    }
+  };
 }
 
 export default CollectionRepo;
