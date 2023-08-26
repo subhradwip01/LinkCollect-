@@ -37,22 +37,20 @@ class CollectionRepo {
     }
   };
 
-  validUserAndCollection = (user: any, collection: any) => {
-    if (!user) {
-      throw new Error("User ID is not a Valid ID");
-    }
-    if (!collection) {
-      throw new Error("Collection ID is not a Valid ID");
-    }
-  };
 
   save = async (collectionId: string, userId: string) => {
     try {
       const collection: any = await Collection.findById(collectionId);
       const user: any = await User.findById(userId);
       this.validUserAndCollection(user, collection);
+
+      // save logic
       user.savedCollections.push(collectionId.toString());
+      await collection.saves.addToSet(userId); // add to set to avoid duplicates
+
+
       await user.save();
+      await collection.save();
       return collection;
     } catch (error) {
       console.log(
@@ -71,10 +69,13 @@ class CollectionRepo {
       if (!user) {
         throw new Error("User ID is not a Valid ID");
       }
+
+      await collection.saves.pull(userId); // remove from set
       user.savedCollections = this.deleteFromArray(
         user.savedCollections,
         collectionId
       );
+      await collection.save();
       await user.save();
       return collection;
     } catch (error) {
@@ -472,7 +473,6 @@ class CollectionRepo {
       this.validUserAndCollection(user, collection);
 
       collection.upvotes.addToSet(userId); // add to set to avoid duplicates
-      await collection.save();
       //emit event
       const payload = {
         userId: collection.userId,
@@ -528,6 +528,7 @@ class CollectionRepo {
         isPinned: collection.isPinned,
         pinnedTime: collection.pinnedTime,
         upvotes: collection.upvotes,
+        saves: collection.saves,
         userId: collection.userId,
         username: collection.username,
         tags: collection.tags,
@@ -589,6 +590,15 @@ class CollectionRepo {
       
     }
   }
+
+  validUserAndCollection = (user: any, collection: any) => {
+    if (!user) {
+      throw new Error("User ID is not a Valid ID, user not found");
+    }
+    if (!collection) {
+      throw new Error("Collection ID is not a Valid ID, collection not found");
+    }
+  };
 }
 
 export default CollectionRepo;

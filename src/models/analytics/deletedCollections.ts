@@ -8,6 +8,7 @@ interface ICollection extends Document {
   isPinned: boolean;
   pinnedTime?: Date;
   upvotes: mongoose.Schema.Types.ObjectId[];
+  saves: mongoose.Schema.Types.ObjectId[];
   userId: mongoose.Schema.Types.ObjectId;
   username: string;
   tags: string[];
@@ -20,7 +21,6 @@ const CollectionSchema: Schema<ICollection> = new Schema(
     title: {
       type: String,
       required: true,
-    //   unique: true,
     },
     image: {
       type: String,
@@ -41,6 +41,12 @@ const CollectionSchema: Schema<ICollection> = new Schema(
       default: null
     },
     upvotes: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Users",
+      },
+    ],
+    saves: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Users",
