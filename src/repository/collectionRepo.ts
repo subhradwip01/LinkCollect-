@@ -43,7 +43,12 @@ class CollectionRepo {
       const collection: any = await Collection.findById(collectionId);
       const user: any = await User.findById(userId);
       this.validUserAndCollection(user, collection);
-
+      if (!user.isPremium) {
+        if (user.savedCollections.length >= 200) {
+          throw "You have reached your limit of saved collections";
+        }
+      }
+      
       // save logic
       user.savedCollections.push(collectionId.toString());
       await collection.saves.addToSet(userId); // add to set to avoid duplicates
@@ -471,13 +476,13 @@ class CollectionRepo {
       const collection: any = await Collection.findById(collectionId);
       const user: any = await User.findById(userId);
       this.validUserAndCollection(user, collection);
-
       collection.upvotes.addToSet(userId); // add to set to avoid duplicates
       //emit event
       const payload = {
         userId: collection.userId,
         collection: collection,
       };
+      await collection.save();
       emit.collectionUpvoted(payload);
       return collection;
     } catch (error) {
