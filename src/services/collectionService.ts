@@ -43,12 +43,13 @@ class CollectionService {
     }
   };
 
-  getExplorePage = async (pageSize, page, tags) => {
+  getExplorePage = async (pageSize, page, tags, sortBy) => {
     try {
       const collection = await this.collectionRepo.getExplorePage(
         pageSize,
         page,
-        tags
+        tags, 
+        sortBy
       );
       return collection;
     } catch (error) {

@@ -121,8 +121,48 @@ class CollectionRepo {
     }
   };
 
-  getExplorePage = async (pageSize: any, page: any, tags: any) => {
+  getExplorePage = async (pageSize: any, page: any, tags: any, sortBy: string) => {
     try {
+      let SortBy = 'upvotes'
+      if(sortBy.length > 0 && (sortBy === 'createdAt' || sortBy === 'upvotes' || sortBy === 'views' )) {
+        SortBy = sortBy
+      }
+         // Define the sort stage based on the selected sort field
+        let sortStage: any = {
+          $sort: {
+            countOfUpvotes: -1,
+            views: -1,
+            countOfLinks: -1,
+          },
+        };;
+
+          if (SortBy === 'upvotes') {
+            sortStage = {
+              $sort: {
+                countOfUpvotes: -1,
+                views: -1,
+                countOfLinks: -1,
+              },
+            };
+          } else if (SortBy === 'createdAt') {
+            sortStage = {
+              $sort: {
+                createdAt: -1,
+                upvotes: -1,
+                countOfLinks: -1,
+                views: -1,
+              },
+            };
+          } else if (SortBy === 'views') {
+            sortStage = {
+              $sort: {
+                views: -1,
+                upvotes: -1,
+                countOfLinks: -1,
+              },
+            };
+          }
+
       let tagQuery = {};
       let tagsArray;
       let isTagFilter = false;
@@ -196,7 +236,7 @@ class CollectionRepo {
         let query = {
           isPublic: true,
         };
-        const excludedTitles = ["Tabs Session", "Sex", "Porn", "sexy", "porn"]; // Add more titles here
+        const excludedTitles = ["Tabs Session", "Sex", "Porn", "sexy", "porn"]; // Add more titles to be excluded here
 
         const excludedTitleRegex = excludedTitles.map(title => new RegExp(title, 'i'));
 
@@ -228,9 +268,10 @@ class CollectionRepo {
               countOfUpvotes: 1,
               tagSimilarity: 1,
               userId: 1,
+              createdAt: 1,
             },
           },
-          { $sort: { countOfUpvotes: -1, views: -1, countOfLinks: -1 } },
+           sortStage,
           { $skip: (parseInt(page) - 1) * parseInt(pageSize) },
           { $limit: parseInt(pageSize) },
         ]);
