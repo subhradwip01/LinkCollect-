@@ -111,6 +111,8 @@ class CollectionRepo {
           allCollections.push(collection);
         }
       }
+      // reverse and return 
+      allCollections = allCollections.reverse()
       return allCollections;
     } catch (error) {
       console.log(
