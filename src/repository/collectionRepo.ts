@@ -124,7 +124,7 @@ class CollectionRepo {
   getExplorePage = async (pageSize: any, page: any, tags: any, sortBy: string) => {
     try {
       let SortBy = 'upvotes'
-      if(sortBy.length > 0 && (sortBy === 'createdAt' || sortBy === 'upvotes')) {
+      if(sortBy.length > 0 && (sortBy === 'createdAt' || sortBy === 'upvotes' || sortBy === 'views' )) {
         SortBy = sortBy
       }
          // Define the sort stage based on the selected sort field
@@ -148,10 +148,17 @@ class CollectionRepo {
             sortStage = {
               $sort: {
                 createdAt: -1,
-                tagSimilarity: -1,
                 upvotes: -1,
                 countOfLinks: -1,
                 views: -1,
+              },
+            };
+          } else if (SortBy === 'views') {
+            sortStage = {
+              $sort: {
+                views: -1,
+                upvotes: -1,
+                countOfLinks: -1,
               },
             };
           }
