@@ -109,11 +109,12 @@ const getSavedCollections = async (
 
 const getExplorePage = async (req: AuthenticatedRequest, res: Response) => {
   try {
-    const { page = 1, pageSize = 200, tags } = req.query;
+    const { page = 1, pageSize = 200, tags, sortBy = 'upvotes' } = req.query;
     const collection = await collectionService.getExplorePage(
       pageSize,
       page,
-      tags
+      tags,
+      sortBy
     );
 
     return res.status(201).json({
