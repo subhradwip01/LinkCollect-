@@ -14,12 +14,7 @@ const app = express();
 
 // import {Socket, Server} from "socket.io";
 import { Server, Socket } from "socket.io";
-
-import requestIp from 'request-ip';
-
-
 // socket io imports
-
 import {ConnectSocketIo} from "./events/io"
 
 
@@ -33,8 +28,6 @@ const setUpAndStartServer = async () => {
     express.raw({ type: "application/json" }),
     paymentController.webhook
   );
-  app.use(requestIp.mw());
-
 
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
@@ -42,38 +35,34 @@ const setUpAndStartServer = async () => {
 
   const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100, // Limit each IP to 200 requests per `window` (here, per 15 minutes)
+    max: 10, // Limit each IP to 200 requests per `window` (here, per 15 minutes)
     standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
     legacyHeaders: false, // Disable the `X-RateLimit-*` headers
-    keyGenerator: (req: any, res: any) => {
-      return req.clientIp // IP address from requestIp.mw(), as opposed to req.ip
-    }
   });
   app.use(limiter);
+  app.set("trust proxy", 1);
   app.use("/api", ApiRoutes);
 
 
   await connect();
-  const server = http.createServer(app);
-
-  server.listen(env.PORT, async () => {
+  app.listen(env.PORT, async () => {
     console.log(`Server Started at ${env.PORT}`);
   });
 
-  const io = new Server(server, {
-    cors: {
-      origin: "*",
-      // origin: "https://linkcollect.io", // production
-    },
-  });
+  // const io = new Server(server, {
+  //   cors: {
+  //     origin: "*",
+  //     // origin: "https://linkcollect.io", // production
+  //   },
+  // });
 
-  const onConnection = (socket) => {
-    console.log("here")
-    ConnectSocketIo(io, socket);
+  // const onConnection = (socket) => {
+  //   console.log("here")
+  //   ConnectSocketIo(io, socket);
 
-  }
+  // }
 
-  io.on("connection", onConnection);
+  // io.on("connection", onConnection);
 
   // schedule tasks to be run on the server
    cronSchedule(cron);
