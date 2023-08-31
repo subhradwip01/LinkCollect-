@@ -35,7 +35,7 @@ const setUpAndStartServer = async () => {
 
   const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 10, // Limit each IP to 200 requests per `window` (here, per 15 minutes)
+    max: 2000, // Limit each IP to 200 requests per `window` (here, per 15 minutes)
     standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
     legacyHeaders: false, // Disable the `X-RateLimit-*` headers
   });
@@ -45,24 +45,26 @@ const setUpAndStartServer = async () => {
 
 
   await connect();
-  app.listen(env.PORT, async () => {
+  const server = http.createServer(app);
+
+  server.listen(env.PORT, async () => {
     console.log(`Server Started at ${env.PORT}`);
   });
 
-  // const io = new Server(server, {
-  //   cors: {
-  //     origin: "*",
-  //     // origin: "https://linkcollect.io", // production
-  //   },
-  // });
+  const io = new Server(server, {
+    cors: {
+      origin: "*",
+      // origin: "https://linkcollect.io", // production
+    },
+  });
 
-  // const onConnection = (socket) => {
-  //   console.log("here")
-  //   ConnectSocketIo(io, socket);
+  const onConnection = (socket) => {
+    console.log("here")
+    ConnectSocketIo(io, socket);
 
-  // }
+  }
 
-  // io.on("connection", onConnection);
+  io.on("connection", onConnection);
 
   // schedule tasks to be run on the server
    cronSchedule(cron);
