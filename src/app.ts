@@ -8,13 +8,14 @@ import { decryptUser } from "./middlewares/decryptUser";
 import rateLimit from "express-rate-limit";
 import paymentController from "./controllers/paymentController";
 import http from "http";
-
 import cron from 'node-cron';
 import cronSchedule from "./utils/cron-jobs/cronJobs";
 const app = express();
 
 // import {Socket, Server} from "socket.io";
 import { Server, Socket } from "socket.io";
+
+import requestIp from 'request-ip';
 
 
 // socket io imports
@@ -32,6 +33,8 @@ const setUpAndStartServer = async () => {
     express.raw({ type: "application/json" }),
     paymentController.webhook
   );
+  app.use(requestIp.mw());
+
 
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
@@ -39,9 +42,12 @@ const setUpAndStartServer = async () => {
 
   const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 2000, // Limit each IP to 200 requests per `window` (here, per 15 minutes)
+    max: 100, // Limit each IP to 200 requests per `window` (here, per 15 minutes)
     standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
     legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+    keyGenerator: (req: any, res: any) => {
+      return req.clientIp // IP address from requestIp.mw(), as opposed to req.ip
+    }
   });
   app.use(limiter);
   app.use("/api", ApiRoutes);
