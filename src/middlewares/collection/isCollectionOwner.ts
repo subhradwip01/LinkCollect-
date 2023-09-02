@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import CollectionModel from "../models/collection";
+import CollectionModel from "../../models/collection";
 
 interface AuthenticatedRequest extends Request {
   userId?: string;
