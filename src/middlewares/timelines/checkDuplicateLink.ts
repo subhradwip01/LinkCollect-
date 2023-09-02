@@ -1,4 +1,4 @@
-import { Collection } from "../models";
+import { Collection } from "../../models";
 
 export const checkDuplicateLink = async (req, res, next) => {
   try {

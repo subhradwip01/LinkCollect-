@@ -8,11 +8,11 @@ import {
 } from "../../middlewares/validateRequests";
 import { collectionLimit } from "../../middlewares/limits";
 import { storage } from "../../cloudinary";
-import isUserPublic from "../../middlewares/isUserPublic";
+import isUserPublic from "../../middlewares/user/isUserPublic";
 import {
   isCollectionOwner,
   isCollectionPublic,
-} from "../../middlewares/isCollectionOwner";
+} from "../../middlewares/collection/isCollectionOwner";
 import multer from "multer";
 const upload = multer({
   storage,

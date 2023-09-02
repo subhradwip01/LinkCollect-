@@ -1,8 +1,8 @@
 import express from "express";
 import timelineController from "../../controllers/timelineController";
-import { isCollectionOwner } from "../../middlewares/isCollectionOwner";
+import { isCollectionOwner } from "../../middlewares/collection/isCollectionOwner";
 import { collectionLimit, LinkLimit } from "../../middlewares/limits";
-import { checkDuplicateLink } from "../../middlewares/checkDuplicateLink";
+import { checkDuplicateLink } from "../../middlewares/timelines/checkDuplicateLink";
 
 const router = express.Router({ mergeParams: true });
 
@@ -19,7 +19,11 @@ router.post(
 
 router.get("/:id", timelineController.getThatTimeline);
 
-router.patch("/togglePin/:timelineId", isCollectionOwner, timelineController.togglePin);
+router.patch(
+  "/togglePin/:timelineId",
+  isCollectionOwner,
+  timelineController.togglePin
+);
 
 router.patch(
   "/:timelineId",
@@ -33,8 +37,11 @@ router.delete(
   timelineController.deleteTimeline
 );
 
-
 // To insert multiple timelines at once in a particular collection
-router.post("/create-multiple", isCollectionOwner, timelineController.createMultiple);
+router.post(
+  "/create-multiple",
+  isCollectionOwner,
+  timelineController.createMultiple
+);
 
 export default router;
