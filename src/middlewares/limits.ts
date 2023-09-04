@@ -15,7 +15,15 @@ export const collectionLimit = async (
   next: INextFunction
 ) => {
   try {
-    const user = await userRepo.getByUserId(req.userId);
+    const user: any = await userRepo.getByUserId(req.userId);
+    if(!user) {
+      return res.status(500).json({
+        success: false,
+        message: "Internal Server Error",
+        err: "Error checking collection limit, no user found",
+        data: {},
+      });
+    }
     console.log("isPremium", user.username, user.isPremium);
 
     // for normal free users, limit to 30 collections per user
