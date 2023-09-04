@@ -1,4 +1,11 @@
-import { Collection, User, Timeline, deletedCollections, ExplorePage, SearchHistory } from "../models/index";
+import {
+  Collection,
+  User,
+  Timeline,
+  deletedCollections,
+  ExplorePage,
+  SearchHistory,
+} from "../models/index";
 // import { Collection, User, Timeline } from "../models/index";
 import tags from "../constants/alltags";
 import Emit from "../events/events";
@@ -37,7 +44,6 @@ class CollectionRepo {
     }
   };
 
-
   save = async (collectionId: string, userId: string) => {
     try {
       const collection: any = await Collection.findById(collectionId);
@@ -48,11 +54,10 @@ class CollectionRepo {
           throw "You have reached your limit of saved collections";
         }
       }
-      
+
       // save logic
       user.savedCollections.push(collectionId.toString());
       await collection.saves.addToSet(userId); // add to set to avoid duplicates
-
 
       await user.save();
       await collection.save();
@@ -105,14 +110,13 @@ class CollectionRepo {
         const collection: any = await Collection.findById(collectId);
 
         if (!collection) {
-          this.unsave(collectId, userId)
-       
+          this.unsave(collectId, userId);
         } else {
           allCollections.push(collection);
         }
       }
-      // reverse and return 
-      allCollections = allCollections.reverse()
+      // reverse and return
+      allCollections = allCollections.reverse();
       return allCollections;
     } catch (error) {
       console.log(
@@ -123,53 +127,61 @@ class CollectionRepo {
     }
   };
 
-  getExplorePage = async (pageSize: any, page: any, tags: any, sortBy: string) => {
+  getExplorePage = async (
+    pageSize: any,
+    page: any,
+    tags: any,
+    sortBy: string
+  ) => {
     try {
-      let SortBy = 'upvotes'
-      if(sortBy.length > 0 && (sortBy === 'createdAt' || sortBy === 'upvotes' || sortBy === 'views' )) {
-        SortBy = sortBy
+      let SortBy = "upvotes";
+      if (
+        sortBy.length > 0 &&
+        (sortBy === "createdAt" || sortBy === "upvotes" || sortBy === "views")
+      ) {
+        SortBy = sortBy;
       }
-         // Define the sort stage based on the selected sort field
-        let sortStage: any = {
+      // Define the sort stage based on the selected sort field
+      let sortStage: any = {
+        $sort: {
+          countOfUpvotes: -1,
+          views: -1,
+          countOfLinks: -1,
+        },
+      };
+
+      if (SortBy === "upvotes") {
+        sortStage = {
           $sort: {
             countOfUpvotes: -1,
             views: -1,
             countOfLinks: -1,
           },
-        };;
-
-          if (SortBy === 'upvotes') {
-            sortStage = {
-              $sort: {
-                countOfUpvotes: -1,
-                views: -1,
-                countOfLinks: -1,
-              },
-            };
-          } else if (SortBy === 'createdAt') {
-            sortStage = {
-              $sort: {
-                createdAt: -1,
-                upvotes: -1,
-                countOfLinks: -1,
-                views: -1,
-              },
-            };
-          } else if (SortBy === 'views') {
-            sortStage = {
-              $sort: {
-                views: -1,
-                upvotes: -1,
-                countOfLinks: -1,
-              },
-            };
-          }
+        };
+      } else if (SortBy === "createdAt") {
+        sortStage = {
+          $sort: {
+            createdAt: -1,
+            upvotes: -1,
+            countOfLinks: -1,
+            views: -1,
+          },
+        };
+      } else if (SortBy === "views") {
+        sortStage = {
+          $sort: {
+            views: -1,
+            upvotes: -1,
+            countOfLinks: -1,
+          },
+        };
+      }
 
       let tagQuery = {};
       let tagsArray;
       let isTagFilter = false;
       if (tags) {
-        console.log(typeof tags)
+        console.log(typeof tags);
         tagsArray = Array.isArray(tags) ? tags : [tags];
         tagQuery = { tags: { $in: tagsArray } };
         isTagFilter = true;
@@ -234,13 +246,14 @@ class CollectionRepo {
 
         return collections;
       } else {
-  
         let query = {
           isPublic: true,
         };
         const excludedTitles = ["Tabs Session", "Sex", "Porn", "sexy", "porn"]; // Add more titles to be excluded here
 
-        const excludedTitleRegex = excludedTitles.map(title => new RegExp(title, 'i'));
+        const excludedTitleRegex = excludedTitles.map(
+          (title) => new RegExp(title, "i")
+        );
 
         const collections = await Collection.aggregate([
           { $match: query },
@@ -254,7 +267,7 @@ class CollectionRepo {
           {
             $match: {
               countOfLinks: { $gt: 0 }, // Exclude collections with no timelines
-              title: { $not: { $in: excludedTitleRegex } } // Exclude specified titles
+              title: { $not: { $in: excludedTitleRegex } }, // Exclude specified titles
             },
           },
           {
@@ -273,7 +286,7 @@ class CollectionRepo {
               createdAt: 1,
             },
           },
-           sortStage,
+          sortStage,
           { $skip: (parseInt(page) - 1) * parseInt(pageSize) },
           { $limit: parseInt(pageSize) },
         ]);
@@ -290,18 +303,51 @@ class CollectionRepo {
 
   searchInExplorePage = async (queryFor, page, pageSize) => {
     try {
-      if (queryFor.length < 3) {
-        throw "search term should be at least 3 characters long";
-      }
 
+      if (queryFor.length < 3 || queryFor.length > 60) {
+        throw "search term should be at least 3 characters long or too big";
+      }
       // find search term in search history
       const searchK = await SearchHistory.findOne({ keyword: queryFor });
-      if(searchK) {
+      if (searchK) {
         searchK.count += 1;
         await searchK.save();
       } else {
         await SearchHistory.create({ keyword: queryFor, count: 1 });
       }
+
+
+      // Create a Set to store unique results
+      const uniqueCollections = new Set();
+      let collections: any = [];
+
+      // divide the sentence in an array of words
+      // Split the query into individual words
+      const words = queryFor.split(/\s+/);
+
+      for (const word of words) {
+        let result = await this.searchForAWord(word, page, pageSize);
+
+        // add the result to the collections array
+        result.forEach((item) => uniqueCollections.add(item));
+        collections = collections.concat(result);
+        // Deduplicate and sort the combined results
+      }
+
+      collections = Array.from(uniqueCollections);
+
+      return collections;
+    } catch (error) {
+      console.log(
+        "Err in repository layer getting saved collection failed",
+        error
+      );
+      throw error;
+    }
+  };
+
+  searchForAWord = async (queryFor, page, pageSize) => {
+    try {
       // Create a regex pattern for the search term
       const regexPattern = new RegExp(queryFor, "i");
 
@@ -582,14 +628,15 @@ class CollectionRepo {
         tags: collection.tags,
         views: collection.views,
         timelines: collection.timelines,
-      }
-      const deletedCollection = await deletedCollections.create(importantCollectionData);
+      };
+      const deletedCollection = await deletedCollections.create(
+        importantCollectionData
+      );
       return deletedCollection;
     } catch (error) {
       console.log("Something went wrong at collection repository layer", error);
       throw error;
     }
-
   }
 
   async checkForExplorePageData() {
@@ -606,7 +653,7 @@ class CollectionRepo {
         },
         {
           $addFields: {
-            "collections1": {
+            collections1: {
               $map: {
                 input: "$collections1",
                 as: "collection",
@@ -614,28 +661,25 @@ class CollectionRepo {
                   $mergeObjects: [
                     "$$collection",
                     { countOfLinks: { $size: "$$collection.timelines" } },
-                    { countOfUpvotes: { $size: "$$collection.upvotes" } }
-                  ]
-                }
-              }
-            }
-          }
+                    { countOfUpvotes: { $size: "$$collection.upvotes" } },
+                  ],
+                },
+              },
+            },
+          },
         },
         {
           $project: {
             "collections1.timelines": 0, // Exclude the timelines array
-          }
+          },
         },
         // Other pipeline stages
       ]);
-    
-      
-        return populatedExplorePage[0].collections1;
-    } catch (error) {
 
+      return populatedExplorePage[0].collections1;
+    } catch (error) {
       // console.log(error)
-      return null
-      
+      return null;
     }
   }
 
