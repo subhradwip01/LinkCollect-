@@ -60,7 +60,6 @@ class UserRepository {
     try {
       const user = await User.findById(userId);
       const userSocialData = user?.socials;
-      console.log(userSocialData);
 
       if (userSocialData && userSocialData?.length > 0) {
         console.log(userSocialData.length);
