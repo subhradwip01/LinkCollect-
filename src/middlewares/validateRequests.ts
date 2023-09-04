@@ -146,6 +146,14 @@ export const checkWhenSomeoneisFetchigCollection = async (req, res, next) => {
     const userId = req.userId;
     const collection: any = await collectionRepo.get(collectionId);
     const user = await userRepo.getByUserId(collection.userId);
+    if(!user) {
+      return res.status(400).json({
+        success: false,
+        message: "User does not exist",
+        err: "User does not exist",
+        data: {},
+      });
+    }
     if (user.id !== userId && !user.isPublic) {
       return res.status(400).json({
         success: false,
